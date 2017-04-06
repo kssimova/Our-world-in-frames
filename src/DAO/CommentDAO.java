@@ -76,7 +76,7 @@ public class CommentDAO {
 	
 	//get one sub comment from sup comment
 	
-	private Comment getSupComment(Comment supCommentId) throws ValidationException{
+	private Comment getSubComment(Comment supCommentId) throws ValidationException{
 	 	String sql = "SELECT c.comment_id, c.post_id, c.user_id, c.parent_comment_id, c.content, c.date_created "
 		 			+ "FROM comments c WHERE c.comment_id = " + supCommentId.getCommentId();
 	 	//initialization
@@ -130,8 +130,12 @@ public class CommentDAO {
  		ResultSet res = st.getGeneratedKeys();
  		res.next();
  		long commentId = res.getLong(1);
- 		Comment c = new Comment(post, user, str, LocalDate.now(), parent, commentId);
- 		post.addComment(c);
+ 		Comment comment = new Comment(post, user, str, LocalDate.now(), parent, commentId);
+ 		if(!parent.equals(null)){
+ 			post.addComment(comment);
+ 		}else{
+ 			post.addSubComment(comment);
+ 		}
  	}
 	
 	//edit comment

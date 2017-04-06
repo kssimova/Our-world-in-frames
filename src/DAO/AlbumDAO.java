@@ -14,5 +14,11 @@ public class AlbumDAO {
 		return instance;
 	}
 	
+	//create new  album
+	//create album from database
+	//delete album
+	//change album name
+	//change album description
+	
 	
 }

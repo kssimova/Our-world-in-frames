@@ -1,6 +1,6 @@
 package model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
@@ -13,14 +13,15 @@ public class Post implements Comparable<Post>{
 	private User user;
 	private String name;
 	private String description;
-	private LocalDateTime dateCreated;
+	private LocalDate dateCreated;
 	private String picturePath;
 	private TreeSet <Comment> comments;
+	private TreeSet <Comment> subComments;
 	private TreeSet <User> likes;
 	private TreeSet <String> tags;
 	
 	
-	public Post(User user, String name, String description, LocalDateTime dateCreated, String picturePath, TreeSet<String> tags, long postId) throws ValidationException {
+	public Post(User user, String name, String description, LocalDate dateCreated, String picturePath, TreeSet<String> tags, long postId) throws ValidationException {
 		if(validUser(user)){
 			this.user = user;
 		}else{
@@ -47,6 +48,7 @@ public class Post implements Comparable<Post>{
 			throw new ValidationException("Post picture path can't be added");
 		}
 		this.comments = new TreeSet<>();
+		this.subComments = new TreeSet<>();
 		this.likes = new TreeSet<>();
 		this.tags = new TreeSet<>();
 		addTags(tags);
@@ -71,7 +73,7 @@ public class Post implements Comparable<Post>{
 	}
 
 
-	public LocalDateTime getDateCreated() {
+	public LocalDate getDateCreated() {
 		return dateCreated;
 	}
 
@@ -83,6 +85,10 @@ public class Post implements Comparable<Post>{
 	
 	public Set<Comment> getComments() {
 		return Collections.unmodifiableSortedSet(comments);
+	}
+	
+	public Set<Comment> getSubComments() {
+		return Collections.unmodifiableSortedSet(subComments);
 	}
 	
 	
@@ -126,6 +132,14 @@ public class Post implements Comparable<Post>{
 			this.comments.add(comment);
 		}else{
 			throw new ValidationException("Post comment can't be added");
+		}
+	}
+	
+	public void addSubComment(Comment comment) throws ValidationException{
+		if(validComment(comment)){
+			this.comments.add(comment);
+		}else{
+			throw new ValidationException("Post sub comment can't be added");
 		}
 	}
 	
@@ -175,7 +189,7 @@ public class Post implements Comparable<Post>{
 		return tags.equals(null);
 	}
 	
-	private boolean validDate(LocalDateTime date){
+	private boolean validDate(LocalDate date){
 		return !date.equals(null);
 	}
 	
