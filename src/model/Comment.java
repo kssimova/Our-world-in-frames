@@ -1,5 +1,6 @@
 package model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.xml.bind.ValidationException;
@@ -10,28 +11,28 @@ public class Comment implements Comparable<Comment>{
 	private Post picture;
 	private User user;
 	protected String content;
-	private LocalDateTime dateCreated;
+	private LocalDate dateCreated;
 	private Comment comment;
 	
 	
-	public Comment(Post picture, User user, String content, LocalDateTime dateCreated, Comment comment, long commentId) throws ValidationException {
+	public Comment(Post picture, User user, String content, LocalDate localDate, Comment comment, long commentId) throws ValidationException {
 		if(validPost(picture)){
-		this.picture = picture;
+			this.picture = picture;
 		}else{
 			throw new ValidationException("Comment photo not valid");
 		}
 		if(validUser(user)){
-		this.user = user;
+			this.user = user;
 		}else{
 			throw new ValidationException("Comment user not valid");
 		}
 		if(validContent(content)){
-		this.content = content;
+			this.content = content;
 		}else{
 			throw new ValidationException("Comment content not valid");
 		}
-		if(validDate(dateCreated)){
-		this.dateCreated = dateCreated;
+		if(validDate(localDate)){
+			this.dateCreated = localDate;
 		}else{
 			throw new ValidationException("Comment date not valid");
 		}
@@ -56,7 +57,7 @@ public class Comment implements Comparable<Comment>{
 	}
 
 
-	public LocalDateTime getDateCreated() {
+	public LocalDate getDateCreated() {
 		return dateCreated;
 	}
 	
@@ -102,7 +103,7 @@ public class Comment implements Comparable<Comment>{
 		return (!content.isEmpty() && !content.equals(null) && content.length() <= 500) ;
 	}
 	
-	private boolean validDate(LocalDateTime date){
+	private boolean validDate(LocalDate date){
 		return !date.equals(null);
 	}
 

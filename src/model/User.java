@@ -17,6 +17,7 @@ public class User implements Comparable<User>{
 	private final String EMAIL_PATTERN = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9]+.[a-z.]+$";
 	private final String MOBILEPHONE_PATTERN = "([08]{2}+[0-9]{8})";
 	
+	private long userId;
 	private String username;
 	private String email;
 	private String password;
@@ -36,7 +37,7 @@ public class User implements Comparable<User>{
 	private Matcher matcher = null;
 	
 	//again builder pattern
-	public User(String username, String email, String password) throws ValidationException {
+	public User(String username, String email, String password, long userId) throws ValidationException {
 		if(validUsername(username)){
 			this.username = username;
 		}else{
@@ -55,6 +56,7 @@ public class User implements Comparable<User>{
 		this.albums = new TreeMap<>();
 		this.followers = new TreeSet<>();
 		this.following = new TreeSet<>();
+		this.userId = userId;
 	}
 	
 	// getters
@@ -91,10 +93,12 @@ public class User implements Comparable<User>{
 	}
 	public String getProfilePhotoPath() {
 		return profilePhotoPath;
-	}
-		
+	}	
 	public String getMobileNumber() {
 		return mobileNumber;
+	}
+	public long getUserId() {
+		return userId;
 	}
 
 	public Map<String, Album> getAlbums()  {
@@ -108,6 +112,10 @@ public class User implements Comparable<User>{
 	}	
 
 	// setters	
+	
+	public void SetUserId(long userId){
+		this.userId = userId;
+	}
 	
 	public void changeEmail(String email) throws ValidationException {
 		if(validEmail(email)){
