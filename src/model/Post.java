@@ -1,35 +1,63 @@
 package model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class Post {
+import javax.xml.bind.ValidationException;
+
+public class Post implements Comparable<Post>{
 	
+	private long postId;
 	private User user;
 	private String name;
 	private String description;
-	private LocalDateTime dateCreated;
+	private LocalDate dateCreated;
 	private String picturePath;
 	private TreeSet <Comment> comments;
+	private TreeSet <Comment> subComments;
 	private TreeSet <User> likes;
 	private TreeSet <String> tags;
 	
 	
-	public Post(User user, String name, String description, LocalDateTime dateCreated, String picturePath, TreeSet tags) {
-		this.user = user;
-		this.name = name;
-		this.description = description;
-		this.dateCreated = dateCreated;
-		this.picturePath = picturePath;
+	public Post(User user, String name, String description, LocalDate dateCreated, String picturePath, TreeSet<String> tags, long postId) throws ValidationException {
+		if(validUser(user)){
+			this.user = user;
+		}else{
+			throw new ValidationException("Post user can't be added");
+		}
+		if(validName(name)){
+			this.name = name;
+		}else{
+			throw new ValidationException("Post name can't be added");
+		}
+		if(validDescription(description)){
+			this.description = description;
+		}else{
+			throw new ValidationException("Post description can't be added");
+		}
+		if(validDate(dateCreated)){
+			this.dateCreated = dateCreated;
+		}else{
+			throw new ValidationException("Post date can't be added");
+		}
+		if(validPicturePath(picturePath)){
+			this.picturePath = picturePath;
+		}else{
+			throw new ValidationException("Post picture path can't be added");
+		}
 		this.comments = new TreeSet<>();
+		this.subComments = new TreeSet<>();
 		this.likes = new TreeSet<>();
 		this.tags = new TreeSet<>();
-		this.tags = tags;
+		addTags(tags);
+		SetPostId(postId);
 		
 	}
 
+	//getters
+	
 	public User getUser() {
 		return user;
 	}
@@ -45,7 +73,7 @@ public class Post {
 	}
 
 
-	public LocalDateTime getDateCreated() {
+	public LocalDate getDateCreated() {
 		return dateCreated;
 	}
 
@@ -59,6 +87,10 @@ public class Post {
 		return Collections.unmodifiableSortedSet(comments);
 	}
 	
+	public Set<Comment> getSubComments() {
+		return Collections.unmodifiableSortedSet(subComments);
+	}
+	
 	
 	public Set<User> getLikes() {
 		return Collections.unmodifiableSortedSet(likes);
@@ -69,14 +101,115 @@ public class Post {
 		return Collections.unmodifiableSortedSet(tags);
 	}
 	
-	
-	public void addComment(Comment comment){
-		this.comments.add(comment);
+	public long getPostId() {
+		return postId;
 	}
 	
+	//setters
 	
-	public void addLike(User user){
-		this.likes.add(user);
+	public void SetPostId(long postId){
+		this.postId = postId;
+	}
+	
+	public void changeName(String name) throws ValidationException{
+		if(validName(name)){
+			this.name = name;
+		}else{
+			throw new ValidationException("Post name can't be changed");
+		}
+	}
+	
+	public void changeDescription(String desc) throws ValidationException{
+		if(validDescription(desc)){
+			this.description = desc;
+		}else{
+			throw new ValidationException("Post description can't be changed");
+		}
+	}
+	
+	public void addComment(Comment comment) throws ValidationException{
+		if(validComment(comment)){
+			this.comments.add(comment);
+		}else{
+			throw new ValidationException("Post comment can't be added");
+		}
+	}
+	
+	public void addSubComment(Comment comment) throws ValidationException{
+		if(validComment(comment)){
+			this.comments.add(comment);
+		}else{
+			throw new ValidationException("Post sub comment can't be added");
+		}
+	}
+	
+	public void addLike(User user) throws ValidationException{
+		if(validUser(user)){
+			this.likes.add(user);
+		}else{
+			throw new ValidationException("Post like can't be added");
+		}
+	}
+	
+	public void removeLike(User user) throws ValidationException{
+		if(validUser(user)){
+			this.likes.remove(user);
+		}else{
+			throw new ValidationException("Post like can't be removed");
+		}
+	}
+	
+	public void addTags(TreeSet<String> tags) throws ValidationException{
+		if(validTags(tags)){
+			this.tags.addAll(tags);
+		}else{
+			throw new ValidationException("Post tags can't be added");
+		}
+	}
+	
+	//validations	
+	
+	private boolean validName(String name) {
+		return (name != null && name.length()>2 && name.length() <= 45);
+	}
+	
+	private boolean validDescription(String desc) {
+		return description.length() <= 500;
+	}
+	
+	private boolean validComment(Comment comment) {
+		return !comment.equals(null);
+	}
+	
+	private boolean validUser(User user){
+		return !user.equals(null);
+	}
+	
+	private boolean validTags(TreeSet<String> tags){
+		return tags.equals(null);
+	}
+	
+	private boolean validDate(LocalDate date){
+		return !date.equals(null);
+	}
+	
+	private boolean validPicturePath(String picturePath) {
+		return (!picturePath.isEmpty() && picturePath.equals(null) && picturePath.length() <= 500);
 	}
 
+	//compare to other Posts
+	
+	@Override
+	public int compareTo(Post post) {
+		int compare = this.name.compareTo(post.name);
+		if(compare == 0){
+			return this.dateCreated.compareTo(post.dateCreated);
+		}
+		return compare;
+	}
+	
+	//JSON
+	
+	
+	
 }
