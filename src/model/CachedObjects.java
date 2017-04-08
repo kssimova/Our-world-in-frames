@@ -1,13 +1,13 @@
 package model;
 
-import java.security.AllPermission;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 public class CachedObjects {
 	
 	private static CachedObjects instance;
 	private final TreeMap<Long, User> allUsers = new TreeMap<>();
-	private final TreeMap<Long, TreeMap<Album, TreeMap<Long, Post>>> allPosts = new TreeMap<>();
+	private final TreeMap<Long, TreeMap<Long, Post>> allPosts = new TreeMap<>();
 	
 	private CachedObjects() {
 
@@ -26,22 +26,43 @@ public class CachedObjects {
 
 	public Post getOnePost(long postId) {
 		Post p = null;
-		for(TreeMap<Album, TreeMap<Long, Post>> e : allPosts.values())
-		for( TreeMap<Long, Post> e1 : e.values()){
-			p = e1.get(postId);
+		for(Entry <Long, TreeMap<Long, Post>> e : allPosts.entrySet()){
+			for(Entry <Long, Post> e1 : e.getValue().entrySet()){
+				if(e1.getKey().equals(postId)){
+					p = e1.getValue();
+				}
+			}
 		}
 		return p;
 	}
+	
 	
 	public Post getOnePost(long postId, long albumId) {
 		Post p = null;
-		for( TreeMap<Long, Post> e : allPosts.get(albumId).values()){
-			p = e.get(postId);
+		if(allPosts.containsKey(albumId)){
+			p = allPosts.get(allPosts).get(postId);
 		}
 		return p;
 	}
 	
-	//TODO add user to allUsers
-	//TODO add photos to allPosts
+	//remove post
+	public void removePost(Post post){
+		allPosts.remove(post);
+	}	
+	
+	//add user
+	public void addUser(User user){
+		allUsers.put(user.getUserId(), user);
+	}
+	
+	//delete post
+	public void addPost(Post post, Album album){
+		if(!allPosts.keySet().contains(album.getAlbumId())){
+			allPosts.put(album.getAlbumId(), new TreeMap<Long, Post>());
+		}
+		if(!allPosts.get(album.getAlbumId()).containsKey(post.getPostId())){
+			allPosts.get(album.getAlbumId()).put(post.getPostId(), post);
+		}
+	}
 	
 }

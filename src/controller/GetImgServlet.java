@@ -18,11 +18,17 @@ import com.google.gson.JsonParser;
 @WebServlet("/getImg")
 
 //actually this  will only view images from imgur :D 
+//not actually needed 
 public class GetImgServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		URL url = new URL("	https://api.imgur.com/3/image/wBCmqov");
+		
+		//TODO get real image id
+		String imageId = "miYgPf1";
+		
+		
+		URL url = new URL("	https://api.imgur.com/3/image/" + imageId);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setDoOutput(true);
 		connection.setDoInput(true);
@@ -67,7 +73,7 @@ public class GetImgServlet extends HttpServlet {
 			String imgLink = obj2.get("link").getAsString();
 			request.getSession().setAttribute("link", imgLink);
 		}
-	request.getRequestDispatcher("index.jsp").forward(request, response);				
+	request.getRequestDispatcher("/JSP/index.jsp").forward(request, response);				
 	}
 
 }

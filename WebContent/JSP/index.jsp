@@ -5,24 +5,32 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+
 </head>
 <body>
 
-<form action="getImg" method="get">
-<input type="submit" value="pass">
+<form action="../getImg" method="get">
+<input type="submit" value="getImg">
 </form>
 <br>
 <br>
-<br>
-<br>
 
-<FORM enctype="multipart/form-data" action="uploadImg" method="post">
+
+<FORM enctype="multipart/form-data" action="../uploadImg" method="post">
 	<b><h1> Choose your image:</h1></b>
 		  <INPUT NAME="file" TYPE="file">
 		 </br>
 		 <input type="submit" value="Submit">
 	</div>
 </FORM>
+<br>
+<br>
+
+
+<form action="../deleteImg" method="get">
+<input type="submit" value="deleteImg">
+</form>
+
 
 </body>
 </html>

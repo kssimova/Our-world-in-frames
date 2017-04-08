@@ -12,7 +12,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Scanner;
 
@@ -129,32 +128,23 @@ public class UploadImgServlet extends HttpServlet {
 		JsonObject jsonObj = parser.parse(responseData).getAsJsonObject();
 		JsonObject obj2 = jsonObj.getAsJsonObject("data");
 		System.out.println(obj2.toString());
-	//		
-	//		if(!obj2.get("id").isJsonNull()){
-	//			String imgID = obj2.get("id").getAsString();
-	//			request.getSession().setAttribute("id", imgID);
-	//			
-	//		}
-	//		if(!obj2.get("title").isJsonNull()){
-	//			String imgTitle = obj2.get("title").getAsString();
-	//			request.getSession().setAttribute("title", imgTitle);
-	//		}
-	//		if(!obj2.get("description").isJsonNull()){
-	//			String imgDesc = obj2.get("description").getAsString();
-	//			request.getSession().setAttribute("description", imgDesc);
-	//		}
-	//		if(!obj2.get("datetime").isJsonNull()){
-	//			String imgDate = obj2.get("datetime").getAsString();
-	//			request.getSession().setAttribute("datetime", imgDate);
-	//		}
-	//		if(!obj2.get("name").isJsonNull()){
-	//			String imgName = obj2.get("name").getAsString();
-	//			request.getSession().setAttribute("name", imgName);
-	//		}
-	//		if(!obj2.get("link").isJsonNull()){
-	//			String imgLink = obj2.get("link").getAsString();
-	//			request.getSession().setAttribute("link", imgLink);
-	//		}
-	request.getRequestDispatcher("index.jsp").forward(request, response);				
+		
+		//TODO get photo id and photo link and deleteHash !!!!
+		
+		//TODO change DB id for this image-s to be the same as imgur id so it's not the auto increment one
+		
+		//TODO call DAO makePost method
+		
+		if(!obj2.get("id").isJsonNull()){
+			String imgID = obj2.get("id").getAsString();
+			request.getSession().setAttribute("id", imgID);	
+			System.out.println(imgID);
+		}
+		if(!obj2.get("link").isJsonNull()){
+			String imgLink = obj2.get("link").getAsString();
+			request.getSession().setAttribute("link", imgLink);
+			System.out.println(imgLink);
+		}
+	request.getRequestDispatcher("/JSP/index.jsp").forward(request, response);				
 	}
 }

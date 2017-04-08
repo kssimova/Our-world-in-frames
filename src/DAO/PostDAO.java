@@ -32,7 +32,7 @@ public class PostDAO {
 	}
 	
 	//getPost
-	public static Post createPost(long postId) throws ValidationException {
+	public Post createPost(long postId) throws ValidationException {
 		TreeSet<String> tags = new TreeSet<>();
   		Statement st = null;
   		Post post = null;
@@ -95,7 +95,8 @@ public class PostDAO {
 	
 	// makePost
 	public void makePost(User user, String name, String description, LocalDate dateCreated, String picturePath, TreeSet<String> tags, Album album) throws SQLException, ValidationException{
- 		try {
+		Post post = null;
+		try {
  			DBManager.getInstance().getConnection().setAutoCommit(false);
 			String sql ="INSERT INTO posts (user_id, name, descriptiopn, album_id, date_created, picture_path)"
 						+ "VALUES (?, ?, ?, ?, ?, ?);";
@@ -108,7 +109,7 @@ public class PostDAO {
 	 		st.setString(6, picturePath); 		
 	 		st.execute();
 	 		ResultSet res = st.getGeneratedKeys();
-	 		Post post = new Post(user, name, description, dateCreated, picturePath, tags, res.getLong("post_id"));
+	 		post = new Post(user, name, description, dateCreated, picturePath, tags, res.getLong("post_id"));
 	 		editTags(post, user, tags);
  		}catch (SQLException e1) {
  			try {
@@ -124,10 +125,11 @@ public class PostDAO {
  				System.out.println("Error#3 in PostDAO. Eroor message: " + e.getMessage());
  			}
  		}
+ 		CachedObjects.getInstance().addPost(post, album);
 	}
 		
 	// change name
-	public void editPhotoName(Post post, User user, String str) throws ValidationException{
+	public void editPostName(Post post, User user, String str) throws ValidationException{
 		String sql = "UPDATE posts SET name = ? WHERE post_id = " + post.getPostId();
  		PreparedStatement st;
 		try {
@@ -137,11 +139,11 @@ public class PostDAO {
 		} catch (SQLException e) {
 			System.out.println("Error#1 in PostDAO. Eroor message: " + e.getMessage());
 		}
-		post.changeName(str);
+		CachedObjects.getInstance().getOnePost(post.getPostId()).changeName(str);;
  	}
 	
 	// change description
- 	public void editPhotoInfo(Post post, User user, String str) throws ValidationException{
+ 	public void editPostInfo(Post post, User user, String str) throws ValidationException{
 		String sql = "UPDATE posts SET description = ? WHERE post_id = " + post.getPostId();
  		PreparedStatement st;
 		try {
@@ -151,11 +153,11 @@ public class PostDAO {
 		} catch (SQLException e) {
 			System.out.println("Error#1 in PostDAO. Eroor message: " + e.getMessage());
 		}
-		post.changeDescription(str);
+		CachedObjects.getInstance().getOnePost(post.getPostId()).changeDescription(str);
  	}
 	
 	//method that edits and puts tags, can be used in creating new post
- 	public void editTags(Post post, User user, TreeSet<String> tags){
+ 	public void editTags(Post post, User user, TreeSet<String> tags) throws ValidationException{
  		PreparedStatement st = null;
 		ResultSet result = null;
 	 	ArrayList<Long> lonelyTags = new ArrayList<>();
@@ -224,11 +226,49 @@ public class PostDAO {
  				System.out.println("Error#3 in PostDAO. Eroor message: " + e.getMessage());
  			}
  		}
+		CachedObjects.getInstance().getOnePost(post.getPostId()).addTags(tags);;
  	}		
  	
-	//TODO addLike
-	//TODO remove like
-	//TODO delete post
- 	//TODO connect to imgur for photo path
-	
+ 	
+ 	
+	//add Like
+ 	public void addLike(Post post, User user) throws ValidationException{
+		String sql = "INSERT INTO post_likes (user_id, post_id) VALUES (?, ?)";
+ 		PreparedStatement st;
+		try {
+			st = DBManager.getInstance().getConnection().prepareStatement(sql);
+			st.setLong(1, user.getUserId());
+			st.setLong(1, post.getPostId());
+	 		st.execute();
+		} catch (SQLException e) {
+			System.out.println("Error#1 in PostDAO. Eroor message: " + e.getMessage());
+		}
+		CachedObjects.getInstance().getOnePost(post.getPostId()).addLike(user);;
+ 	}
+ 	
+	//remove like	
+ 	public void removeLike(Post post, User user) throws ValidationException{
+		String sql = "DELETE FROM post_likes WHERE user_id = " + user.getUserId() + " and post_id " + post.getPostId();
+ 		PreparedStatement st;
+		try {
+			st = DBManager.getInstance().getConnection().prepareStatement(sql);
+	 		st.execute();
+		} catch (SQLException e) {
+			System.out.println("Error#1 in PostDAO. Eroor message: " + e.getMessage());
+		}
+		CachedObjects.getInstance().getOnePost(post.getPostId()).removeLike(user);
+ 	}
+ 	
+	//delete post
+ 	public void deletePost(Post post, User user) throws ValidationException{
+		String sql = "DELETE FROM posts WHERE post_id = " + post.getPostId();
+ 		PreparedStatement st;
+		try {
+			st = DBManager.getInstance().getConnection().prepareStatement(sql);
+	 		st.execute();
+		} catch (SQLException e) {
+			System.out.println("Error#1 in PostDAO. Eroor message: " + e.getMessage());
+		}
+		CachedObjects.getInstance().removePost(post);
+ 	}
 }
