@@ -208,4 +208,8 @@ public class Post implements Comparable<Post>{
 		return compare;
 	}
 	
+	//JSON
+	
+	
+	
 }

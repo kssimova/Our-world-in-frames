@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 
 import javax.xml.bind.ValidationException;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 public class Comment implements Comparable<Comment>{
 	
 	private long commentId;
@@ -113,6 +116,28 @@ public class Comment implements Comparable<Comment>{
 	@Override
 	public int compareTo(Comment comment) {
 		return this.dateCreated.compareTo(comment.dateCreated);
+	}
+	
+	//JSON
+	public JsonObject getAsJSON(){
+		JsonObject root = new JsonObject();
+		//create JSONObject
+		root.addProperty("commentId", this.commentId);
+		root.addProperty("content", content);
+		root.addProperty("dateCreated", this.dateCreated.toString());
+		root.addProperty("pictureId", this.picture.getPostId());
+		if(!comment.equals(null)){
+			JsonArray supCommentArray = new JsonArray();
+			comment.getAsJSON();
+			root.add("supComment", supCommentArray);
+		}
+		JsonArray userArray = new JsonArray();
+		JsonObject user = new JsonObject();
+		user.addProperty("username", this.user.getUsername());
+		user.addProperty("userId", this.user.getUserId());
+		userArray.add(user);
+		root.add("user", userArray);		
+		return root;
 	}
 	
 }
