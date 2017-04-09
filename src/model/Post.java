@@ -9,7 +9,8 @@ import javax.xml.bind.ValidationException;
 
 public class Post implements Comparable<Post>{
 	
-	private long postId;
+	private String postId;
+	private String deleteHash;
 	private User user;
 	private String name;
 	private String description;
@@ -21,7 +22,10 @@ public class Post implements Comparable<Post>{
 	private TreeSet <String> tags;
 	
 	
-	public Post(User user, String name, String description, LocalDate dateCreated, String picturePath, TreeSet<String> tags, long postId) throws ValidationException {
+	
+	
+	
+	public Post(User user, String name, String description, LocalDate dateCreated, String picturePath, TreeSet<String> tags) throws ValidationException {
 		if(validUser(user)){
 			this.user = user;
 		}else{
@@ -51,8 +55,13 @@ public class Post implements Comparable<Post>{
 		this.subComments = new TreeSet<>();
 		this.likes = new TreeSet<>();
 		this.tags = new TreeSet<>();
-		addTags(tags);
-		SetPostId(postId);
+		addTags(tags);	
+	}
+	
+	public Post(User user, String name, String description, LocalDate dateCreated, String picturePath, TreeSet<String> tags, String postId, String deleteHash) throws ValidationException {
+		this(user, name, description, dateCreated, picturePath, tags);
+		setPostId(postId);
+		setDeleteHash(deleteHash);
 		
 	}
 
@@ -101,16 +110,25 @@ public class Post implements Comparable<Post>{
 		return Collections.unmodifiableSortedSet(tags);
 	}
 	
-	public long getPostId() {
+	public String getPostId() {
 		return postId;
+	}
+	
+	public String getDeleteHash() {
+		return deleteHash;
 	}
 	
 	//setters
 	
-	public void SetPostId(long postId){
+	public void setPostId(String postId){
 		this.postId = postId;
 	}
 	
+
+	public void setDeleteHash(String deleteHash) {
+		this.deleteHash = deleteHash;
+	}
+
 	public void changeName(String name) throws ValidationException{
 		if(validName(name)){
 			this.name = name;
@@ -161,6 +179,7 @@ public class Post implements Comparable<Post>{
 	
 	public void addTags(TreeSet<String> tags) throws ValidationException{
 		if(validTags(tags)){
+			this.tags.clear();
 			this.tags.addAll(tags);
 		}else{
 			throw new ValidationException("Post tags can't be added");
@@ -174,27 +193,27 @@ public class Post implements Comparable<Post>{
 	}
 	
 	private boolean validDescription(String desc) {
-		return description.length() <= 500;
+		return desc.length() <= 500;
 	}
 	
 	private boolean validComment(Comment comment) {
-		return !comment.equals(null);
+		return comment != null;
 	}
 	
 	private boolean validUser(User user){
-		return !user.equals(null);
+		return user != null;
 	}
 	
 	private boolean validTags(TreeSet<String> tags){
-		return tags.equals(null);
+		return tags != null;
 	}
 	
 	private boolean validDate(LocalDate date){
-		return !date.equals(null);
+		return date != null;
 	}
 	
 	private boolean validPicturePath(String picturePath) {
-		return (!picturePath.isEmpty() && picturePath.equals(null) && picturePath.length() <= 500);
+		return (!picturePath.isEmpty() && picturePath != null && picturePath.length() <= 500);
 	}
 
 	//compare to other Posts

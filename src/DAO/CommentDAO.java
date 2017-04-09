@@ -59,7 +59,7 @@ public class CommentDAO {
  			while(result.next()){
  				try {
  					user = CachedObjects.getInstance().getOneUser(result.getLong("user_id"));
- 					post = CachedObjects.getInstance().getOnePost(result.getLong("post_id"));
+ 					post = CachedObjects.getInstance().getOnePost(result.getString("post_id"));
  					if(result.getObject("parent_comment_id").equals(null)){
  						comment = new Comment(post, user, result.getString("content"), result.getDate("date_created").toLocalDate(), null, result.getLong("comment_id"));
  	 					allComments.put(commentCoutn++, comment);
@@ -100,7 +100,7 @@ public class CommentDAO {
 	 		while(result.next()){
 	 			try {
 	 				user = CachedObjects.getInstance().getOneUser(result.getLong("user_id"));
-	 				post = CachedObjects.getInstance().getOnePost(result.getLong("post_id"));
+	 				post = CachedObjects.getInstance().getOnePost(result.getString("post_id"));
 	 				comment = new Comment(post, user, result.getString("content"), result.getDate("date_created").toLocalDate(), supCommentId , result.getLong("comment_id"));
 	 			} catch (SQLException e) {
 	 				System.out.println("Error#3 in PhotoDAO. Eroor message: " + e.getMessage());
@@ -117,7 +117,7 @@ public class CommentDAO {
 		String sql = "INSERT INTO comments (post_id, user_id, parent_comment_id, content, date_created) " +
  					"VALUES (?, ?, ?, ?, ?)";
  		PreparedStatement st = DBManager.getInstance().getConnection().prepareStatement(sql);
- 		st.setLong(1, post.getPostId());
+ 		st.setString(1, post.getPostId());
  		st.setLong(2, user.getUserId());
  		if(!parent.equals(null)){
  			st.setLong(3, parent.getCommentId());
@@ -143,7 +143,7 @@ public class CommentDAO {
 		String sql = "UPDATE comments SET content = ? WHERE  comment_id = ?";
 	 	PreparedStatement st = DBManager.getInstance().getConnection().prepareStatement(sql);
 	 	st.setString(1, str);
-	 	st.setLong(2, post.getPostId());
+	 	st.setLong(2, comment.getCommentId());
 	 	st.execute();
 	 	ResultSet res = st.getGeneratedKeys();
 	 	res.next();

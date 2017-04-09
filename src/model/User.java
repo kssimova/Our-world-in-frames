@@ -1,6 +1,6 @@
 package model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
@@ -37,7 +37,7 @@ public class User implements Comparable<User>{
 	private Matcher matcher = null;
 	
 	//again builder pattern
-	public User(String username, String email, String password, long userId) throws ValidationException {
+	public User(String username, String email, String password) throws ValidationException {
 		if(validUsername(username)){
 			this.username = username;
 		}else{
@@ -56,6 +56,11 @@ public class User implements Comparable<User>{
 		this.albums = new TreeMap<>();
 		this.followers = new TreeSet<>();
 		this.following = new TreeSet<>();
+	}
+	
+	//for getting user from DB
+	public User(String username, String email, String password, long userId) throws ValidationException {
+		this(username, email, password);
 		this.userId = userId;
 	}
 	
@@ -204,7 +209,9 @@ public class User implements Comparable<User>{
 	}
 		
 	public void createAlbum(String albumName, String desc,  long albumId) throws ValidationException {
-		this.albums.put(albumName, new Album(albumName, desc, LocalDateTime.now(), this, albumId));
+		Album album = new Album(albumName, desc, LocalDate.now(), this);
+		album.setAlbumId(albumId);
+		this.albums.put(albumName, album);
 	}
 	
 	
@@ -230,18 +237,18 @@ public class User implements Comparable<User>{
 	}
 	
 	public boolean validateString(String str){
-		return (!password.isEmpty() && password != null && password.length() > 3);
+		return (!str.isEmpty() && str != null && str.length() > 3);
 	}
 	
 	private boolean validUser(User user){
-		return !user.equals(null);
+		return user != null;
 	}
 	
 	private boolean validUsername(String username) {
 		return (validateString(username) && username.length() <= 45);
 	}
 	
-	private boolean validEmail(String emal){
+	private boolean validEmail(String email){
 		return (patternFinder(EMAIL_PATTERN, email));
 	}
 	private boolean validPassword(String password){

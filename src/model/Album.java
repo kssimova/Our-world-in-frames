@@ -1,6 +1,6 @@
 package model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
@@ -12,12 +12,12 @@ public class Album implements Comparable<Album>{
 	private long albumId;
 	private String name;
 	private String description;
-	private LocalDateTime dateCreated;
+	private LocalDate dateCreated;
 	private User user;
 	private TreeSet <Post> photos;
 	
 	//if you want we can use builder pattern
-	public Album(String name, String description, LocalDateTime dateCreated, User user, long albumId) throws ValidationException {
+	public Album(String name, String description, LocalDate dateCreated, User user) throws ValidationException {
 		if(validName(name)){
 			this.name = name;
 		}else{
@@ -39,7 +39,6 @@ public class Album implements Comparable<Album>{
 			throw new ValidationException("Album user not valid");
 		}
 		this.photos = new TreeSet<>();
-		setAlbumId(albumId);
 	}
 
 	//getters
@@ -53,7 +52,7 @@ public class Album implements Comparable<Album>{
 	}
 
 
-	public LocalDateTime getDateCreated() {
+	public LocalDate getDateCreated() {
 		return dateCreated;
 	}
 
@@ -104,16 +103,16 @@ public class Album implements Comparable<Album>{
 		return description.length() <= 500;
 	}
 	
-	private boolean validDate(LocalDateTime date){
-		return !date.equals(null);
+	private boolean validDate(LocalDate date){
+		return date != null;
 	}
 	
 	private boolean validUser(User user){
-		return !user.equals(null);
+		return user != null;
 	}
 	
 	private boolean validPost(Post post){
-		return !post.equals(null);
+		return post != null;
 	}
 	
 	

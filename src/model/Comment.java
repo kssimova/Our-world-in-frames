@@ -99,15 +99,15 @@ public class Comment implements Comparable<Comment>{
 	}
 
 	private boolean validUser(User user) {
-		return !user.equals(null);
+		return user !=null;
 	}
 	
 	private boolean validContent(String content) {
-		return (!content.isEmpty() && !content.equals(null) && content.length() <= 500) ;
+		return (!content.isEmpty() && content != null && content.length() <= 500) ;
 	}
 	
 	private boolean validDate(LocalDate date){
-		return !date.equals(null);
+		return date != null;
 	}
 
 	
