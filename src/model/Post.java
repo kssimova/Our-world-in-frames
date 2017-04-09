@@ -179,6 +179,7 @@ public class Post implements Comparable<Post>{
 	
 	public void addTags(TreeSet<String> tags) throws ValidationException{
 		if(validTags(tags)){
+			this.tags.clear();
 			this.tags.addAll(tags);
 		}else{
 			throw new ValidationException("Post tags can't be added");
