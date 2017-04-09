@@ -1,9 +1,7 @@
 package model;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -216,9 +214,17 @@ public class User implements Comparable<User>{
 		}
 	}
 		
-	public void createAlbum(String albumName, String desc,  long albumId) throws ValidationException {
-		this.albums.put(albumName, new Album(albumName, desc, LocalDate.now(), this));
+	public Album createAlbum(String albumName, String desc,  long albumId) throws ValidationException {
+		Album album = new Album(albumName, desc, LocalDate.now(), this);
+		album.setAlbumId(albumId);
+		this.albums.put(albumName, album);
+		return album;
 	}
+	
+	public void deleteAlbum(Album album) throws ValidationException {
+		this.albums.remove(album);
+	}
+	
 	
 	
 	public void addFollower(User user){
@@ -243,18 +249,18 @@ public class User implements Comparable<User>{
 	}
 	
 	public boolean validateString(String str){
-		return (!password.isEmpty() && password != null && password.length() > 3);
+		return (!str.isEmpty() && str != null && str.length() > 3);
 	}
 	
 	private boolean validUser(User user){
-		return !user.equals(null);
+		return user != null;
 	}
 	
 	private boolean validUsername(String username) {
 		return (validateString(username) && username.length() <= 45);
 	}
 	
-	private boolean validEmail(String emal){
+	private boolean validEmail(String email){
 		return (patternFinder(EMAIL_PATTERN, email));
 	}
 	private boolean validPassword(String password){

@@ -110,7 +110,7 @@ public class CommentsTest {
 		}
 		//working
 		
-		System.out.println("---------------------TEST 5 ---------------------");
+		System.out.println("---------------------TEST 4 ---------------------");
 		System.out.println("------------------DELETE COMMENT-------------------");
 		
 //		System.out.println(p.getComments().toString());

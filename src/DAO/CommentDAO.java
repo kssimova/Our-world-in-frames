@@ -73,7 +73,7 @@ public class CommentDAO {
  		return allComments;
 	}
 	
-	//create comment
+	//create new comment
 	public Comment makeComment(Post post, User user, Comment parent, String str) throws ValidationException, SQLException{
  		Comment comment = null;
 		String sql = "INSERT INTO comments (post_id, user_id, parent_comment_id, content, date_created) " +
@@ -116,7 +116,7 @@ public class CommentDAO {
 	// delete comment
 	public void deleteComment(Post post, User user, Comment comment) throws ValidationException, SQLException{
 		String sql = "DELETE FROM comments WHERE comment_id = ?";
-		if(!comment.getComment().equals(null)){
+		if(comment.getComment() != null){
  			try {
 				DBManager.getInstance().getConnection().setAutoCommit(false);
 				PreparedStatement st = DBManager.getInstance().getConnection().prepareStatement(sql);
@@ -140,12 +140,7 @@ public class CommentDAO {
 					System.out.println("Error#3 in delete commetnt. Error message: " + e.getMessage());
 				}
 			}		
-			return;
 		}
-		sql += comment.getCommentId();
-		Statement st = DBManager.getInstance().getConnection().createStatement();
-		st.executeQuery(sql);
-		post.getComments().remove(comment);
  	}
 	
 	private Comment getComment(TreeMap<Long, Comment> map , Long comNum){

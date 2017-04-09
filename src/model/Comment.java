@@ -1,11 +1,9 @@
 package model;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import javax.xml.bind.ValidationException;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 public class Comment implements Comparable<Comment>{
