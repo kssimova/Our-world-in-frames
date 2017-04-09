@@ -217,7 +217,7 @@ public class User implements Comparable<User>{
 	}
 		
 	public void createAlbum(String albumName, String desc,  long albumId) throws ValidationException {
-		this.albums.put(albumName, new Album(albumName, desc, LocalDateTime.now(), this, albumId));
+		this.albums.put(albumName, new Album(albumName, desc, LocalDate.now(), this));
 	}
 	
 	
