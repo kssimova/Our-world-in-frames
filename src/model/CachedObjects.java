@@ -1,13 +1,16 @@
 package model;
 
 import java.util.Map.Entry;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class CachedObjects {
 	
 	private static CachedObjects instance;
 	private final TreeMap<Long, User> allUsers = new TreeMap<>();
-	private final TreeMap<Long, TreeMap<Long, Post>> allPosts = new TreeMap<>();
+	private final TreeMap<Long, TreeMap<String, Post>> allPosts = new TreeMap<>();
 	
 	private CachedObjects() {
 
@@ -24,10 +27,10 @@ public class CachedObjects {
 		return allUsers.get(userId);
 	}
 
-	public Post getOnePost(long postId) {
+	public Post getOnePost(String postId) {
 		Post p = null;
-		for(Entry <Long, TreeMap<Long, Post>> e : allPosts.entrySet()){
-			for(Entry <Long, Post> e1 : e.getValue().entrySet()){
+		for(Entry <Long, TreeMap<String, Post>> e : allPosts.entrySet()){
+			for(Entry<String, Post> e1 : e.getValue().entrySet()){
 				if(e1.getKey().equals(postId)){
 					p = e1.getValue();
 				}
@@ -36,33 +39,54 @@ public class CachedObjects {
 		return p;
 	}
 	
-	
-	public Post getOnePost(long postId, long albumId) {
+	public Post getOnePost(String postId, long albumId) {
 		Post p = null;
-		if(allPosts.containsKey(albumId)){
-			p = allPosts.get(allPosts).get(postId);
+		for(Entry <Long, TreeMap<String, Post>> e : allPosts.entrySet()){
+			if(e.getKey().equals(albumId)){
+				for(Entry<String, Post> e1 : e.getValue().entrySet()){
+					if(e1.getKey().equals(postId)){
+						p = e1.getValue();
+					}
+				}
+			}
 		}
 		return p;
 	}
 	
 	//remove post
-	public void removePost(Post post){
-		allPosts.remove(post);
+	public void removePost(Post post, Album album){
+		for(Iterator <Entry <Long, TreeMap<String, Post>>> it = allPosts.entrySet().iterator(); it.hasNext(); ){
+			Entry<Long, TreeMap<String, Post>> e1 = it.next();
+			if(e1.getKey().equals(album.getAlbumId())){
+				for(Iterator <Entry <String, Post>> it2 = e1.getValue().entrySet().iterator(); it2.hasNext();){
+					Entry <String, Post> e2 = it2.next();
+					if(e2.getKey().equals(post.getPostId())){
+						it2.remove();
+					}
+				}
+			}
+		}
 	}	
 	
 	//add user
 	public void addUser(User user){
 		allUsers.put(user.getUserId(), user);
 	}
-	
+		
 	//delete post
 	public void addPost(Post post, Album album){
 		if(!allPosts.keySet().contains(album.getAlbumId())){
-			allPosts.put(album.getAlbumId(), new TreeMap<Long, Post>());
+			allPosts.put(album.getAlbumId(), new TreeMap<String, Post>());
 		}
 		if(!allPosts.get(album.getAlbumId()).containsKey(post.getPostId())){
 			allPosts.get(album.getAlbumId()).put(post.getPostId(), post);
 		}
 	}
+	
+	//just for tests
+	public Map <Long, TreeMap<String, Post>> getAllPosts() {
+		return  Collections.unmodifiableSortedMap(allPosts);
+	}
+	
 	
 }
