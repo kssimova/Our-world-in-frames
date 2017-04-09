@@ -1,5 +1,6 @@
 package model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
@@ -13,7 +14,7 @@ import java.util.regex.Pattern;
 import javax.xml.bind.ValidationException;
 
 public class User implements Comparable<User>{
-	enum Gender {MALE, FEMALE}
+	public enum Gender {MALE, FEMALE}
 	private final String EMAIL_PATTERN = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9]+.[a-z.]+$";
 	private final String MOBILEPHONE_PATTERN = "([08]{2}+[0-9]{8})";
 	
@@ -27,7 +28,7 @@ public class User implements Comparable<User>{
 	private String city;
 	private String descriprion;
 	private String mobileNumber;
-	private Date birthdate;
+	private LocalDate birthdate;
 	private Gender gender;
 	private String profilePhotoPath;
 	private TreeMap <String, Album> albums;
@@ -64,39 +65,51 @@ public class User implements Comparable<User>{
 	public String getUsername() {
 		return username;
 	}
+	
 	public String getEmail() {
 		return email;
 	}
+	
 	public String getPassword() {
 		return password;
 	}
+	
 	public String getFirstName() {
 		return firstName;
 	}
+	
 	public String getLastName() {
 		return lastName;
 	}
+	
 	public String getCountry() {
 		return country;
 	}
+	
 	public String getCity() {
 		return city;
 	}
+	
 	public String getDescriprion() {
 		return descriprion;
 	}
-	public Date getBirthdate() {
+	
+	public LocalDate getBirthdate() {
 		return birthdate;
 	}
+	
 	public Gender getGender() {
 		return gender;
 	}
+	
 	public String getProfilePhotoPath() {
 		return profilePhotoPath;
-	}	
+	}
+	
 	public String getMobileNumber() {
 		return mobileNumber;
 	}
+	
 	public long getUserId() {
 		return userId;
 	}
@@ -185,7 +198,7 @@ public class User implements Comparable<User>{
 	}
 	
 	
-	public void changeBirthDate(Date birthDate) {
+	public void changeBirthDate(LocalDate birthDate) {
 		this.birthdate = birthDate;
 	}
 	
