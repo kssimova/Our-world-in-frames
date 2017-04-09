@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.regex.Pattern;
 import javax.xml.bind.ValidationException;
 
 public class User implements Comparable<User>{
-	enum Gender {MALE, FEMALE}
+	public enum Gender {MALE, FEMALE}
 	private final String EMAIL_PATTERN = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9]+.[a-z.]+$";
 	private final String MOBILEPHONE_PATTERN = "([08]{2}+[0-9]{8})";
 	
@@ -27,7 +28,7 @@ public class User implements Comparable<User>{
 	private String city;
 	private String descriprion;
 	private String mobileNumber;
-	private Date birthdate;
+	private LocalDate birthdate;
 	private Gender gender;
 	private String profilePhotoPath;
 	private TreeMap <String, Album> albums;
@@ -37,7 +38,7 @@ public class User implements Comparable<User>{
 	private Matcher matcher = null;
 	
 	//again builder pattern
-	public User(String username, String email, String password) throws ValidationException {
+	public User(String username, String email, String password, long userId) throws ValidationException {
 		if(validUsername(username)){
 			this.username = username;
 		}else{
@@ -56,11 +57,6 @@ public class User implements Comparable<User>{
 		this.albums = new TreeMap<>();
 		this.followers = new TreeSet<>();
 		this.following = new TreeSet<>();
-	}
-	
-	//for getting user from DB
-	public User(String username, String email, String password, long userId) throws ValidationException {
-		this(username, email, password);
 		this.userId = userId;
 	}
 	
@@ -69,39 +65,51 @@ public class User implements Comparable<User>{
 	public String getUsername() {
 		return username;
 	}
+	
 	public String getEmail() {
 		return email;
 	}
+	
 	public String getPassword() {
 		return password;
 	}
+	
 	public String getFirstName() {
 		return firstName;
 	}
+	
 	public String getLastName() {
 		return lastName;
 	}
+	
 	public String getCountry() {
 		return country;
 	}
+	
 	public String getCity() {
 		return city;
 	}
+	
 	public String getDescriprion() {
 		return descriprion;
 	}
-	public Date getBirthdate() {
+	
+	public LocalDate getBirthdate() {
 		return birthdate;
 	}
+	
 	public Gender getGender() {
 		return gender;
 	}
+	
 	public String getProfilePhotoPath() {
 		return profilePhotoPath;
-	}	
+	}
+	
 	public String getMobileNumber() {
 		return mobileNumber;
 	}
+	
 	public long getUserId() {
 		return userId;
 	}
@@ -190,7 +198,7 @@ public class User implements Comparable<User>{
 	}
 	
 	
-	public void changeBirthDate(Date birthDate) {
+	public void changeBirthDate(LocalDate birthDate) {
 		this.birthdate = birthDate;
 	}
 	
@@ -209,9 +217,7 @@ public class User implements Comparable<User>{
 	}
 		
 	public void createAlbum(String albumName, String desc,  long albumId) throws ValidationException {
-		Album album = new Album(albumName, desc, LocalDate.now(), this);
-		album.setAlbumId(albumId);
-		this.albums.put(albumName, album);
+		this.albums.put(albumName, new Album(albumName, desc, LocalDateTime.now(), this, albumId));
 	}
 	
 	
@@ -237,18 +243,18 @@ public class User implements Comparable<User>{
 	}
 	
 	public boolean validateString(String str){
-		return (!str.isEmpty() && str != null && str.length() > 3);
+		return (!password.isEmpty() && password != null && password.length() > 3);
 	}
 	
 	private boolean validUser(User user){
-		return user != null;
+		return !user.equals(null);
 	}
 	
 	private boolean validUsername(String username) {
 		return (validateString(username) && username.length() <= 45);
 	}
 	
-	private boolean validEmail(String email){
+	private boolean validEmail(String emal){
 		return (patternFinder(EMAIL_PATTERN, email));
 	}
 	private boolean validPassword(String password){
