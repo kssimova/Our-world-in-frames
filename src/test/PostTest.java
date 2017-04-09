@@ -6,9 +6,13 @@ import java.util.TreeSet;
 
 import javax.xml.bind.ValidationException;
 
+import com.google.gson.JsonObject;
+
+import DAO.CommentDAO;
 import DAO.PostDAO;
 import model.Album;
 import model.CachedObjects;
+import model.Comment;
 import model.Post;
 import model.User;
 
@@ -106,16 +110,39 @@ public class PostTest {
 		System.out.println("---------------------TEST 5 ---------------------");
 		System.out.println("------------------DELETE POST -------------------");
 		
-		System.out.println("Post exists: " + CachedObjects.getInstance().getAllPosts().get(a.getAlbumId()).containsKey(p.getPostId()));
-		
-		try {
-			PostDAO.getInstance().deletePost(p, u, a);
-		} catch (ValidationException e) {
-			System.out.println("ops!!!");
-		}	
-		
-		System.out.println("Post exists: " + CachedObjects.getInstance().getAllPosts().get(a.getAlbumId()).containsKey(p.getPostId()));
+//		System.out.println("Post exists: " + CachedObjects.getInstance().getAllPosts().get(a.getAlbumId()).containsKey(p.getPostId()));
+//		
+//		try {
+//			PostDAO.getInstance().deletePost(p, u, a);
+//		} catch (ValidationException e) {
+//			System.out.println("ops!!!");
+//		}	
+//		
+//		System.out.println("Post exists: " + CachedObjects.getInstance().getAllPosts().get(a.getAlbumId()).containsKey(p.getPostId()));
 		//working
 	
+		System.out.println("---------------------TEST 6 ---------------------");
+		System.out.println("------------------GET POST FROM DB -------------------");
+				
+		CachedObjects.getInstance().addUser(u);
+		
+		Post postchence = null;
+		System.out.println("Get the post... ");
+		try {
+			postchence = PostDAO.getInstance().createPost("EOdEWqM", "sasdafs");
+		} catch (ValidationException e) {
+			System.out.println("ops");
+		}
+		
+		try {
+			Comment c = CommentDAO.getInstance().makeComment(postchence, u, null , "Sooo cute");
+		} catch (ValidationException e) {
+			System.err.println("ops!");
+		}
+		
+		System.out.println("The JSON of it:");
+		JsonObject post = postchence.getAsJSON();
+		System.out.println(post.toString());
+		//Working	
 	}
 }
