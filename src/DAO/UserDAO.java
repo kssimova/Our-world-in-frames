@@ -12,7 +12,8 @@ import model.User;
 public class UserDAO {
 
 	private static final String INSERT_USER = "INSERT INTO ourwif.users (first_name, last_name, username, email, password, birthdate, description, gender, profilephoto_path, city_id, country_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	private static final String CHANGE_FIRSTNAME = "UPDATE ourwif.users ";
+	private static final String CHANGE_FIRSTNAME = "UPDATE ourwif.users SET first_name = ? WHERE user_id = ?";
+	private static final String CHANGE_LASTNAME = "UPDATE ourwif.users SET last_name = ? WHERE user_id = ?";
 	private static UserDAO instance;
 	private Connection connection = DBManager.getInstance().getConnection();
 
@@ -95,11 +96,49 @@ public class UserDAO {
 	//select user from database with all his albums, photos and other connections
 	
 	//change first name
-	public void changeFirstName(String first_name){
-		
+	public void changeFirstName(long user_id, String first_name){
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = connection.prepareStatement(CHANGE_FIRSTNAME);
+			preparedStatement.setString(1, first_name);
+			preparedStatement.setLong(2, user_id);
+			preparedStatement.executeUpdate();
+		} catch (SQLException e1) {
+			System.out.println("Error in 1st catch block in UserDAO method changeFirstName() - " + e1.getMessage());
+		}
+		finally{
+			if(preparedStatement != null){
+				try {
+					preparedStatement.close();
+				} catch (SQLException e2) {
+					System.out.println("Error when closing statement in 1st catch block in UserDAO method changeFirstName() - " + e2.getMessage());
+				}
+			}
+		}
 	}
 	
 	//change last name
+	public void changeLastName(long user_id, String last_name){
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = connection.prepareStatement(CHANGE_lASTNAME);
+			preparedStatement.setString(1, last_name);
+			preparedStatement.setLong(2, user_id);
+			preparedStatement.executeUpdate();
+		} catch (SQLException e1) {
+			System.out.println("Error in 1st catch block in UserDAO method changeFirstName() - " + e1.getMessage());
+		}
+		finally{
+			if(preparedStatement != null){
+				try {
+					preparedStatement.close();
+				} catch (SQLException e2) {
+					System.out.println("Error when closing statement in 1st catch block in UserDAO method changeFirstName() - " + e2.getMessage());
+				}
+			}
+		}
+	}
+	
 	//change email
 	//change mobile number
 	//change password
