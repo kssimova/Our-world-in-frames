@@ -32,13 +32,13 @@ public class CommentsTest {
 		tags.add("cute");
 		tags.add("cat");	
 		try {
-			u = new User("werewolf", "werewolfss@abv.bg", "12345", 1L);
+			u = new User("werewolf", "werewolfss@abv.bg", "12345", 5L);
 		} catch (ValidationException e) {
 			System.out.println("ops" + e.getMessage());
 		}				
 		try {
 			a = new Album("default", "def",  LocalDate.now(), u);
-			a.setAlbumId(1);
+			a.setAlbumId(45);
 			
 			p = new Post(u, "cat", "one cat", LocalDate.now(), "http://i.imgur.com/EOdEWqM.png", tags);
 			
@@ -59,7 +59,7 @@ public class CommentsTest {
 		System.out.println("Comments before: " + p.getComments().size());
 		
 		try {
-			c = CommentDAO.getInstance().createComment(p, u, null , "Sooo cute");
+			c = CommentDAO.getInstance().createComment(p, u, null ,"Sooo cute");
 		} catch (ValidationException e) {
 			System.err.println("ops!");
 		}
@@ -95,8 +95,7 @@ public class CommentsTest {
 			if(comm1.getComment() != null){
 				System.out.println("My Sup comment is: " + comm1.getComment().getContent());
 			}
-		}
-		
+		}		
 		try {
 			CommentDAO.getInstance().createComment(p, u, c, "I'm a subcomment");
 		} catch (ValidationException e) {
@@ -106,7 +105,9 @@ public class CommentsTest {
 		System.out.println("After..");
 		for(Comment comm1 : p.getComments()){
 			System.out.println("Comments after: " + comm1.getContent());
-			System.out.println("My Sup comment is: " + comm1.getComment().getContent());
+			if(comm1.getComment() != null){
+				System.out.println("My Sup comment is: " + comm1.getComment().getContent());
+			}
 		}
 		//working
 		
@@ -131,7 +132,7 @@ public class CommentsTest {
 		CachedObjects.getInstance().addUser(u);	
 		TreeMap<Long, Comment> comments = null;
 		try {
-			comments = CommentDAO.getInstance().getAllComments("EOdEWqM");
+			comments = CommentDAO.getInstance().getAllComments(p);
 		} catch (ValidationException e) {
 			System.out.println("ops");
 		}

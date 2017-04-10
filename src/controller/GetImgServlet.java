@@ -25,7 +25,7 @@ public class GetImgServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		//TODO get real image id
-		String imageId = "miYgPf1";
+		String imageId = "mC5ECGi";
 		
 		
 		URL url = new URL("	https://api.imgur.com/3/image/" + imageId);
@@ -50,8 +50,7 @@ public class GetImgServlet extends HttpServlet {
 		System.out.println(obj2.toString());
 		if(!obj2.get("id").isJsonNull()){
 			String imgID = obj2.get("id").getAsString();
-			request.getSession().setAttribute("id", imgID);
-			
+			request.getSession().setAttribute("id", imgID);			
 		}
 		if(!obj2.get("title").isJsonNull()){
 			String imgTitle = obj2.get("title").getAsString();
@@ -73,7 +72,13 @@ public class GetImgServlet extends HttpServlet {
 			String imgLink = obj2.get("link").getAsString();
 			request.getSession().setAttribute("link", imgLink);
 		}
-	request.getRequestDispatcher("/JSP/index.jsp").forward(request, response);				
+		
+		response.setContentType("application/json");  
+	    response.setCharacterEncoding("UTF-8");
+		// Set content type of the response so that jQuery knows what it can expect.
+	    response.getWriter().write(obj2.toString());       
+	    // Write response body.
+		request.setAttribute("json", obj2);			
 	}
 
 }

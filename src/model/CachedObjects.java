@@ -11,6 +11,7 @@ public class CachedObjects {
 	private static CachedObjects instance;
 	private final TreeMap<Long, User> allUsers = new TreeMap<>();
 	private final TreeMap<Long, TreeMap<String, Post>> allPosts = new TreeMap<>();
+	private final TreeMap<Long, Album> allAlbums = new TreeMap<>();
 	
 	private CachedObjects() {
 
@@ -83,10 +84,38 @@ public class CachedObjects {
 		}
 	}
 	
+	//add post
+	public void addPost(Post post, Long albumId){
+		if(!allPosts.keySet().contains(albumId)){
+			allPosts.put(albumId, new TreeMap<String, Post>());
+		}
+		if(!allPosts.get(albumId).containsKey(post.getPostId())){
+			allPosts.get(albumId).put(post.getPostId(), post);
+		}
+	}
+	
+	//add albums
+	public void addAlbums(Album album){
+		if(!allAlbums.containsKey(album.getAlbumId())){
+			allAlbums.put(album.getAlbumId(), album);
+		}
+	}
+	
 	//just for tests
 	public Map <Long, TreeMap<String, Post>> getAllPosts() {
 		return  Collections.unmodifiableSortedMap(allPosts);
 	}
 	
+	public Map <Long, Album> getAllAlbums(){
+		return  Collections.unmodifiableSortedMap(allAlbums);
+	}
+	
+	public void clearAlbums(){
+		allAlbums.clear();
+	}
+	
+	public void clearPosts(){
+		allPosts.clear();
+	}
 	
 }
