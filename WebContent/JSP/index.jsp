@@ -48,6 +48,18 @@ Response from ajax : <ul id="ajaxGetImg"></ul>
 <br>
 
 
+<br>
+<br>
+<p><b>Your comment: </b></p>
+<p>comment: <input type="text" id="comment-content"></p>
+<input id = "addCommentButton" type="submit" value="submit">
+this is just one demo button for comments : 
+<br>
+<ul id="comments"></ul>
+
+<br>
+<br>
+
 
 <FORM enctype="multipart/form-data" action="../uploadImg" method="post">
 	<b><h1> Choose your image:</h1></b>

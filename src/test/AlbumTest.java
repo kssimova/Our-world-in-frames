@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.TreeSet;
 
+import javax.swing.text.ChangedCharSetException;
 import javax.xml.bind.ValidationException;
 
 import DAO.AlbumDAO;
@@ -25,7 +26,7 @@ public class AlbumTest {
 		Post p = null;
 		
 		try {
-			u = new User("werewolf", "werewolfss@abv.bg", "12345", 1L);
+			u = new User("werewolf", "werewolfss@abv.bg", "12345", 5L);
 		} catch (ValidationException e) {
 			System.out.println("ops" + e.getMessage());
 		}		
@@ -50,7 +51,7 @@ public class AlbumTest {
 			tagsss.addAll(p.getTags());
 			p.setPostId("EOdEWqM");
 			PostDAO.getInstance().createPost(u, p.getName(), p.getDescription(), p.getDateCreated(), p.getPicturePath(), tagsss, a, "EOdEWqM", "sasdafs");
-		} catch (ValidationException | SQLException e1) {
+		} catch (ValidationException e1) {
 			System.out.println("ops");
 		}		
 	
@@ -102,7 +103,7 @@ public class AlbumTest {
 		//working
 		
 		System.out.println("---------------------TEST 5 ---------------------");
-		System.out.println("------------------GET POST FROM DB -------------------");
+		System.out.println("------------------GET ALBUM FROM DB -------------------");
 		
 		Album newAlbum = null;
 		CachedObjects.getInstance().addUser(u);
@@ -114,9 +115,27 @@ public class AlbumTest {
 		} catch (ValidationException e) {
 			System.out.println("ops");
 		}
-		System.out.println("JSON:");
 		System.out.println("Do we have ne album now: " + (newAlbum != null));
+		System.out.println("JSON:");
 		System.out.println(newAlbum.getAsJSON());
+		//working
+		
+		System.out.println("---------------------TEST 6 ---------------------");
+		System.out.println("------------------GET ALL ALBUM FROM DB -------------------");
+		
+		System.out.println("First delete all albums:");
+		CachedObjects.getInstance().clearAlbums();
+		System.out.println("All albums: " + CachedObjects.getInstance().getAllAlbums().toString());
+		
+		try {
+			AlbumDAO.getInstance().getAllAlbums();
+		} catch (ValidationException e) {
+			System.out.println("ops");
+		}
+		
+		System.out.println("Try getting all albums");
+		System.out.println("All albums: " + CachedObjects.getInstance().getAllAlbums().toString());
+	
 		//working
 	}
 }

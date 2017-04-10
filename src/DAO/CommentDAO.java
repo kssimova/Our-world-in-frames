@@ -32,9 +32,8 @@ public class CommentDAO {
 		return instance;
 	}	
 	
-	//get all comments
-	
-	public TreeMap<Long, Comment> getAllComments(String postId) throws ValidationException{
+	//get all comments	
+	public TreeMap<Long, Comment> getAllComments(Post post) throws ValidationException{
 		ResultSet result = null;
 		String sql = "SELECT c.comment_id, c.post_id, c.user_id, c.parent_comment_id, c.content, c.date_created "
  				+ " FROM comments c WHERE c.post_id = ? ";
@@ -43,19 +42,17 @@ public class CommentDAO {
   		TreeMap<Long, Comment> allComments = new TreeMap<>();
   		Comment comment = null;
   		User user = null;
-  		Post post = null;
  		try {
  		 	st = DBManager.getInstance().getConnection().prepareStatement(sql);
- 		 	st.setString(1, postId);
+ 		 	st.setString(1, post.getPostId());
  		 	//get result
  			st.execute();
  			result = st.getResultSet();
  			while(result.next()){
  				try {
  					user = CachedObjects.getInstance().getOneUser(result.getLong("user_id"));
- 					post = CachedObjects.getInstance().getOnePost(postId);
  					Long num = result.getLong("parent_comment_id");
- 					if(result.wasNull()){
+ 					if(result.wasNull()){		
  						comment = new Comment(post, user, result.getString("content"), result.getDate("date_created").toLocalDate(), null, result.getLong("comment_id"));
  						allComments.put(result.getLong("comment_id"), comment);
  					}else{
@@ -93,11 +90,7 @@ public class CommentDAO {
  		res.next();
  		long commentId = res.getLong(1);
  		comment = new Comment(post, user, str, LocalDate.now(), parent, commentId);
- 		if(parent == null){
- 			post.addComment(comment);
- 		}else{
- 			parent.addComment(comment);
- 		}
+ 		post.addComment(comment);
  		return comment;
  	}
 	

@@ -29,13 +29,14 @@ public class PostTest {
 		tags.add("cat");
 		
 		try {
-			u = new User("werewolf", "werewolfss@abv.bg", "12345", 1L);
+			u = new User("werewolf", "werewolfss@abv.bg", "12345", 5L);
 		} catch (ValidationException e) {
 			System.out.println("ops" + e.getMessage());
 		}				
 		try {
 			a = new Album("default", "def",  LocalDate.now(), u);
-			a.setAlbumId(1);
+			//this have to be existing album id 
+			a.setAlbumId(45);
 			
 			p = new Post(u, "cat", "one cat", LocalDate.now(), "http://i.imgur.com/EOdEWqM.png", tags);
 			
@@ -143,5 +144,20 @@ public class PostTest {
 		JsonObject post = postchence.getAsJSON();
 		System.out.println(post.toString());
 		//Working	
+		
+		
+		System.out.println("---------------------TEST 7 ---------------------");
+		System.out.println("------------------GET ALL POST FROM DB-------------------");
+		
+		
+		CachedObjects.getInstance().clearPosts();
+		System.out.println(CachedObjects.getInstance().getAllPosts().toString());
+		
+		try {
+			PostDAO.getInstance().getAllPosts();
+		} catch (ValidationException e) {
+			System.out.println("ops");
+		}	
+		System.out.println(CachedObjects.getInstance().getAllPosts().toString());
 	}
 }
