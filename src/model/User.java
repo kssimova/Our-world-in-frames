@@ -128,6 +128,8 @@ public class User implements Comparable<User>{
 		this.userId = userId;
 	}
 	
+	// change properties
+	
 	public void changeEmail(String email) throws ValidationException {
 		if(validEmail(email)){
 			this.email = email;		
