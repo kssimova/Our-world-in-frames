@@ -5,24 +5,30 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
 
 import javax.xml.bind.ValidationException;
-
-import com.sun.corba.se.impl.orb.PrefixParserAction;
 
 import model.CachedObjects;
 import model.User;
 
 public class UserDAO {
 
-	private static final String INSERT_USER = "INSERT INTO ourwif.users (first_name, last_name, username, email, password, birthdate, description, gender, profilephoto_path, city_id, country_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	private static final String CHANGE_FIRSTNAME = "UPDATE ourwif.users SET first_name = ? WHERE user_id = ?";
-	private static final String CHANGE_LASTNAME = "UPDATE ourwif.users SET last_name = ? WHERE user_id = ?";
+	// works
+	private static final String SELECT_ALL_USERS = "SELECT user_id, first_name, last_name, username, email, password, mobile_number, birthdate, description, gender, profilephoto_path, CITY.name AS city_name, COUNTRY.name AS country_name FROM ourwif.users JOIN ourwif.cities CITY ON (users.city_id = CITY.city_id) JOIN ourwif.countries COUNTRY ON (CITY.country_id = COUNTRY.country_id)";
+	// works
+	private static final String INSERT_USER = "INSERT INTO ourwif.users (first_name, last_name, username, email, password, mobile_number, birthdate, description, gender, profilephoto_path, city_id, country_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	// works
+	private static final String CHANGE_FIRST_NAME = "UPDATE ourwif.users SET first_name = ? WHERE user_id = ?";
+	private static final String CHANGE_LAST_NAME = "UPDATE ourwif.users SET last_name = ? WHERE user_id = ?";
 	private static final String CHANGE_EMAIL = "UPDATE ourwif.users SET email = ? WHERE user_id = ?";
 	private static final String CHANGE_MOBILENUMBER = "UPDATE ourwif.users SET mobile_number = ? WHERE user_id = ?";
 	private static final String CHANGE_PASSWORD = "UPDATE ourwif.users SET password = ? WHERE user_id = ?";
-	private static final String CHANGE_CITYANDCOUNTRY = "UPDATE ourwif.users SET city_id = ?, country_id = ? WHERE user_id = ?";
+	private static final String CHANGE_CITY_AND_COUNTRY = "UPDATE ourwif.users SET city_id = ?, country_id = ? WHERE user_id = ?";
 	private static final String CHANGE_DESCRIPTION = "UPDATE ourwif.users SET description = ? WHERE user_id = ?";
 	private static final String CHANGE_BIRTHDATE = "UPDATE ourwif.users SET birthdate = ? WHERE user_id = ?";
 	private static final String CHANGE_PROFILEPHOTO = "UPDATE ourwif.users SET profilephoto_path = ? WHERE user_id = ?";
@@ -44,16 +50,16 @@ public class UserDAO {
 	public synchronized void addUser(User user){
 		
 		// get city_id and country_id 
-		String sql = "SELECT (city_id, country_id) FROM ourwif.cities WHERE name = " + user.getCity();
+		String sql = "SELECT city_id, country_id FROM ourwif.cities WHERE name = '" + user.getCity() + "'";
 		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
 		long city_id = 0, country_id = 0;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			ResultSet result = preparedStatement.executeQuery();
-			while(result.next()){
+			result = preparedStatement.executeQuery();
+			if(result.next()){
 				city_id = result.getLong("city_id");
 				country_id = result.getLong("country_id");
-				break;
 			}
 		} catch (SQLException e1) {
 			System.out.println("Error in 1st catch block in UserDAO method addUser() - " + e1.getMessage());
@@ -66,28 +72,32 @@ public class UserDAO {
 					System.out.println("Error when closing statement in 1st catch block in UserDAO method addUser() - " + e2.getMessage());
 				}
 			}
+			if(result != null){
+				try {
+					result.close();
+				} catch (SQLException e3) {
+					System.out.println("Error when closing resultSet in 1st catch block in UserDAO method addUser() - " + e3.getMessage());
+				}
+			}
 		}
 		
 		// add new user to database
 		PreparedStatement prepStatement = null;
 		try {
-			prepStatement = connection.prepareStatement(INSERT_USER, java.sql.Statement.RETURN_GENERATED_KEYS);
+			prepStatement = connection.prepareStatement(INSERT_USER);
 			prepStatement.setString(1, user.getFirstName());
 			prepStatement.setString(2, user.getLastName());
 			prepStatement.setString(3, user.getUsername());
 			prepStatement.setString(4, user.getEmail());
 			prepStatement.setString(5, user.getPassword());
-			prepStatement.setDate(6, Date.valueOf(user.getBirthdate()));
-			prepStatement.setString(7, user.getDescriprion());
-			prepStatement.setString(8, user.getGender().toString());
-			prepStatement.setString(9, user.getProfilePhotoPath());
-			prepStatement.setLong(10, city_id);
-			prepStatement.setLong(11, country_id);
-			prepStatement.executeUpdate(INSERT_USER);
-			ResultSet result = prepStatement.getGeneratedKeys();
-			if(result.next()){
-				System.out.println("in UserDAO - addUser(), new user's id is " + result.getLong("user_id"));
-			}
+			prepStatement.setString(6, user.getMobileNumber());
+			prepStatement.setDate(7, Date.valueOf(user.getBirthdate()));
+			prepStatement.setString(8, user.getDescription());
+			prepStatement.setString(9, (user.getGender().toString()));
+			prepStatement.setString(10, user.getProfilePhotoPath());
+			prepStatement.setLong(11, city_id);
+			prepStatement.setLong(12, country_id);
+			prepStatement.executeUpdate();
 		} catch (SQLException e3) {
 			System.out.println("Error in 2nd catch block in UserDAO method addUser() - " + e3.getMessage());
 		}
@@ -105,14 +115,63 @@ public class UserDAO {
 		
 	}
 	
+	
+	public List<User> getAllUsers() throws ValidationException{
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+		ArrayList<User> allUsers = new ArrayList<>();
+		try {
+			preparedStatement = connection.prepareStatement(SELECT_ALL_USERS);
+			result = preparedStatement.executeQuery();
+			while(result.next()){
+				User user = new User(result.getString("username"), result.getString("email"), result.getString("password"), result.getLong("user_id"));
+				user.changeFirstName(result.getString("first_name"));
+				user.changeLastName(result.getString("last_name"));
+				user.changeMobileNumber(result.getString("mobile_number"));
+				//user.changeBirthDate(result.getDate("birthdate").toLocalDate());
+				user.changeDescription(result.getString("description"));
+				// enum parser
+				user.changeGender(Enum.valueOf(User.Gender.class, result.getString("gender").toUpperCase()));
+				if(result.getString("profilephoto_path") != null){
+					user.changeProfilePhoto(result.getString("profilephoto_path"));
+				}
+				user.changeCity(result.getString("city_name"));
+				user.changeCountry(result.getString("country_name"));
+				allUsers.add(user);
+			}
+		} catch (SQLException e1) {
+			System.out.println("Error in 1st catch block in UserDAO method getAllUsers() - " + e1.getMessage());
+		}
+		finally{
+			if(preparedStatement != null){
+				try {
+					preparedStatement.close();
+				} catch (SQLException e2) {
+					System.out.println("Error when closing statement in 1st catch block in UserDAO method getAllUsers() - " + e2.getMessage());
+				}
+			}
+			if(result != null){
+				try {
+					result.close();
+				} catch (SQLException e3) {
+					System.out.println("Error when closing resultSet in 1st catch block in UserDAO method getAllUsers() - " + e3.getMessage());
+				}
+			}
+		}
+		return Collections.unmodifiableList(allUsers);
+	}
+	
 	//select user from database with all his albums, photos and other connections
+//	public User getUser(){
+//		
+//	}
 	
 	//change first name
 	public void changeFirstName(User user, String first_name) throws ValidationException{
 		user.changeFirstName(first_name);
 		PreparedStatement preparedStatement = null;
 		try {
-			preparedStatement = connection.prepareStatement(CHANGE_FIRSTNAME);
+			preparedStatement = connection.prepareStatement(CHANGE_FIRST_NAME);
 			preparedStatement.setString(1, first_name);
 			preparedStatement.setLong(2, user.getUserId());
 			preparedStatement.executeUpdate();
@@ -135,7 +194,7 @@ public class UserDAO {
 		user.changeLastName(last_name);
 		PreparedStatement preparedStatement = null;
 		try {
-			preparedStatement = connection.prepareStatement(CHANGE_LASTNAME);
+			preparedStatement = connection.prepareStatement(CHANGE_LAST_NAME);
 			preparedStatement.setString(1, last_name);
 			preparedStatement.setLong(2, user.getUserId());
 			preparedStatement.executeUpdate();
@@ -228,11 +287,12 @@ public class UserDAO {
 		user.changeCountry(country_name);
 		String sql1 = "SELECT country_id FROM ourwif.countries WHERE name = ?";
 		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
 		long country_id = 0;
 		try {
 			preparedStatement = connection.prepareStatement(sql1);
 			preparedStatement.setString(1, country_name);
-			ResultSet resultSet = preparedStatement.executeQuery();
+			resultSet = preparedStatement.executeQuery();
 			if(resultSet.next()){
 				country_id = resultSet.getLong("country_id");
 			}
@@ -247,45 +307,60 @@ public class UserDAO {
 					System.out.println("Error when closing statement in 1st catch block in UserDAO method changeCityCountry() - " + e2.getMessage());
 				}
 			}
+			if(resultSet != null){
+				try {
+					resultSet.close();
+				} catch (SQLException e3) {
+					System.out.println("Error when closing resultSet in 1st catch block in UserDAO method changeCityCountry() - " + e3.getMessage());
+				}
+			}
 		}
 		String sql2 = "SELECT city_id FROM ourwif.cities WHERE country_id = " + country_id + " AND name = ?";
 		PreparedStatement prepStatement = null;
+		ResultSet result = null;
 		long city_id = 0;
 		try {
 			prepStatement = connection.prepareStatement(sql2);
 			prepStatement.setString(1, city_name);
-			ResultSet resultSet = prepStatement.executeQuery();
-			if(resultSet.next()){
-				city_id = resultSet.getLong("city_id");
+			result = prepStatement.executeQuery();
+			if(result.next()){
+				city_id = result.getLong("city_id");
 			}
-		} catch (SQLException e3) {
-			System.out.println("Error in 2nd catch block in UserDAO method changeCityCountry() - " + e3.getMessage());
+		} catch (SQLException e4) {
+			System.out.println("Error in 2nd catch block in UserDAO method changeCityCountry() - " + e4.getMessage());
 		}
 		finally{
 			if(prepStatement != null){
 				try {
 					prepStatement.close();
-				} catch (SQLException e4) {
-					System.out.println("Error when closing statement in 2nd catch block in UserDAO method changeCityCountry() - " + e4.getMessage());
+				} catch (SQLException e5) {
+					System.out.println("Error when closing statement in 2nd catch block in UserDAO method changeCityCountry() - " + e5.getMessage());
+				}
+			}
+			if(result != null){
+				try {
+					result.close();
+				} catch (SQLException e6) {
+					System.out.println("Error when closing resultSet in 2nd catch block in UserDAO method changeCityCountry() - " + e6.getMessage());
 				}
 			}
 		}
 		PreparedStatement statement = null;
 		try {
-			statement = connection.prepareStatement(CHANGE_CITYANDCOUNTRY);
+			statement = connection.prepareStatement(CHANGE_CITY_AND_COUNTRY);
 			statement.setLong(1, city_id);
 			statement.setLong(2, country_id);
 			statement.setLong(3, user.getUserId());
 			statement.executeUpdate();
-		} catch (SQLException e5) {
-			System.out.println("Error in 3rd catch block in UserDAO method changeCityCountry() - " + e5.getMessage());
+		} catch (SQLException e7) {
+			System.out.println("Error in 3rd catch block in UserDAO method changeCityCountry() - " + e7.getMessage());
 		}
 		finally{
 			if(statement != null){
 				try {
 					statement.close();
-				} catch (SQLException e6) {
-					System.out.println("Error when closing statement in 3rd catch block in UserDAO method changeCityCountry() - " + e6.getMessage());
+				} catch (SQLException e8) {
+					System.out.println("Error when closing statement in 3rd catch block in UserDAO method changeCityCountry() - " + e8.getMessage());
 				}
 			}
 		}

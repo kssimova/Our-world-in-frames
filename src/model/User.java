@@ -88,7 +88,7 @@ public class User implements Comparable<User>{
 		return city;
 	}
 	
-	public String getDescriprion() {
+	public String getDescription() {
 		return descriprion;
 	}
 	
@@ -253,7 +253,7 @@ public class User implements Comparable<User>{
 	}
 	
 	public boolean validateString(String str){
-		return (!str.isEmpty() && str != null && str.length() > 3);
+		return (!str.isEmpty() && str != null && str.length() >= 2);
 	}
 	
 	private boolean validUser(User user){
