@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import javax.xml.bind.ValidationException;
 
@@ -20,7 +21,6 @@ import model.User;
 public class CommentDAO {
 	
 	private static CommentDAO instance;
-	private static int commentCoutn = 1;
 
 	private CommentDAO() {
 
@@ -34,92 +34,54 @@ public class CommentDAO {
 	
 	//get all comments
 	
-	public TreeMap<Integer, Comment> getAllComments(String postId) throws ValidationException{
- 		String sql = "SELECT c.comment_id, c.post_id, c.user_id, c.parent_comment_id, c.content, c.date_created "
- 				+ "FROM comments c WHERE c.post_id " + postId ;
+	public TreeMap<Long, Comment> getAllComments(String postId) throws ValidationException{
+		ResultSet result = null;
+		String sql = "SELECT c.comment_id, c.post_id, c.user_id, c.parent_comment_id, c.content, c.date_created "
+ 				+ " FROM comments c WHERE c.post_id = ? ";
  		//initialization
-  		Statement st = null;
-  		TreeMap<Integer, Comment> allComments = new TreeMap<>();
+  		PreparedStatement st = null;
+  		TreeMap<Long, Comment> allComments = new TreeMap<>();
   		Comment comment = null;
   		User user = null;
   		Post post = null;
  		try {
- 			st = DBManager.getInstance().getConnection().createStatement();
- 		} catch (SQLException e2) {
- 			System.out.println("Error#1 in PhotoDAO. Error message: " + e2.getMessage());
- 		}
- 		ResultSet result = null;
- 		//get result
- 		try {
- 			result = st.executeQuery(sql);
- 		} catch (SQLException e) {
- 			System.out.println("Error#2 in PhotoDAO. Eroor message: " + e.getMessage());
- 		}
- 		try {
+ 		 	st = DBManager.getInstance().getConnection().prepareStatement(sql);
+ 		 	st.setString(1, postId);
+ 		 	//get result
+ 			st.execute();
+ 			result = st.getResultSet();
  			while(result.next()){
  				try {
  					user = CachedObjects.getInstance().getOneUser(result.getLong("user_id"));
- 					post = CachedObjects.getInstance().getOnePost(result.getString("post_id"));
- 					if(result.getObject("parent_comment_id").equals(null)){
+ 					post = CachedObjects.getInstance().getOnePost(postId);
+ 					Long num = result.getLong("parent_comment_id");
+ 					if(result.wasNull()){
  						comment = new Comment(post, user, result.getString("content"), result.getDate("date_created").toLocalDate(), null, result.getLong("comment_id"));
- 	 					allComments.put(commentCoutn++, comment);
+ 						allComments.put(result.getLong("comment_id"), comment);
+ 					}else{
+ 						Comment perant = getComment(allComments, num);
+ 						comment = new Comment(post, user, result.getString("content"), result.getDate("date_created").toLocalDate(), perant, result.getLong("comment_id"));
+ 						allComments.put(result.getLong("comment_id"), comment);
  					}
  				} catch (SQLException e) {
- 					System.out.println("Error#3 in PhotoDAO. Eroor message: " + e.getMessage());
+ 					System.out.println("Error#1 in CommentDAO. Error message: " + e.getMessage());
  				}
  			}
  		} catch (SQLException e1) {
- 			System.out.println("Error#4 in PhotoDAO. Eroor message: " + e1.getMessage());
- 		}		
+ 			System.out.println("Error#2 in CommentDAO. Error message: " + e1.getMessage());
+ 		}
  		return allComments;
 	}
 	
-	//get one sub comment from sup comment
-	
-	private Comment getSubComment(Comment supCommentId) throws ValidationException{
-	 	String sql = "SELECT c.comment_id, c.post_id, c.user_id, c.parent_comment_id, c.content, c.date_created "
-		 			+ "FROM comments c WHERE c.comment_id = " + supCommentId.getCommentId();
-	 	//initialization
-	  	Statement st = null;
-	  	Comment comment = null;
-	  	User user = null;
-	  	Post post = null;
-	 	try {
-	 		st = DBManager.getInstance().getConnection().createStatement();
-	 	} catch (SQLException e2) {
-	 		System.out.println("Error#1 in PhotoDAO. Error message: " + e2.getMessage());
-	 	}
-	 	ResultSet result = null;
-	 	//get result
-	 	try {
-	 		result = st.executeQuery(sql);
-	 	} catch (SQLException e) {
-	 		System.out.println("Error#2 in PhotoDAO. Eroor message: " + e.getMessage());
-	 	}
-	 	try {
-	 		while(result.next()){
-	 			try {
-	 				user = CachedObjects.getInstance().getOneUser(result.getLong("user_id"));
-	 				post = CachedObjects.getInstance().getOnePost(result.getString("post_id"));
-	 				comment = new Comment(post, user, result.getString("content"), result.getDate("date_created").toLocalDate(), supCommentId , result.getLong("comment_id"));
-	 			} catch (SQLException e) {
-	 				System.out.println("Error#3 in PhotoDAO. Eroor message: " + e.getMessage());
-	 			}
-	 		}
-	 	} catch (SQLException e1) {
-	 		System.out.println("Error#4 in PhotoDAO. Eroor message: " + e1.getMessage());
-	 	}		
-	 	return comment;
-	}
-	
-	//create comment
-	public void makeComment(Post post, User user, Comment parent, String str) throws ValidationException, SQLException{
+	//create new comment
+	public Comment createComment(Post post, User user, Comment parent, String str) throws ValidationException, SQLException{
+ 		Comment comment = null;
 		String sql = "INSERT INTO comments (post_id, user_id, parent_comment_id, content, date_created) " +
  					"VALUES (?, ?, ?, ?, ?)";
- 		PreparedStatement st = DBManager.getInstance().getConnection().prepareStatement(sql);
+ 		PreparedStatement st = DBManager.getInstance().getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
  		st.setString(1, post.getPostId());
  		st.setLong(2, user.getUserId());
- 		if(!parent.equals(null)){
+ 		if(parent !=null){
  			st.setLong(3, parent.getCommentId());
  		}else{
  			st.setNull(3, java.sql.Types.INTEGER);
@@ -130,18 +92,19 @@ public class CommentDAO {
  		ResultSet res = st.getGeneratedKeys();
  		res.next();
  		long commentId = res.getLong(1);
- 		Comment comment = new Comment(post, user, str, LocalDate.now(), parent, commentId);
- 		if(!parent.equals(null)){
+ 		comment = new Comment(post, user, str, LocalDate.now(), parent, commentId);
+ 		if(parent == null){
  			post.addComment(comment);
  		}else{
- 			post.addSubComment(comment);
+ 			parent.addComment(comment);
  		}
+ 		return comment;
  	}
 	
 	//edit comment
 	public void editComment(Post post, Comment comment, String str) throws ValidationException, SQLException{
 		String sql = "UPDATE comments SET content = ? WHERE  comment_id = ?";
-	 	PreparedStatement st = DBManager.getInstance().getConnection().prepareStatement(sql);
+	 	PreparedStatement st = DBManager.getInstance().getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 	 	st.setString(1, str);
 	 	st.setLong(2, comment.getCommentId());
 	 	st.execute();
@@ -152,18 +115,18 @@ public class CommentDAO {
 	
 	// delete comment
 	public void deleteComment(Post post, User user, Comment comment) throws ValidationException, SQLException{
-		String sql = "DELETE FROM comments WHERE comment_id ";
-		if(!comment.getComment().equals(null)){
+		String sql = "DELETE FROM comments WHERE comment_id = ?";
+		PreparedStatement st = null;
+		if(comment.getComment() != null){
  			try {
 				DBManager.getInstance().getConnection().setAutoCommit(false);
-				String sql1 = sql + comment.getComment().getCommentId();
-				Statement st = DBManager.getInstance().getConnection().createStatement();
-				st.executeQuery(sql1);
-				post.getComments().remove(comment.getComment());
-				sql += comment.getCommentId();
-				st = DBManager.getInstance().getConnection().createStatement();
-				st.executeQuery(sql);
-				post.getComments().remove(comment);
+				st = DBManager.getInstance().getConnection().prepareStatement(sql);
+			 	st.setLong(1, comment.getComment().getCommentId());
+			 	st.execute();	
+				st = DBManager.getInstance().getConnection().prepareStatement(sql);
+			 	st.setLong(1, comment.getCommentId());
+			 	st.execute();
+				post.removeComment(comment);
  			} catch (SQLException e) {
  				try {
 					DBManager.getInstance().getConnection().rollback();
@@ -177,12 +140,23 @@ public class CommentDAO {
 				} catch (SQLException e) {
 					System.out.println("Error#3 in delete commetnt. Error message: " + e.getMessage());
 				}
-			}		
-			return;
-		}
-		sql += comment.getCommentId();
-		Statement st = DBManager.getInstance().getConnection().createStatement();
-		st.executeQuery(sql);
-		post.getComments().remove(comment);
+			}	
+ 			return;
+		}	
+		st = DBManager.getInstance().getConnection().prepareStatement(sql);
+	 	st.setLong(1, comment.getCommentId());
+	 	st.execute();
+		post.removeComment(comment);
  	}
+	
+	private Comment getComment(TreeMap<Long, Comment> map , Long comNum){
+		Comment c = null;
+		for(Entry<Long, Comment> e : map.entrySet()){
+			if(e.getKey().equals(comNum)){
+				c = e.getValue();
+			}
+		}
+		return c;
+	}
+	
 }

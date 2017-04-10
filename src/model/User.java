@@ -1,9 +1,7 @@
 package model;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -31,7 +29,7 @@ public class User implements Comparable<User>{
 	private LocalDate birthdate;
 	private Gender gender;
 	private String profilePhotoPath;
-	private TreeMap <String, Album> albums;
+	private TreeMap <Long, Album> albums;
 	private TreeSet <User> followers;
 	private TreeSet <User> following;
 	private Pattern pattern = null;
@@ -114,7 +112,7 @@ public class User implements Comparable<User>{
 		return userId;
 	}
 
-	public Map<String, Album> getAlbums()  {
+	public Map<Long, Album> getAlbums()  {
 		return Collections.unmodifiableSortedMap(albums);
 	}
 	public Set<User> getFollowers() {
@@ -216,9 +214,19 @@ public class User implements Comparable<User>{
 		}
 	}
 		
-	public void createAlbum(String albumName, String desc,  long albumId) throws ValidationException {
-		this.albums.put(albumName, new Album(albumName, desc, LocalDateTime.now(), this, albumId));
+	public Album createAlbum(String albumName, String desc,  long albumId) throws ValidationException {
+		Album album = new Album(albumName, desc, LocalDate.now(), this);
+		album.setAlbumId(albumId);
+		this.albums.put(albumId, album);
+		return album;
 	}
+	
+	public void deleteAlbum(Album album) throws ValidationException {
+		if(albums.containsKey(album.getAlbumId())){
+			this.albums.remove(album.getAlbumId());
+		}
+	}
+	
 	
 	
 	public void addFollower(User user){
@@ -243,18 +251,18 @@ public class User implements Comparable<User>{
 	}
 	
 	public boolean validateString(String str){
-		return (!password.isEmpty() && password != null && password.length() > 3);
+		return (!str.isEmpty() && str != null && str.length() > 3);
 	}
 	
 	private boolean validUser(User user){
-		return !user.equals(null);
+		return user != null;
 	}
 	
 	private boolean validUsername(String username) {
 		return (validateString(username) && username.length() <= 45);
 	}
 	
-	private boolean validEmail(String emal){
+	private boolean validEmail(String email){
 		return (patternFinder(EMAIL_PATTERN, email));
 	}
 	private boolean validPassword(String password){

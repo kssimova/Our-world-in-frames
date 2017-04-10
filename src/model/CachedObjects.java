@@ -73,7 +73,7 @@ public class CachedObjects {
 		allUsers.put(user.getUserId(), user);
 	}
 		
-	//delete post
+	//add post
 	public void addPost(Post post, Album album){
 		if(!allPosts.keySet().contains(album.getAlbumId())){
 			allPosts.put(album.getAlbumId(), new TreeMap<String, Post>());

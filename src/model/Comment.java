@@ -1,11 +1,9 @@
 package model;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import javax.xml.bind.ValidationException;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 public class Comment implements Comparable<Comment>{
@@ -123,20 +121,17 @@ public class Comment implements Comparable<Comment>{
 		JsonObject root = new JsonObject();
 		//create JSONObject
 		root.addProperty("commentId", this.commentId);
-		root.addProperty("content", content);
+		root.addProperty("content", this.content);
 		root.addProperty("dateCreated", this.dateCreated.toString());
 		root.addProperty("pictureId", this.picture.getPostId());
-		if(!comment.equals(null)){
-			JsonArray supCommentArray = new JsonArray();
-			comment.getAsJSON();
-			root.add("supComment", supCommentArray);
+		if(this.comment != null){
+			JsonObject subComment = this.comment.getAsJSON();
+			root.add("supComment", subComment);
 		}
-		JsonArray userArray = new JsonArray();
 		JsonObject user = new JsonObject();
 		user.addProperty("username", this.user.getUsername());
 		user.addProperty("userId", this.user.getUserId());
-		userArray.add(user);
-		root.add("user", userArray);		
+		root.add("user", user);		
 		return root;
 	}
 	

@@ -3,7 +3,6 @@ package DAO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,10 +30,10 @@ public class PostDAO {
 		return instance;
 	}
 	
-	//getPost
-	public Post createPost(String postId, String deleteHash) throws ValidationException {
+	//get Post from DB
+	public Post getPost(String postId, String deleteHash) throws ValidationException {
 		TreeSet<String> tags = new TreeSet<>();
-  		Statement st = null;
+  		PreparedStatement st = null;
   		Post post = null;
   		String sql = "";
  		ResultSet result = null;
@@ -43,61 +42,59 @@ public class PostDAO {
  			//get tags
  			sql = "SELECT t.name FROM tags t "
  				+ "JOIN tags_posts tp ON t.tag_id = tp.tag_id "
- 				+ "WHERE tp.post_id = " + postId;
- 			st = DBManager.getInstance().getConnection().createStatement();
- 			result = st.executeQuery(sql);
+ 				+ "WHERE tp.post_id = ? ";
+ 		 	st = DBManager.getInstance().getConnection().prepareStatement(sql);
+ 		 	st.setString(1, postId);
+ 		 	st.execute();
+ 		 	result = st.getResultSet();
  			while(result.next()){
  				tags.add(result.getString("name"));
  			}
 			//create post
 	 		sql = "SELECT name, user_id, description, album_id, date_created, picture_path "
-	 			+ "FROM posts WHERE post_id = " + postId;
+	 			+ "FROM posts WHERE post_id = ? ";
 	 		//initialization
 	 		try {
-	 			st = DBManager.getInstance().getConnection().createStatement();
+	 		 	st = DBManager.getInstance().getConnection().prepareStatement(sql);
+	 		 	st.setString(1, postId);
+	 		 	st.execute();
 	 		} catch (SQLException e2) {
 	 			System.out.println("Error#1 in create post. Error message: " + e2.getMessage());
 	 		}
 	 		//get result
 	 		try {
-	 			result = st.executeQuery(sql);
-	 		} catch (SQLException e) {
-	 			System.out.println("Error#1 in PostDAO. Eroor message: " + e.getMessage());
-	 		}
-	 		try {
+	 			result = st.getResultSet();
 	 			while(result.next()){
 	 				try {
 		 				User user = CachedObjects.getInstance().getOneUser(result.getLong("user_id"));
-	 					post = new Post(user, result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), result.getString("picture_path"), tags, postId, deleteHash);
-	 				
-	 					//TODO add all comments in post
-	 				
+		 				post = new Post(user, result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), result.getString("picture_path"), tags, postId, deleteHash);
+		 				CommentDAO.getInstance().getAllComments(postId);
 	 				} catch (SQLException e) {
-	 					System.out.println("Error#2 in PostDAO. Eroor message: " + e.getMessage());
+	 					System.out.println("Error#3 in PostDAO. Error message: " + e.getMessage());
 	 				}
 	 			}
 	 		} catch (SQLException e1) {
-	 			System.out.println("Error#3 in PostDAO. Eroor message: " + e1.getMessage());
+	 			System.out.println("Error#4 in PostDAO. Error message: " + e1.getMessage());
 	 		}		
  		}catch (SQLException e1) {
  			try {
 				DBManager.getInstance().getConnection().rollback();
-	 			System.out.println("Error#4 in PostDAO. Eroor message: " + e1.getMessage());
+	 			System.out.println("Error#5 in PostDAO. Error message: " + e1.getMessage());
 			} catch (SQLException e) {
-	 			System.out.println("Error#5 in PostDAO. Eroor message: " + e.getMessage());
+	 			System.out.println("Error#6 in PostDAO. Error message: " + e.getMessage());
 			}
  	 	}finally{
  			try {
  				DBManager.getInstance().getConnection().setAutoCommit(true);
  			} catch (SQLException e) {
- 				System.out.println("Error#6 in PostDAO. Eroor message: " + e.getMessage());
+ 				System.out.println("Error#7 in PostDAO. Error message: " + e.getMessage());
  			}
  		}
  	return post;
 	}
 	
-	// makePost
-	public void makePost(User user, String name, String description, LocalDate dateCreated, String picturePath, TreeSet<String> tags, Album album, String postId, String deleteHash) throws SQLException, ValidationException{
+	// create new Post
+	public void createPost(User user, String name, String description, LocalDate dateCreated, String picturePath, TreeSet<String> tags, Album album, String postId, String deleteHash) throws SQLException, ValidationException{
 		Post post = null;
 		try {
  			DBManager.getInstance().getConnection().setAutoCommit(false);
@@ -166,7 +163,7 @@ public class PostDAO {
 		return post;
  	}
 	
-	//method that edits and puts tags, can be used when we creating new post 
+	//method that edits and puts tags, can be used when we are creating new posts 
  	public Post editTags(Post post, User user, TreeSet<String> tags) throws ValidationException{
  		PreparedStatement st = null;
 		ResultSet result = null;
