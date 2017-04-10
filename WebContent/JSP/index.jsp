@@ -7,6 +7,8 @@
 <title>Insert title here</title>
 
 </head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script src="../js/Ajax.js"></script>
 <body>
 <script>
   window.fbAsyncInit = function() {
@@ -35,15 +37,16 @@
 </div>
 
 
-
-
-
-
-<form action="../getImg" method="get">
-<input type="submit" value="getImg">
-</form>
 <br>
 <br>
+
+
+<input id = "getImgButton" type="submit" value="getImg">
+Response from ajax : <ul id="ajaxGetImg"></ul>
+
+<br>
+<br>
+
 
 
 <FORM enctype="multipart/form-data" action="../uploadImg" method="post">

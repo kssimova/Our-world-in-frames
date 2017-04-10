@@ -103,6 +103,7 @@ public class CommentDAO {
 	
 	//edit comment
 	public void editComment(Post post, Comment comment, String str) throws ValidationException, SQLException{
+		comment.changeContent(str);
 		String sql = "UPDATE comments SET content = ? WHERE  comment_id = ?";
 	 	PreparedStatement st = DBManager.getInstance().getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 	 	st.setString(1, str);
@@ -110,7 +111,6 @@ public class CommentDAO {
 	 	st.execute();
 	 	ResultSet res = st.getGeneratedKeys();
 	 	res.next();
-	 	comment.changeContent(str);
  	}	
 	
 	// delete comment
