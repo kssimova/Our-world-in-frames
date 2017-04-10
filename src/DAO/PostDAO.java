@@ -113,6 +113,12 @@ public class PostDAO {
 	 		post = new Post(user, name, description, dateCreated, picturePath, tags, postId, deleteHash);
 	 		editTags(post, user, tags);
 	 		post.addTags(tags);
+	 		sql ="INSERT INTO albums_posts (album_id, post_id) VALUES (?, ?);";
+	 		st = DBManager.getInstance().getConnection().prepareStatement(sql);	
+	 		st.setLong(1, album.getAlbumId());
+	 		st.setString(2, postId);
+	 		st.execute();
+	 		
  		}catch (SQLException e1) {
  			try {
 				DBManager.getInstance().getConnection().rollback();

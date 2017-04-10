@@ -148,7 +148,7 @@ public class Album implements Comparable<Album>{
 				postArray.add(postObj);
 			}
 		}
-		root.add("tags", postArray);
+		root.add("posts", postArray);
 		//user
 		JsonObject user = new JsonObject();
 		user.addProperty("username", this.user.getUsername());

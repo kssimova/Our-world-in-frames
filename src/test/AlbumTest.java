@@ -9,6 +9,7 @@ import javax.xml.bind.ValidationException;
 import DAO.AlbumDAO;
 import DAO.PostDAO;
 import model.Album;
+import model.CachedObjects;
 import model.Post;
 import model.User;
 
@@ -104,6 +105,7 @@ public class AlbumTest {
 		System.out.println("------------------GET POST FROM DB -------------------");
 		
 		Album newAlbum = null;
+		CachedObjects.getInstance().addUser(u);
 		
 		System.out.println("Do we have ne album: " + (newAlbum != null));
 		
@@ -112,8 +114,9 @@ public class AlbumTest {
 		} catch (ValidationException e) {
 			System.out.println("ops");
 		}
-		
+		System.out.println("JSON:");
 		System.out.println("Do we have ne album now: " + (newAlbum != null));
-		
+		System.out.println(newAlbum.getAsJSON());
+		//working
 	}
 }

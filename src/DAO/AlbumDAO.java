@@ -121,17 +121,16 @@ public class AlbumDAO {
  			sql = "SELECT p.user_id, p.post_id, p.name, p.description, p.delete_hash, p.date_created, p.picture_path "
  				+ "FROM posts p JOIN albums_posts ap ON p.post_id = ap.post_id WHERE ap.album_id = ? ;";
  		 	st = DBManager.getInstance().getConnection().prepareStatement(sql);
- 		 	st.setLong(1, albumId);
+ 	 		st.setLong(1, albumId);
  		 	st.execute();
  		 	result = st.getResultSet();
  			while(result.next()){
  				Post p = PostDAO.getInstance().getPost(result.getString("post_id"), result.getString("delete_hash"));
  				posts.add(p);
  			}
- 			
  			sql = "SELECT a.name, a.description, a.date_created, a.user_id FROM albums a wHERE a.album_id = ? ;";
 	 		//create the album
-	 		try {
+ 			try {
 	 		 	st = DBManager.getInstance().getConnection().prepareStatement(sql);
 	 		 	st.setLong(1, albumId);
 	 		 	st.execute();
@@ -161,6 +160,7 @@ public class AlbumDAO {
  				System.out.println("Error#4 in AlbumDAO. Error message: " + e.getMessage());
  			}
  		}
+ 		album.setAlbumId(albumId);
  	return album;
 	}
 }
