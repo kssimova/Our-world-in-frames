@@ -64,17 +64,17 @@ public class CommentDAO {
  						allComments.put(result.getLong("comment_id"), comment);
  					}
  				} catch (SQLException e) {
- 					System.out.println("Error#1 in PhotoDAO. Error message: " + e.getMessage());
+ 					System.out.println("Error#1 in CommentDAO. Error message: " + e.getMessage());
  				}
  			}
  		} catch (SQLException e1) {
- 			System.out.println("Error#2 in PhotoDAO. Error message: " + e1.getMessage());
+ 			System.out.println("Error#2 in CommentDAO. Error message: " + e1.getMessage());
  		}
  		return allComments;
 	}
 	
 	//create new comment
-	public Comment makeComment(Post post, User user, Comment parent, String str) throws ValidationException, SQLException{
+	public Comment createComment(Post post, User user, Comment parent, String str) throws ValidationException, SQLException{
  		Comment comment = null;
 		String sql = "INSERT INTO comments (post_id, user_id, parent_comment_id, content, date_created) " +
  					"VALUES (?, ?, ?, ?, ?)";
@@ -116,16 +116,17 @@ public class CommentDAO {
 	// delete comment
 	public void deleteComment(Post post, User user, Comment comment) throws ValidationException, SQLException{
 		String sql = "DELETE FROM comments WHERE comment_id = ?";
+		PreparedStatement st = null;
 		if(comment.getComment() != null){
  			try {
 				DBManager.getInstance().getConnection().setAutoCommit(false);
-				PreparedStatement st = DBManager.getInstance().getConnection().prepareStatement(sql);
+				st = DBManager.getInstance().getConnection().prepareStatement(sql);
 			 	st.setLong(1, comment.getComment().getCommentId());
 			 	st.execute();	
 				st = DBManager.getInstance().getConnection().prepareStatement(sql);
 			 	st.setLong(1, comment.getCommentId());
 			 	st.execute();
-				post.removeComment(comment);;
+				post.removeComment(comment);
  			} catch (SQLException e) {
  				try {
 					DBManager.getInstance().getConnection().rollback();
@@ -139,8 +140,13 @@ public class CommentDAO {
 				} catch (SQLException e) {
 					System.out.println("Error#3 in delete commetnt. Error message: " + e.getMessage());
 				}
-			}		
-		}
+			}	
+ 			return;
+		}	
+		st = DBManager.getInstance().getConnection().prepareStatement(sql);
+	 	st.setLong(1, comment.getCommentId());
+	 	st.execute();
+		post.removeComment(comment);
  	}
 	
 	private Comment getComment(TreeMap<Long, Comment> map , Long comNum){

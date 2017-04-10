@@ -30,8 +30,8 @@ public class PostDAO {
 		return instance;
 	}
 	
-	//getPost
-	public Post createPost(String postId, String deleteHash) throws ValidationException {
+	//get Post from DB
+	public Post getPost(String postId, String deleteHash) throws ValidationException {
 		TreeSet<String> tags = new TreeSet<>();
   		PreparedStatement st = null;
   		Post post = null;
@@ -87,14 +87,14 @@ public class PostDAO {
  			try {
  				DBManager.getInstance().getConnection().setAutoCommit(true);
  			} catch (SQLException e) {
- 				System.out.println("Error#7 in PostDAO. Eroor message: " + e.getMessage());
+ 				System.out.println("Error#7 in PostDAO. Error message: " + e.getMessage());
  			}
  		}
  	return post;
 	}
 	
-	// makePost
-	public void makePost(User user, String name, String description, LocalDate dateCreated, String picturePath, TreeSet<String> tags, Album album, String postId, String deleteHash) throws SQLException, ValidationException{
+	// create new Post
+	public void createPost(User user, String name, String description, LocalDate dateCreated, String picturePath, TreeSet<String> tags, Album album, String postId, String deleteHash) throws SQLException, ValidationException{
 		Post post = null;
 		try {
  			DBManager.getInstance().getConnection().setAutoCommit(false);
@@ -163,7 +163,7 @@ public class PostDAO {
 		return post;
  	}
 	
-	//method that edits and puts tags, can be used when we creating new post 
+	//method that edits and puts tags, can be used when we are creating new posts 
  	public Post editTags(Post post, User user, TreeSet<String> tags) throws ValidationException{
  		PreparedStatement st = null;
 		ResultSet result = null;

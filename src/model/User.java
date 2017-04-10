@@ -29,7 +29,7 @@ public class User implements Comparable<User>{
 	private LocalDate birthdate;
 	private Gender gender;
 	private String profilePhotoPath;
-	private TreeMap <String, Album> albums;
+	private TreeMap <Long, Album> albums;
 	private TreeSet <User> followers;
 	private TreeSet <User> following;
 	private Pattern pattern = null;
@@ -112,7 +112,7 @@ public class User implements Comparable<User>{
 		return userId;
 	}
 
-	public Map<String, Album> getAlbums()  {
+	public Map<Long, Album> getAlbums()  {
 		return Collections.unmodifiableSortedMap(albums);
 	}
 	public Set<User> getFollowers() {
@@ -217,12 +217,14 @@ public class User implements Comparable<User>{
 	public Album createAlbum(String albumName, String desc,  long albumId) throws ValidationException {
 		Album album = new Album(albumName, desc, LocalDate.now(), this);
 		album.setAlbumId(albumId);
-		this.albums.put(albumName, album);
+		this.albums.put(albumId, album);
 		return album;
 	}
 	
 	public void deleteAlbum(Album album) throws ValidationException {
-		this.albums.remove(album);
+		if(albums.containsKey(album.getAlbumId())){
+			this.albums.remove(album.getAlbumId());
+		}
 	}
 	
 	

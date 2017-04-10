@@ -7,6 +7,9 @@ import java.util.TreeSet;
 
 import javax.xml.bind.ValidationException;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 public class Album implements Comparable<Album>{
 	
 	private long albumId;
@@ -127,4 +130,31 @@ public class Album implements Comparable<Album>{
 		return compare;
 	}
 	
+	//JSON
+	
+	public JsonObject getAsJSON(){
+		JsonObject root = new JsonObject();
+		//create JSONObject
+		root.addProperty("albumId", this.albumId);
+		root.addProperty("description", this.description);
+		root.addProperty("name", this.name);
+		root.addProperty("dateCreated", this.dateCreated.toString());
+		//photos
+		JsonArray postArray = new JsonArray();
+		if(!photos.isEmpty() && photos != null ){
+			for(Post post: photos){
+				JsonObject postObj = new JsonObject();
+				postObj = post.getAsJSON();
+				postArray.add(postObj);
+			}
+		}
+		root.add("tags", postArray);
+		//user
+		JsonObject user = new JsonObject();
+		user.addProperty("username", this.user.getUsername());
+		user.addProperty("userId", this.user.getUserId());
+		root.add("user", user);
+
+		return root;
+	}	
 }

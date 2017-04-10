@@ -49,7 +49,7 @@ public class CommentsTest {
 			//Don't forget to set the ID
 			p.setPostId("EOdEWqM");
 	
-			PostDAO.getInstance().makePost(u, p.getName(), p.getDescription(), p.getDateCreated(), p.getPicturePath(), tagsss, a, "EOdEWqM", "sasdafs");
+			PostDAO.getInstance().createPost(u, p.getName(), p.getDescription(), p.getDateCreated(), p.getPicturePath(), tagsss, a, "EOdEWqM", "sasdafs");
 			
 		} catch (ValidationException e) {
 			System.out.println("ops" + e.getMessage());
@@ -59,7 +59,7 @@ public class CommentsTest {
 		System.out.println("Comments before: " + p.getComments().size());
 		
 		try {
-			c = CommentDAO.getInstance().makeComment(p, u, null , "Sooo cute");
+			c = CommentDAO.getInstance().createComment(p, u, null , "Sooo cute");
 		} catch (ValidationException e) {
 			System.err.println("ops!");
 		}
@@ -98,7 +98,7 @@ public class CommentsTest {
 		}
 		
 		try {
-			CommentDAO.getInstance().makeComment(p, u, c, "I'm a subcomment");
+			CommentDAO.getInstance().createComment(p, u, c, "I'm a subcomment");
 		} catch (ValidationException e) {
 			System.out.println("Ops");
 		}	

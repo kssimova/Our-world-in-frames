@@ -12,7 +12,6 @@ import DAO.CommentDAO;
 import DAO.PostDAO;
 import model.Album;
 import model.CachedObjects;
-import model.Comment;
 import model.Post;
 import model.User;
 
@@ -48,7 +47,7 @@ public class PostTest {
 			p.setPostId("EOdEWqM");
 			
 			
-			PostDAO.getInstance().makePost(u, p.getName(), p.getDescription(), p.getDateCreated(), p.getPicturePath(), tagsss, a, "EOdEWqM", "sasdafs");
+			PostDAO.getInstance().createPost(u, p.getName(), p.getDescription(), p.getDateCreated(), p.getPicturePath(), tagsss, a, "EOdEWqM", "sasdafs");
 			System.out.println("All albums in cached objects : " + CachedObjects.getInstance().getAllPosts().size());
 			Post post4e  = CachedObjects.getInstance().getOnePost(p.getPostId(), a.getAlbumId());
 			
@@ -129,13 +128,13 @@ public class PostTest {
 		Post postchence = null;
 		System.out.println("Get the post... ");
 		try {
-			postchence = PostDAO.getInstance().createPost("EOdEWqM", "sasdafs");
+			postchence = PostDAO.getInstance().getPost("EOdEWqM", "sasdafs");
 		} catch (ValidationException e) {
 			System.out.println("ops");
 		}
 		
 		try {
-			Comment c = CommentDAO.getInstance().makeComment(postchence, u, null , "Sooo cute");
+			CommentDAO.getInstance().createComment(postchence, u, null , "Sooo cute");
 		} catch (ValidationException e) {
 			System.err.println("ops!");
 		}
