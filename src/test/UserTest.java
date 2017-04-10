@@ -32,6 +32,16 @@ public class UserTest {
 		krisi.changeGender(Gender.FEMALE);
 		
 		//UserDAO.getInstance().addUser(krisi);
+		User mimi = new User("mimi", "mimi@abv.bg", "mimi123", 7);
+		mimi.changeMobileNumber("0888888888");
+		mimi.changeFirstName("MIMI");
+		mimi.changeLastName("Yordanova");
+		mimi.changeCity("sofia");
+		mimi.changeCountry("bulgaria");
+		mimi.changeDescription("dofngdfnbdibkn");
+		mimi.changeBirthDate(LocalDate.now());
+		mimi.changeGender(Gender.FEMALE);
+		UserDAO.getInstance().addUser(mimi);
 		
 		UserDAO.getInstance().changeFirstName(krisi, "KRISTINA");
 		
@@ -50,6 +60,8 @@ public class UserTest {
 		UserDAO.getInstance().changeMobileNumber(krisi, "0883411090");
 		
 		UserDAO.getInstance().changeBirthdate(krisi, LocalDate.of(1996, 8, 31));
+		
+		UserDAO.getInstance().followUser(krisi, mimi);
 	}
 
 }

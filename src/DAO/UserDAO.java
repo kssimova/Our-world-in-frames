@@ -24,14 +24,30 @@ public class UserDAO {
 	private static final String INSERT_USER = "INSERT INTO ourwif.users (first_name, last_name, username, email, password, mobile_number, birthdate, description, gender, profilephoto_path, city_id, country_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	// works
 	private static final String CHANGE_FIRST_NAME = "UPDATE ourwif.users SET first_name = ? WHERE user_id = ?";
+	// works
 	private static final String CHANGE_LAST_NAME = "UPDATE ourwif.users SET last_name = ? WHERE user_id = ?";
+	// works 
 	private static final String CHANGE_EMAIL = "UPDATE ourwif.users SET email = ? WHERE user_id = ?";
+	// works
 	private static final String CHANGE_MOBILENUMBER = "UPDATE ourwif.users SET mobile_number = ? WHERE user_id = ?";
+	// works
 	private static final String CHANGE_PASSWORD = "UPDATE ourwif.users SET password = ? WHERE user_id = ?";
+	// works
 	private static final String CHANGE_CITY_AND_COUNTRY = "UPDATE ourwif.users SET city_id = ?, country_id = ? WHERE user_id = ?";
+	// works
 	private static final String CHANGE_DESCRIPTION = "UPDATE ourwif.users SET description = ? WHERE user_id = ?";
+	// works
 	private static final String CHANGE_BIRTHDATE = "UPDATE ourwif.users SET birthdate = ? WHERE user_id = ?";
+	// works
 	private static final String CHANGE_PROFILEPHOTO = "UPDATE ourwif.users SET profilephoto_path = ? WHERE user_id = ?";
+	
+	// user_id follows follower_id? user_id sledva foll_id ||| follower - posledovatel
+	// works
+	private static final String FOLLOW_USER = "INSERT INTO ourwif.followers (user_id, followed_id) VALUES (?, ?);";
+	
+	// TODO
+	private static final String GET_ALL_FOLLOWERS = "";
+
 	private static UserDAO instance;
 	private Connection connection = DBManager.getInstance().getConnection();
 
@@ -433,6 +449,33 @@ public class UserDAO {
 				}
 			}
 		}
+	}
+	
+	// follow user
+	public void followUser(User user, User followedUser){
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = connection.prepareStatement(FOLLOW_USER);
+			preparedStatement.setLong(1, user.getUserId());
+			preparedStatement.setLong(2, followedUser.getUserId());
+			preparedStatement.executeUpdate();
+		} catch (SQLException e1) {
+			System.out.println("Error in 1st catch block in UserDAO method followUser() - " + e1.getMessage());
+		}
+		finally{
+			if(preparedStatement != null){
+				try {
+					preparedStatement.close();
+				} catch (SQLException e2) {
+					System.out.println("Error when closing statement in 1st catch block in UserDAO method followUser() - " + e2.getMessage());
+				}
+			}
+		}
+	}
+	
+	// get user's followers
+	public List<User> getFollowers(User user){
+		return null;
 	}
 	
 }
