@@ -11,9 +11,9 @@ $(function() {
 			url: '../getImg',
 			success: function(img) {
 			    $img.find('li').remove();
-				$img.append('<li>ID: '+ img.id+' </li> <br>');
-				$img.append('<li>Image <img src = "' + img.link + ' "> </li> <br>');
-				$img.append('<li>deletehash ' + img.deletehash + '</li> <br>');
+				$img.append('<li>ID: '+ img.id+'</li> ');
+				$img.append('<li>Image <img src = "' + img.link + ' "> </li>');
+				$img.append('<li>deletehash ' + img.deletehash + ' </li>');
 			},
 			error: function() {
 			 alert('error loading image');
