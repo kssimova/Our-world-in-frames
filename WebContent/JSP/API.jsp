@@ -78,15 +78,15 @@
 	    <td>optional</td> 
 	    <td>String</td>
 	  </tr>
-	   <tr>
-	    <td>password</td>
-	    <td>optional</td> 
-	    <td>String</td>
+	  <tr>
+	    <td>new_password</td>
+	    <td>required</td> 
+	    <td>To change the password you need the old one and the new one</td>
 	  </tr>
 	  <tr>
-	    <td>counfirm_password</td>
-	    <td>optional</td> 
-	    <td>String</td>
+	    <td>old_password</td>
+	    <td>required</td> 
+	    <td>To change the password you need the old one and the new one</td>
 	  </tr>
 	  <tr>
 	    <td>firstName</td>
@@ -173,14 +173,14 @@
 	    <td>String</td>
 	  </tr>
 	   <tr>
-	    <td>new_password</td>
+	    <td>password</td>
 	    <td>required</td> 
-	    <td>To change the password you need the old one and the new one</td>
+	    <td>String</td>
 	  </tr>
 	  <tr>
-	    <td>old_password</td>
+	    <td>counfirm_password</td>
 	    <td>required</td> 
-	    <td>To change the password you need the old one and the new one</td>
+	    <td>String</td>
 	  </tr>
 	  <tr>
 	    <td>firstName</td>
@@ -277,7 +277,7 @@
 	  </tr>
 	  <tr>
 	    <th>Route</th>
-	    <td>/login</td> 
+	    <td>/logout</td> 
 	  </tr>
 	    <tr>
 	   	 <th>Response Model</th>
@@ -632,6 +632,7 @@
 	    <td><a href = "APIResponse.jsp" >Comments</a></td> 
 	  </tr>
 	</table>
+	empty servlets with initialize methods
 </div>
 <div class="col-md-6">
 <h3>Parameters</h3>

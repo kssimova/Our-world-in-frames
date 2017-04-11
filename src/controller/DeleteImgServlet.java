@@ -20,7 +20,7 @@ public class DeleteImgServlet extends HttpServlet {
 		
 		//TODO get real image delete hash
 		//TODO call delete image DAO method
-		String imageId = "OpBK2nwGhPD10l2";
+		String imageId = "5NZqCZPylHFm3Zy";
 		
 		URL url = new URL("https://api.imgur.com/3/image/" + imageId);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
