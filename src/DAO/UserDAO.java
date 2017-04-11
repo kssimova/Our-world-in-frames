@@ -477,5 +477,10 @@ public class UserDAO {
 	public List<User> getFollowers(User user){
 		return null;
 	}
+
+	public boolean validLogin(String username, String password) {
+		//TODO
+		return false;
+	}
 	
 }

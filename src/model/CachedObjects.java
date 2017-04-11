@@ -27,6 +27,27 @@ public class CachedObjects {
 	public User getOneUser(long userId) {
 		return allUsers.get(userId);
 	}
+	public User getOneUser(String username) {
+		User user = null;
+		for(User users : allUsers.values()){
+			if(users.getUsername().equals(username)){
+				user = users;
+			}
+		}
+		return user;
+	}
+	
+	public boolean containsUser(String username){
+		boolean contains = false;
+		for(User users : allUsers.values()){
+			if(users.getUsername().equals(username)){
+				contains = true;
+			}
+		}
+		return contains;
+	}
+	
+	
 
 	public Post getOnePost(String postId) {
 		Post p = null;

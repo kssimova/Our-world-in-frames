@@ -75,10 +75,8 @@ public class GetImgServlet extends HttpServlet {
 		
 		response.setContentType("application/json");  
 	    response.setCharacterEncoding("UTF-8");
-		// Set content type of the response so that jQuery knows what it can expect.
-	    response.getWriter().write(obj2.toString());       
-	    // Write response body.
-		request.setAttribute("json", obj2);			
+		// Set content type of the response so that jQuery knows what it can expect.      
+	    response.getWriter().write(obj2.toString());	
 	}
 
 }

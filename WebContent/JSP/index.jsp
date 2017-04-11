@@ -61,7 +61,7 @@ this is just one demo button for comments :
 <br>
 
 
-<FORM enctype="multipart/form-data" action="../uploadImg" method="post">
+<FORM enctype="multipart/form-data" action="../image" method="post">
 	<b><h1> Choose your image:</h1></b>
 		  <INPUT NAME="file" TYPE="file">
 		 </br>
