@@ -468,7 +468,7 @@
 	  </tr>
 	  <tr>
 	    <th>Route</th>
-	    <td>/oneImg</td> 
+	    <td>/image</td> 
 	  </tr>
 	  <tr>
 	    <th>Response Model</th>
@@ -501,7 +501,7 @@
 	  </tr>
 	  <tr>
 	    <th>Route</th>
-	    <td>/oneImg</td> 
+	    <td>/image</td> 
 	  </tr>
 	    <tr>
 	   	 <th>Response Model</th>
@@ -551,7 +551,7 @@
 	  </tr>
 	  <tr>
 	    <th>Route</th>
-	    <td>/oneImg</td> 
+	    <td>/image</td> 
 	  </tr>
 	    <tr>
 	    <th>Response Model</th>
@@ -584,7 +584,7 @@
 	  </tr>
 	  <tr>
 	    <th>Route</th>
-	    <td>/oneImg</td> 
+	    <td>/image</td> 
 	  </tr>
 	    <tr>
 	    <th>Response Model</th>
