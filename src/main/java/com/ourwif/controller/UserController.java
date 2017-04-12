@@ -1,6 +1,5 @@
 package com.ourwif.controller;
 
-import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ourwif.DAO.UserDAO;
 import com.ourwif.model.CachedObjects;
-import com.ourwif.model.Comment;
 import com.ourwif.model.User;
 
 @RestController
@@ -81,7 +79,7 @@ public class UserController {
 		return "user";
 	}
 	
-	@RequestMapping(value="/unfollow",method = RequestMethod.DELETE)
+	@RequestMapping(value="/follow",method = RequestMethod.DELETE)
 	public String unfollow(Model model, HttpServletRequest request) {
 		//this will delete one comment.. request should contain the id of this comment 
 		return "user";

@@ -23,26 +23,11 @@
 	  </tr>
 	  <tr>
 	    <th>Route</th>
-	    <td>/user</td> 
+	    <td>/user/{user_id}</td> 
 	  </tr>
 	  <tr>
 	    <th>Response Model</th>
 	    <td><a href = "APIResponse.jsp" >User</a></td> 
-	  </tr>
-	</table>
-</div>
-<div class="col-md-6">
-<h3>Parameters</h3>
-	<table class="table table-hover">
-	  <tr>
-	    <th>Key</th>
-	    <th>Required</th> 
-	    <th>Description</th>
-	  </tr>
-	  <tr>
-	    <td>user_id</td>
-	    <td>Required</td> 
-	    <td>User ID</td>
 	  </tr>
 	</table>
 </div>
@@ -56,7 +41,7 @@
 	  </tr>
 	  <tr>
 	    <th>Route</th>
-	    <td>/user</td> 
+	    <td>/user/change</td> 
 	  </tr>
 	    <tr>
 	    <th>Response Model</th>
@@ -145,7 +130,7 @@
 	  </tr>
 	  <tr>
 	    <th>Route</th>
-	    <td>/register</td> 
+	    <td>/user/register</td> 
 	  </tr>
 	    <tr>
 	   	 <th>Response Model</th>
@@ -239,7 +224,7 @@
 	  </tr>
 	  <tr>
 	    <th>Route</th>
-	    <td>/login</td> 
+	    <td>/user/login</td> 
 	  </tr>
 	    <tr>
 	   	 <th>Response Model</th>
@@ -277,26 +262,11 @@
 	  </tr>
 	  <tr>
 	    <th>Route</th>
-	    <td>/logout</td> 
+	    <td>/user/logout</td> 
 	  </tr>
 	    <tr>
 	   	 <th>Response Model</th>
 	   	 <td><a href = "APIResponse.jsp" >Basic</a></td> 
-	  </tr>
-	</table>
-</div>
-<div class="col-md-6">
-<h3>Parameters</h3>
-	<table class="table table-hover">
-	  <tr>
-	    <th>Key</th>
-	    <th>Required</th> 
-	    <th>Description</th>
-	  </tr>
-	  <tr>
-	    <td>user_id</td>
-	    <td>Required</td> 
-	    <td>Long</td>
 	  </tr>
 	</table>
 </div>
@@ -310,7 +280,7 @@
 	  </tr>
 	  <tr>
 	    <th>Route</th>
-	    <td>/follow</td> 
+	    <td>/user/follow</td> 
 	  </tr>
 	    <tr>
 	    <th>Response Model</th>
@@ -349,7 +319,7 @@
 	  </tr>
 	  <tr>
 	    <th>Route</th>
-	    <td>/follow</td> 
+	    <td>/user/follow</td> 
 	  </tr>
 	    <tr>
 	    <th>Response Model</th>
@@ -378,85 +348,6 @@
 	  </tr>
 	</table>
 </div>
-<br class = "stop">
-<div class="col-md-6">
-	<h3>To like post</h3>
-	<table class="table table-hover">
-	  <tr>
-	    <th>Method</th>
-	    <td>POST</td> 
-	  </tr>
-	  <tr>
-	    <th>Route</th>
-	    <td>/likes</td> 
-	  </tr>
-	    <tr>
-	    <th>Response Model</th>
-	    <td><a href = "APIResponse.jsp" >Basic</a></td> 
-	  </tr>
-	</table>
-</div>
-
-<div class="col-md-6">
-	<h3>Parameters</h3>
-	<table class="table table-hover">
-	  <tr>
-	    <th>Key</th>
-	    <th>Required</th> 
-	    <th >Description</th>
-	  </tr>
-	  <tr>
-	    <td>user_id</td>
-	    <td>required</td> 
-	    <td>The user that is making the request</td>
-	  </tr>
-	   <tr>
-	    <td>post_id</td>
-	    <td>required</td> 
-	    <td>Liked post</td>
-	  </tr>
-	</table>
-</div>
-<br class = "stop">
-<div class="col-md-6">
-	<h3>To remove like </h3>
-	<table class="table table-hover">
-	  <tr>
-	    <th>Method</th>
-	    <td>DELETE</td> 
-	  </tr>
-	  <tr>
-	    <th>Route</th>
-	    <td>/likes</td> 
-	  </tr>
-	    <tr>
-	    <th>Response Model</th>
-	    <td><a href = "APIResponse.jsp" >Basic</a></td> 
-	  </tr>
-	</table>
-</div>
-
-<div class="col-md-6">
-	<h3>Parameters</h3>
-	<table class="table table-hover">
-	  <tr>
-	    <th>Key</th>
-	    <th>Required</th> 
-	    <th >Description</th>
-	  </tr>
-	  <tr>
-	    <td>user_id</td>
-	    <td>required</td> 
-	    <td>The user that is making the request</td>
-	  </tr>
-	   <tr>
-	    <td>post_id</td>
-	    <td>required</td> 
-	    <td>The post from with you are removing like</td>
-	  </tr>
-	</table>
-</div>
-
 
 <h1>IMAGE</h1>
 <div class="col-md-6">
@@ -613,6 +504,86 @@
 	  </tr>
 	</table>
 </div>
+<br class = "stop">
+<div class="col-md-6">
+	<h3>To like post</h3>
+	<table class="table table-hover">
+	  <tr>
+	    <th>Method</th>
+	    <td>POST</td> 
+	  </tr>
+	  <tr>
+	    <th>Route</th>
+	    <td>/likes</td> 
+	  </tr>
+	    <tr>
+	    <th>Response Model</th>
+	    <td><a href = "APIResponse.jsp" >Basic</a></td> 
+	  </tr>
+	</table>
+</div>
+
+<div class="col-md-6">
+	<h3>Parameters</h3>
+	<table class="table table-hover">
+	  <tr>
+	    <th>Key</th>
+	    <th>Required</th> 
+	    <th >Description</th>
+	  </tr>
+	  <tr>
+	    <td>user_id</td>
+	    <td>required</td> 
+	    <td>The user that is making the request</td>
+	  </tr>
+	   <tr>
+	    <td>post_id</td>
+	    <td>required</td> 
+	    <td>Liked post</td>
+	  </tr>
+	</table>
+</div>
+<br class = "stop">
+<div class="col-md-6">
+	<h3>To remove like </h3>
+	<table class="table table-hover">
+	  <tr>
+	    <th>Method</th>
+	    <td>DELETE</td> 
+	  </tr>
+	  <tr>
+	    <th>Route</th>
+	    <td>/likes</td> 
+	  </tr>
+	    <tr>
+	    <th>Response Model</th>
+	    <td><a href = "APIResponse.jsp" >Basic</a></td> 
+	  </tr>
+	</table>
+</div>
+
+<div class="col-md-6">
+	<h3>Parameters</h3>
+	<table class="table table-hover">
+	  <tr>
+	    <th>Key</th>
+	    <th>Required</th> 
+	    <th >Description</th>
+	  </tr>
+	  <tr>
+	    <td>user_id</td>
+	    <td>required</td> 
+	    <td>The user that is making the request</td>
+	  </tr>
+	   <tr>
+	    <td>post_id</td>
+	    <td>required</td> 
+	    <td>The post from with you are removing like</td>
+	  </tr>
+	</table>
+</div>
+
+
 
 <h1>COMENTS</h1>
 

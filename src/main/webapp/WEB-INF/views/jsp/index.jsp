@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -58,7 +57,7 @@ this is just one demo button for comments :
 <br>
 
 
-<FORM enctype="multipart/form-data" action="../image" method="post">
+<FORM enctype="multipart/form-data" action="/post/add" method="post">
 	<b><h1> Choose your image:</h1></b>
 		  <INPUT NAME="file" TYPE="file">
 		 </br>
@@ -69,10 +68,9 @@ this is just one demo button for comments :
 <br>
 
 
-<form action="../deleteImg" method="get">
+<form action="/deleteImg" method="get">
 <input type="submit" value="deleteImg">
 </form>
-
 
 </body>
 </html>

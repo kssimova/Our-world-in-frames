@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+
 public class CachedObjects {
 	
 	private static CachedObjects instance;
@@ -138,6 +139,16 @@ public class CachedObjects {
 	
 	public void clearPosts(){
 		allPosts.clear();
+	}
+
+	public boolean containsPost(String postId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public Album getOneAlbum(Integer albumId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
