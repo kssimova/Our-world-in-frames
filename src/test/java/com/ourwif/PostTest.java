@@ -6,6 +6,9 @@ import java.util.TreeSet;
 
 import javax.xml.bind.ValidationException;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import com.ourwif.DAO.CommentDAO;
 import com.ourwif.DAO.PostDAO;
 import com.ourwif.model.Album;
@@ -17,9 +20,14 @@ import com.ourwif.model.User;
 public class PostTest {
 	public static void main(String [] args) throws SQLException{
 		
+    	ApplicationContext context =
+        		new ClassPathXmlApplicationContext("Spring-Module.xml");
+		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
+		CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
+		
 		System.out.println("---------------------TEST 1 ---------------------");
 		System.out.println("------------------CREATE NEW POST-------------------");
-		
+				
 		User u = null;
 		Post p = null;
 		Album a = null;
@@ -28,7 +36,7 @@ public class PostTest {
 		tags.add("cat");
 		
 		try {
-			u = new User("werewolf", "werewolfss@abv.bg", "12345", 5L);
+			u = new User("werewolf", "werewolfss@abv.bg", "12345", 4L);
 		} catch (ValidationException e) {
 			System.out.println("ops" + e.getMessage());
 		}				
@@ -46,8 +54,7 @@ public class PostTest {
 			//Don't forget to set the ID
 			p.setPostId("EOdEWqM");
 			
-			
-			PostDAO.getInstance().createPost(u, p.getName(), p.getDescription(), p.getDateCreated(), p.getPicturePath(), tagsss, a, "EOdEWqM", "sasdafs");
+			postDAO.createPost(u, p.getName(), p.getDescription(), p.getDateCreated(), p.getPicturePath(), tagsss, a, "EOdEWqM", "sasdafs");
 			System.out.println("All albums in cached objects : " + CachedObjects.getInstance().getAllPosts().size());
 			Post post4e  = CachedObjects.getInstance().getOnePost(p.getPostId(), a.getAlbumId());
 			
@@ -66,7 +73,7 @@ public class PostTest {
 		System.out.println("Old description: " + p.getDescription());		
 		
 		try {
-			p = PostDAO.getInstance().editPostInfo(p, u, "Cats cats cat1");
+			p = postDAO.editPostInfo(p, u, "Cats cats cat1");
 		} catch (ValidationException e) {
 			System.out.println("ops!" + e.getMessage());
 		}
@@ -80,7 +87,7 @@ public class PostTest {
 		System.out.println("Old name: " + p.getName());
 		
 		try {
-			p = PostDAO.getInstance().editPostName(p, u, "Whaaat?");
+			p = postDAO.editPostName(p, u, "Whaaat?");
 		} catch (ValidationException e) {
 			System.out.println("ops");
 		}
@@ -98,7 +105,7 @@ public class PostTest {
 		System.out.println("Old tags: " + p.getTags().toString());
 		
 		try {
-			p = PostDAO.getInstance().editTags(p, u, newTags);
+			p = postDAO.editTags(p, u, newTags);
 		} catch (ValidationException e) {
 			System.out.println("Ops!");
 		}
@@ -128,13 +135,13 @@ public class PostTest {
 		Post postchence = null;
 		System.out.println("Get the post... ");
 		try {
-			postchence = PostDAO.getInstance().getPost("EOdEWqM", "sasdafs");
+			postchence = postDAO.getPost("EOdEWqM", "sasdafs");
 		} catch (ValidationException e) {
 			System.out.println("ops");
 		}
 		
 		try {
-			CommentDAO.getInstance().createComment(postchence, u, null , "Sooo cute");
+			commentDAO.createComment(postchence, u, "Sooo cute");
 		} catch (ValidationException e) {
 			System.err.println("ops!");
 		}
@@ -147,13 +154,13 @@ public class PostTest {
 		
 		
 		CachedObjects.getInstance().clearPosts();
-		System.out.println(CachedObjects.getInstance().getAllPosts().toString());
+		System.out.println(CachedObjects.getInstance().getAllPosts().size());
 		
 		try {
-			PostDAO.getInstance().getAllPosts();
+			postDAO.getAllPosts();
 		} catch (ValidationException e) {
 			System.out.println("ops");
 		}	
-		System.out.println(CachedObjects.getInstance().getAllPosts().toString());
+		System.out.println(CachedObjects.getInstance().getAllPosts().size());
 	}
 }

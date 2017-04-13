@@ -7,7 +7,11 @@ import java.util.TreeSet;
 import javax.swing.text.ChangedCharSetException;
 import javax.xml.bind.ValidationException;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import com.ourwif.DAO.AlbumDAO;
+import com.ourwif.DAO.CommentDAO;
 import com.ourwif.DAO.PostDAO;
 import com.ourwif.model.Album;
 import com.ourwif.model.CachedObjects;
@@ -19,6 +23,11 @@ public class AlbumTest {
 
 	public static void main(String[] args) {
 		
+    	ApplicationContext context =
+        		new ClassPathXmlApplicationContext("Spring-Module.xml");
+		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
+		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
+		
 		System.out.println("---------------------TEST 1 ---------------------");
 		System.out.println("------------------CREATE NEW ALBUM-------------------");	
 		
@@ -27,7 +36,7 @@ public class AlbumTest {
 		Post p = null;
 		
 		try {
-			u = new User("werewolf", "werewolfss@abv.bg", "12345", 5L);
+			u = new User("werewolf", "werewolfss@abv.bg", "12345", 4L);
 		} catch (ValidationException e) {
 			System.out.println("ops" + e.getMessage());
 		}		
@@ -35,7 +44,7 @@ public class AlbumTest {
 		System.out.println("This user have : " + u.getAlbums().size() + " albums");
 		
 		try {
-			a = AlbumDAO.getInstance().createAlbum(u, "new album", "default album");
+			a = albumDAO.createAlbum(u, "new album", "default album");
 		} catch (ValidationException  | SQLException e) {
 			System.out.println("ops");
 		}
@@ -51,7 +60,7 @@ public class AlbumTest {
 			TreeSet<String> tagsss = new TreeSet<>();		
 			tagsss.addAll(p.getTags());
 			p.setPostId("EOdEWqM");
-			PostDAO.getInstance().createPost(u, p.getName(), p.getDescription(), p.getDateCreated(), p.getPicturePath(), tagsss, a, "EOdEWqM", "sasdafs");
+			postDAO.createPost(u, p.getName(), p.getDescription(), p.getDateCreated(), p.getPicturePath(), tagsss, a, "EOdEWqM", "sasdafs");
 		} catch (ValidationException e1) {
 			System.out.println("ops");
 		}		
@@ -64,7 +73,7 @@ public class AlbumTest {
 		System.out.println("Album description: " + a.getDescription());
 		
 		try {
-			AlbumDAO.getInstance().editAlbumInfo(a, u, "new description ");
+			albumDAO.editAlbumInfo(a, u, "new description ");
 		} catch (ValidationException e) {
 			System.out.println("ops");
 		}
@@ -80,7 +89,7 @@ public class AlbumTest {
 		System.out.println("Album name: " + a.getName());
 		
 		try {
-			AlbumDAO.getInstance().editAlbumName(a, u, "newwwwwww name");
+			albumDAO.editAlbumName(a, u, "newwwwwww name");
 		} catch (ValidationException e) {
 			System.out.println("ops");
 		}
@@ -112,7 +121,7 @@ public class AlbumTest {
 		System.out.println("Do we have ne album: " + (newAlbum != null));
 		
 		try {
-			newAlbum = AlbumDAO.getInstance().getAlbum(u, a.getAlbumId());
+			newAlbum = albumDAO.getAlbum(u, a.getAlbumId());
 		} catch (ValidationException e) {
 			System.out.println("ops");
 		}
@@ -127,7 +136,7 @@ public class AlbumTest {
 		System.out.println("All albums: " + CachedObjects.getInstance().getAllAlbums().toString());
 		
 		try {
-			AlbumDAO.getInstance().getAllAlbums();
+			albumDAO.getAllAlbums();
 		} catch (ValidationException e) {
 			System.out.println("ops");
 		}

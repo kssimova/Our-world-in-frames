@@ -5,12 +5,12 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 
+import javax.sql.DataSource;
 import javax.xml.bind.ValidationException;
 
 import com.ourwif.model.CachedObjects;
@@ -48,29 +48,22 @@ public class UserDAO {
 	// TODO
 	private static final String GET_ALL_FOLLOWERS = "";
 
-	private static UserDAO instance;
-	private Connection connection = DBManager.getInstance().getConnection();
+	private DataSource dataSource;
 
-	private UserDAO() {
-
-	}
-	
-	public static synchronized UserDAO getInstance() {
-		if (instance == null) {
-			instance = new UserDAO();
-		}
-		return instance;
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 	
 	//create new user with default album and insert into cachedObjects
 	public synchronized void addUser(User user){
-		
+		Connection connection = null;
 		// get city_id and country_id 
 		String sql = "SELECT city_id, country_id FROM ourwif.cities WHERE name = '" + user.getCity() + "'";
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
 		long city_id = 0, country_id = 0;
 		try {
+			connection = (Connection) dataSource.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
 			result = preparedStatement.executeQuery();
 			if(result.next()){
@@ -136,7 +129,9 @@ public class UserDAO {
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
 		ArrayList<User> allUsers = new ArrayList<>();
+		Connection connection = null;
 		try {
+			connection = (Connection) dataSource.getConnection();
 			preparedStatement = connection.prepareStatement(SELECT_ALL_USERS);
 			result = preparedStatement.executeQuery();
 			while(result.next()){
@@ -186,7 +181,9 @@ public class UserDAO {
 	public void changeFirstName(User user, String first_name) throws ValidationException{
 		user.changeFirstName(first_name);
 		PreparedStatement preparedStatement = null;
+		Connection connection = null;
 		try {
+			connection = (Connection) dataSource.getConnection();
 			preparedStatement = connection.prepareStatement(CHANGE_FIRST_NAME);
 			preparedStatement.setString(1, first_name);
 			preparedStatement.setLong(2, user.getUserId());
@@ -209,7 +206,9 @@ public class UserDAO {
 	public void changeLastName(User user, String last_name) throws ValidationException{
 		user.changeLastName(last_name);
 		PreparedStatement preparedStatement = null;
+		Connection connection = null;
 		try {
+			connection = (Connection) dataSource.getConnection();
 			preparedStatement = connection.prepareStatement(CHANGE_LAST_NAME);
 			preparedStatement.setString(1, last_name);
 			preparedStatement.setLong(2, user.getUserId());
@@ -232,7 +231,9 @@ public class UserDAO {
 	public void changeEmail(User user, String email) throws ValidationException{
 		user.changeEmail(email);
 		PreparedStatement preparedStatement = null;
+		Connection connection = null;
 		try {
+			connection = (Connection) dataSource.getConnection();
 			preparedStatement = connection.prepareStatement(CHANGE_EMAIL);
 			preparedStatement.setString(1, email);
 			preparedStatement.setLong(2, user.getUserId());
@@ -255,7 +256,9 @@ public class UserDAO {
 	public void changeMobileNumber(User user, String mobile_number) throws ValidationException{
 		user.changeMobileNumber(mobile_number);
 		PreparedStatement preparedStatement = null;
+		Connection connection = null;
 		try {
+			connection = (Connection) dataSource.getConnection();
 			preparedStatement = connection.prepareStatement(CHANGE_MOBILENUMBER);
 			preparedStatement.setString(1, mobile_number);
 			preparedStatement.setLong(2, user.getUserId());
@@ -278,7 +281,9 @@ public class UserDAO {
 	public void changePassword(User user, String password) throws ValidationException{
 		user.changePassword(password);
 		PreparedStatement preparedStatement = null;
+		Connection connection = null;
 		try {
+			connection = (Connection) dataSource.getConnection();
 			preparedStatement = connection.prepareStatement(CHANGE_PASSWORD);
 			preparedStatement.setString(1, password);
 			preparedStatement.setLong(2, user.getUserId());
@@ -305,7 +310,9 @@ public class UserDAO {
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		long country_id = 0;
+		Connection connection = null;
 		try {
+			connection = (Connection) dataSource.getConnection();
 			preparedStatement = connection.prepareStatement(sql1);
 			preparedStatement.setString(1, country_name);
 			resultSet = preparedStatement.executeQuery();
@@ -386,7 +393,9 @@ public class UserDAO {
 	public void changeDescription(User user, String description) throws ValidationException{
 		user.changeDescription(description);
 		PreparedStatement preparedStatement = null;
+		Connection connection = null;
 		try {
+			connection = (Connection) dataSource.getConnection();
 			preparedStatement = connection.prepareStatement(CHANGE_DESCRIPTION);
 			preparedStatement.setString(1, description);
 			preparedStatement.setLong(2, user.getUserId());
@@ -409,7 +418,9 @@ public class UserDAO {
 	public void changeBirthdate(User user, LocalDate date) throws ValidationException{
 		user.changeBirthDate(date);
 		PreparedStatement preparedStatement = null;
+		Connection connection = null;
 		try {
+			connection = (Connection) dataSource.getConnection();
 			preparedStatement = connection.prepareStatement(CHANGE_BIRTHDATE);
 			preparedStatement.setDate(1, Date.valueOf(date));
 			preparedStatement.setLong(2, user.getUserId());
@@ -432,7 +443,9 @@ public class UserDAO {
 	public void changeProfilePhoto(User user, String profilephoto_path) throws ValidationException{
 		user.changeProfilePhoto(profilephoto_path);
 		PreparedStatement preparedStatement = null;
+		Connection connection = null;
 		try {
+			connection = (Connection) dataSource.getConnection();
 			preparedStatement = connection.prepareStatement(CHANGE_PROFILEPHOTO);
 			preparedStatement.setString(1, profilephoto_path);
 			preparedStatement.setLong(2, user.getUserId());
@@ -454,7 +467,9 @@ public class UserDAO {
 	// follow user
 	public void followUser(User user, User followedUser){
 		PreparedStatement preparedStatement = null;
+		Connection connection = null;
 		try {
+			connection = (Connection) dataSource.getConnection();
 			preparedStatement = connection.prepareStatement(FOLLOW_USER);
 			preparedStatement.setLong(1, user.getUserId());
 			preparedStatement.setLong(2, followedUser.getUserId());

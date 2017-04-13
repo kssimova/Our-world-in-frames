@@ -67,10 +67,5 @@ this is just one demo button for comments :
 <br>
 <br>
 
-
-<form action="/deleteImg" method="get">
-<input type="submit" value="deleteImg">
-</form>
-
 </body>
 </html>

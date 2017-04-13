@@ -13,10 +13,9 @@ public class Comment implements Comparable<Comment>{
 	private User user;
 	protected String content;
 	private LocalDate dateCreated;
-	private Comment comment;
 	
 	
-	public Comment(Post picture, User user, String content, LocalDate localDate, Comment comment, long commentId) throws ValidationException {
+	public Comment(Post picture, User user, String content, LocalDate localDate, long commentId) throws ValidationException {
 		if(validPost(picture)){
 			this.picture = picture;
 		}else{
@@ -37,7 +36,6 @@ public class Comment implements Comparable<Comment>{
 		}else{
 			throw new ValidationException("Comment date not valid");
 		}
-		addComment(comment);
 		setCommentId(commentId);
 	}
 
@@ -62,10 +60,6 @@ public class Comment implements Comparable<Comment>{
 		return dateCreated;
 	}
 	
-	
-	public Comment getComment(){
-		return comment;
-	}
 
 	public long getCommentId() {
 		return commentId;
@@ -76,14 +70,6 @@ public class Comment implements Comparable<Comment>{
 	
 	public void changeContent(String content) {
 		this.content = content;
-	}
-	
-	public void addComment(Comment comment) throws ValidationException{
-		if(this.comment == null){
-			this.comment = comment;
-		}else{
-			throw new ValidationException("You can't comment on a subcomment");
-		}
 	}
 
 	public void setCommentId(long commentId) {

@@ -8,6 +8,9 @@ import java.util.TreeSet;
 
 import javax.xml.bind.ValidationException;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import com.ourwif.DAO.CommentDAO;
 import com.ourwif.DAO.PostDAO;
 import com.ourwif.model.Album;
@@ -19,6 +22,11 @@ import com.ourwif.model.User;
 
 public class CommentsTest {
 	public static void main(String[] args) throws SQLException {
+		
+    	ApplicationContext context =
+        		new ClassPathXmlApplicationContext("Spring-Module.xml");
+		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
+		CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
 		
 		System.out.println("---------------------TEST 1 ---------------------");
 		System.out.println("------------------CREATE NEW COMMENT-------------------");
@@ -33,7 +41,7 @@ public class CommentsTest {
 		tags.add("cute");
 		tags.add("cat");	
 		try {
-			u = new User("werewolf", "werewolfss@abv.bg", "12345", 5L);
+			u = new User("werewolf", "werewolfss@abv.bg", "12345", 4L);
 		} catch (ValidationException e) {
 			System.out.println("ops" + e.getMessage());
 		}				
@@ -50,7 +58,7 @@ public class CommentsTest {
 			//Don't forget to set the ID
 			p.setPostId("EOdEWqM");
 	
-			PostDAO.getInstance().createPost(u, p.getName(), p.getDescription(), p.getDateCreated(), p.getPicturePath(), tagsss, a, "EOdEWqM", "sasdafs");
+			postDAO.createPost(u, p.getName(), p.getDescription(), p.getDateCreated(), p.getPicturePath(), tagsss, a, "EOdEWqM", "sasdafs");
 			
 		} catch (ValidationException e) {
 			System.out.println("ops" + e.getMessage());
@@ -60,7 +68,7 @@ public class CommentsTest {
 		System.out.println("Comments before: " + p.getComments().size());
 		
 		try {
-			c = CommentDAO.getInstance().createComment(p, u, null ,"Sooo cute");
+			c = commentDAO.createComment(p, u, "Sooo cute");
 		} catch (ValidationException e) {
 			System.err.println("ops!");
 		}
@@ -76,7 +84,7 @@ public class CommentsTest {
 		}
 		
 		try {
-			CommentDAO.getInstance().editComment(p, c, "this i my new comment");
+			commentDAO.editComment(p, c, "this i my new comment");
 		} catch (ValidationException e) {
 			System.out.println("ops!!");
 		}
@@ -86,33 +94,9 @@ public class CommentsTest {
 		}
 		//working
 		
+	
+		
 		System.out.println("---------------------TEST 3 ---------------------");
-		System.out.println("------------------ADD SUBCOMMENT-------------------");
-		
-		
-		System.out.println("Before..");
-		for(Comment comm1 : p.getComments()){
-			System.out.println("Comments before:" + comm1.getContent());
-			if(comm1.getComment() != null){
-				System.out.println("My Sup comment is: " + comm1.getComment().getContent());
-			}
-		}		
-		try {
-			CommentDAO.getInstance().createComment(p, u, c, "I'm a subcomment");
-		} catch (ValidationException e) {
-			System.out.println("Ops");
-		}	
-		
-		System.out.println("After..");
-		for(Comment comm1 : p.getComments()){
-			System.out.println("Comments after: " + comm1.getContent());
-			if(comm1.getComment() != null){
-				System.out.println("My Sup comment is: " + comm1.getComment().getContent());
-			}
-		}
-		//working
-		
-		System.out.println("---------------------TEST 4 ---------------------");
 		System.out.println("------------------DELETE COMMENT-------------------");
 		
 //		System.out.println(p.getComments().toString());
@@ -127,13 +111,13 @@ public class CommentsTest {
 		
 		//working
 		
-		System.out.println("---------------------TEST 5 ---------------------");
+		System.out.println("---------------------TEST 4 ---------------------");
 		System.out.println("------------------GET ALL COMMENTS FROM DB-------------------");
 		
 		CachedObjects.getInstance().addUser(u);	
 		TreeMap<Long, Comment> comments = null;
 		try {
-			comments = CommentDAO.getInstance().getAllComments(p);
+			comments = commentDAO.getAllComments(p);
 		} catch (ValidationException e) {
 			System.out.println("ops");
 		}

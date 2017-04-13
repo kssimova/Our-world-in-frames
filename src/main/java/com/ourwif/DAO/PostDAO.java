@@ -12,8 +12,13 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import javax.sql.DataSource;
 import javax.xml.bind.ValidationException;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.mysql.jdbc.Connection;
 import com.ourwif.model.Album;
 import com.ourwif.model.CachedObjects;
 import com.ourwif.model.Post;
@@ -21,16 +26,11 @@ import com.ourwif.model.User;
 
 public class PostDAO {
 	
-	private static PostDAO instance;
+	private DataSource dataSource;
+	
 
-	private PostDAO() {
-
-	}
-	public static synchronized PostDAO getInstance() {
-		if (instance == null) {
-			instance = new PostDAO();
-		}
-		return instance;
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 	
 	//get Post from DB
@@ -40,13 +40,18 @@ public class PostDAO {
   		Post post = null;
   		String sql = "";
  		ResultSet result = null;
+    	ApplicationContext context =
+        		new ClassPathXmlApplicationContext("Spring-Module.xml");
+		CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
+		Connection conn = null;
  		try {
- 			DBManager.getInstance().getConnection().setAutoCommit(false);
+ 			conn = (Connection) dataSource.getConnection();
+ 			conn.setAutoCommit(false);
  			//get tags
  			sql = "SELECT t.name FROM tags t "
  				+ "JOIN tags_posts tp ON t.tag_id = tp.tag_id "
  				+ "WHERE tp.post_id = ? ";
- 		 	st = DBManager.getInstance().getConnection().prepareStatement(sql);
+ 		 	st = conn.prepareStatement(sql);
  		 	st.setString(1, postId);
  		 	st.execute();
  		 	result = st.getResultSet();
@@ -58,7 +63,7 @@ public class PostDAO {
 	 			+ "FROM posts WHERE post_id = ? ";
 	 		//initialization
 	 		try {
-	 		 	st = DBManager.getInstance().getConnection().prepareStatement(sql);
+	 		 	st = conn.prepareStatement(sql);
 	 		 	st.setString(1, postId);
 	 		 	st.execute();
 	 		} catch (SQLException e2) {
@@ -71,7 +76,7 @@ public class PostDAO {
 	 				try {
 		 				User user = CachedObjects.getInstance().getOneUser(result.getLong("user_id"));
 		 				post = new Post(user, result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), result.getString("picture_path"), tags, postId, deleteHash);
-		 				CommentDAO.getInstance().getAllComments(post);
+		 				commentDAO.getAllComments(post);
 	 				} catch (SQLException e) {
 	 					System.out.println("Error#3 in PostDAO. Error message: " + e.getMessage());
 	 				}
@@ -81,14 +86,14 @@ public class PostDAO {
 	 		}		
  		}catch (SQLException e1) {
  			try {
-				DBManager.getInstance().getConnection().rollback();
+				conn.rollback();
 	 			System.out.println("Error#5 in PostDAO. Error message: " + e1.getMessage());
 			} catch (SQLException e) {
 	 			System.out.println("Error#6 in PostDAO. Error message: " + e.getMessage());
 			}
  	 	}finally{
  			try {
- 				DBManager.getInstance().getConnection().setAutoCommit(true);
+ 				conn.setAutoCommit(true);
  			} catch (SQLException e) {
  				System.out.println("Error#7 in PostDAO. Error message: " + e.getMessage());
  			}
@@ -101,56 +106,56 @@ public class PostDAO {
 		Post post = null;
 		String sql = null;
 		PreparedStatement st = null;
- 			try {
-				DBManager.getInstance().getConnection().setAutoCommit(false);
-		 		try {
-					sql ="INSERT INTO posts (user_id, name, description, album_id, date_created, picture_path, post_id, delete_hash)"
-								+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-					st = DBManager.getInstance().getConnection().prepareStatement(sql);	
-			 		st.setLong(1, user.getUserId());
-			 		st.setString(2, name);
-			 		st.setString(3, description);
-			 		st.setLong(4, album.getAlbumId());
-			 		st.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
-			 		st.setString(6, picturePath); 
-			 		st.setString(7, postId);
-			 		st.setString(8, deleteHash);
-					st.execute();
-				} catch (SQLException e2) {
-					System.out.println("Error#1 in PostDAO. Error message: " + e2.getMessage());
-				}
-		 		try {
-			 		post = new Post(user, name, description, dateCreated, picturePath, tags, postId, deleteHash);
-			 		editTags(post, user, tags);
-					post.addTags(tags);
-				} catch (ValidationException e1) {
-					System.out.println("Error#2 in PostDAO. Error message: " + e1.getMessage());
-				}
-		 		try {
-		 			
-		 			sql ="INSERT INTO albums_posts (album_id, post_id) VALUES (?, ?);";
-			 		st = DBManager.getInstance().getConnection().prepareStatement(sql);	
-			 		st.setLong(1, album.getAlbumId());;
-			 		st.setString(2, postId);
-					st.execute();
-				} catch (SQLException e) {
-					System.out.println("Error#3 in PostDAO. Error message: " + e.getMessage());
-				}
-			} catch (SQLException e3) {
-				try {
-					DBManager.getInstance().getConnection().rollback();
-				} catch (SQLException e) {
-					System.out.println("Error#4 in PostDAO. Error message: " + e3.getMessage());
-				}
-				System.out.println("Error#5 in PostDAO. Error message: " + e3.getMessage());
-			}finally{
-	 			try {
-	 				DBManager.getInstance().getConnection().setAutoCommit(true);
-	 			} catch (SQLException e) {
-	 				System.out.println("Error#6 in PostDAO. Error message: " + e.getMessage());
-	 			}
-	 		}	
- 			
+		Connection conn = null;
+ 		try {
+ 			conn = (Connection) dataSource.getConnection();
+			conn.setAutoCommit(false);
+		 	try {
+				sql ="INSERT INTO posts (user_id, name, description, album_id, date_created, picture_path, post_id, delete_hash)"
+							+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+				st = conn.prepareStatement(sql);	
+			 	st.setLong(1, user.getUserId());
+			 	st.setString(2, name);
+				st.setString(3, description);
+				st.setLong(4, album.getAlbumId());
+			 	st.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
+			 	st.setString(6, picturePath); 
+			 	st.setString(7, postId);
+			 	st.setString(8, deleteHash);
+				st.execute();
+			} catch (SQLException e2) {
+				System.out.println("Error#1 in PostDAO. Error message: " + e2.getMessage());
+			}
+		 	try {
+			 	post = new Post(user, name, description, dateCreated, picturePath, tags, postId, deleteHash);
+			 	editTags(post, user, tags);
+				post.addTags(tags);
+			} catch (ValidationException e1) {
+				System.out.println("Error#2 in PostDAO. Error message: " + e1.getMessage());
+			}
+		 	try {	
+		 		sql ="INSERT INTO albums_posts (album_id, post_id) VALUES (?, ?);";
+			 	st = conn.prepareStatement(sql);	
+			 	st.setLong(1, album.getAlbumId());;
+			 	st.setString(2, postId);
+				st.execute();
+			} catch (SQLException e) {
+				System.out.println("Error#3 in PostDAO. Error message: " + e.getMessage());
+			}
+		} catch (SQLException e3) {
+			try {
+				conn.rollback();
+			} catch (SQLException e) {
+				System.out.println("Error#4 in PostDAO. Error message: " + e3.getMessage());
+			}
+			System.out.println("Error#5 in PostDAO. Error message: " + e3.getMessage());
+		}finally{
+	 		try {
+	 			conn.setAutoCommit(true);
+	 		} catch (SQLException e) {
+	 			System.out.println("Error#6 in PostDAO. Error message: " + e.getMessage());
+	 		}
+	 	}				
  		CachedObjects.getInstance().addPost(post, album);
 	}
 		
@@ -158,8 +163,10 @@ public class PostDAO {
 	public Post editPostName(Post post, User user, String str) throws ValidationException{
 		String sql = "UPDATE posts SET name = ? WHERE post_id = ? ";
  		PreparedStatement st;
+		Connection conn = null;
 		try {
-			st = DBManager.getInstance().getConnection().prepareStatement(sql);
+			conn = (Connection) dataSource.getConnection();
+			st = conn.prepareStatement(sql);
 			st.setString(1, str);
 			st.setString(2, post.getPostId());
 	 		st.execute();
@@ -174,8 +181,10 @@ public class PostDAO {
  	public Post editPostInfo(Post post, User user, String str) throws ValidationException{
 		String sql = "UPDATE posts SET description = ? WHERE post_id = ? ";
  		PreparedStatement st;
-		try {
-			st = DBManager.getInstance().getConnection().prepareStatement(sql);
+		Connection conn = null;
+			try {
+			conn = (Connection) dataSource.getConnection();
+			st = conn.prepareStatement(sql);
 			st.setString(1, str);
 			st.setString(2, post.getPostId());
 	 		st.execute();
@@ -192,18 +201,20 @@ public class PostDAO {
 		ResultSet result = null;
 	 	ArrayList<Long> lonelyTags = new ArrayList<>();
 	 	String sql = "";
- 		try {
- 			DBManager.getInstance().getConnection().setAutoCommit(false);
+		Connection conn = null;
+			try {
+			conn = (Connection) dataSource.getConnection();
+ 			conn.setAutoCommit(false);
  			//if this post is new then don't clean old photo tags 'cuz they don't exist :)
  			if(!post.getTags().isEmpty()){
  	 			//delete all tag and post connections 
 	 			sql = "DELETE FROM tags_posts WHERE post_id = ? ";
-	 			st = DBManager.getInstance().getConnection().prepareStatement(sql);
+	 			st = conn.prepareStatement(sql);
 	 			st.setString(1, post.getPostId());
 	 			st.execute();	 			
 	 			//select all tags with no post connections
 	 			sql = "SELECT t.tag_id FROM tags t LEFT JOIN tags_posts tp ON t.tag_id = tp.tag_id WHERE tp.tag_id IS NULL";
-	 			st = DBManager.getInstance().getConnection().prepareStatement(sql);
+	 			st = conn.prepareStatement(sql);
 	 			result = st.executeQuery();
 	 			while(result.next()){
 	 				lonelyTags.add(result.getLong("tag_id"));		
@@ -211,7 +222,7 @@ public class PostDAO {
 	 			//delete them
 	 			for(Long tagId: lonelyTags){
 		 			sql = "DELETE FROM tags WHERE tag_id = ? ";
-		 			st = DBManager.getInstance().getConnection().prepareStatement(sql);
+		 			st = conn.prepareStatement(sql);
 		 			st.setLong(1, tagId);
 		 			st.execute();
 	 			}
@@ -220,7 +231,7 @@ public class PostDAO {
  			//add new tags in tag table if needed! tags are unique they won't be added in if they are already in it
  			for(String tag_name: tags){
  				sql = "INSERT INTO tags (name) value (?)";
-	 			st = DBManager.getInstance().getConnection().prepareStatement(sql);
+	 			st = conn.prepareStatement(sql);
 	 			st.setString(1, tag_name);
 	 			st.execute();
  			}
@@ -228,7 +239,7 @@ public class PostDAO {
  			lonelyTags = new ArrayList<>();
  			for(String tag_name : tags){
  				sql = "SELECT tag_id FROM tags where name = ?";
- 	 			st = DBManager.getInstance().getConnection().prepareStatement(sql);
+ 	 			st = conn.prepareStatement(sql);
 	 			st.setString(1, tag_name);
  	 			result = st.executeQuery();
  	 			while(result.next()){
@@ -238,21 +249,21 @@ public class PostDAO {
  	 		//insert them
  	 		for(Long tagId: lonelyTags){
 				sql = "INSERT INTO tags_posts (tag_id, post_id) VALUES (?, ?) ";
- 				st = DBManager.getInstance().getConnection().prepareStatement(sql);
+ 				st = conn.prepareStatement(sql);
  				st.setLong(1, tagId);
  				st.setString(2, post.getPostId());
  				st.execute();
  	 		}
  	 	}catch (SQLException e1) {
  			try {
-				DBManager.getInstance().getConnection().rollback();
+				conn.rollback();
 	 			System.out.println("Error#1 in PostDAO. Error message: " + e1.getMessage());
 			} catch (SQLException e) {
 	 			System.out.println("Error#2 in PostDAO. Error message: " + e.getMessage());
 			}
  	 	}finally{
  			try {
- 				DBManager.getInstance().getConnection().setAutoCommit(true);
+ 				conn.setAutoCommit(true);
  			} catch (SQLException e) {
  				System.out.println("Error#3 in PostDAO. Error message: " + e.getMessage());
  			}
@@ -267,8 +278,10 @@ public class PostDAO {
  	public void addLike(Post post, User user) throws ValidationException{
 		String sql = "INSERT INTO post_likes (user_id, post_id) VALUES (?, ?)";
  		PreparedStatement st;
-		try {
-			st = DBManager.getInstance().getConnection().prepareStatement(sql);
+		Connection conn = null;
+			try {
+			conn = (Connection) dataSource.getConnection();
+			st = conn.prepareStatement(sql);
 			st.setLong(1, user.getUserId());
 			st.setString(1, post.getPostId());
 	 		st.execute();
@@ -282,8 +295,10 @@ public class PostDAO {
  	public void removeLike(Post post, User user) throws ValidationException{
 		String sql = "DELETE FROM post_likes WHERE user_id = " + user.getUserId() + " and post_id " + post.getPostId();
  		PreparedStatement st;
-		try {
-			st = DBManager.getInstance().getConnection().prepareStatement(sql);
+		Connection conn = null;
+			try {
+			conn = (Connection) dataSource.getConnection();
+			st = conn.prepareStatement(sql);
 	 		st.execute();
 		} catch (SQLException e) {
 			System.out.println("Error#1 in PostDAO. Error message: " + e.getMessage());
@@ -293,14 +308,15 @@ public class PostDAO {
  	
 	//delete post
  	public void deletePost(Post post, User user, Album album) throws ValidationException{
-
- 		try {
+		Connection conn = null;
+			try {
+			conn = (Connection) dataSource.getConnection();
  			//first delete form album and post connecting table
-			DBManager.getInstance().getConnection().setAutoCommit(false);
+			conn.setAutoCommit(false);
 			String sql = "DELETE FROM albums_posts WHERE post_id =  ?; ";
 	 		PreparedStatement st;
 			try {
-				st = DBManager.getInstance().getConnection().prepareStatement(sql);
+				st = conn.prepareStatement(sql);
 				st.setString(1, post.getPostId());
 		 		st.execute();
 			} catch (SQLException e) {
@@ -308,10 +324,10 @@ public class PostDAO {
 			}	
  			
 			//second delete from post and like connecting table
-			DBManager.getInstance().getConnection().setAutoCommit(false);
+			conn.setAutoCommit(false);
 			sql = "DELETE FROM post_likes WHERE post_id = ?; ";
 			try {
-				st = DBManager.getInstance().getConnection().prepareStatement(sql);
+				st = conn.prepareStatement(sql);
 				st.setString(1, post.getPostId());
 		 		st.execute();
 			} catch (SQLException e) {
@@ -319,10 +335,10 @@ public class PostDAO {
 			}	
 			
 			//third delete from tag and posts connecting table
-			DBManager.getInstance().getConnection().setAutoCommit(false);
+			conn.setAutoCommit(false);
 			sql = "DELETE FROM tags_posts WHERE post_id =  ?; ";
 			try {
-				st = DBManager.getInstance().getConnection().prepareStatement(sql);
+				st = conn.prepareStatement(sql);
 				st.setString(1, post.getPostId());
 		 		st.execute();
 			} catch (SQLException e) {
@@ -332,7 +348,7 @@ public class PostDAO {
 			//fourth delete all tags with no posts 			
 			//4.1 select all tags with no post connections
  			sql = "SELECT t.tag_id FROM tags t LEFT JOIN tags_posts tp ON t.tag_id = tp.tag_id WHERE tp.post_id IS NULL";
- 			st = DBManager.getInstance().getConnection().prepareStatement(sql);
+ 			st = conn.prepareStatement(sql);
  			ResultSet result;
  		 	ArrayList<Long> lonelyTags = new ArrayList<>();
  			result = st.executeQuery();
@@ -342,16 +358,16 @@ public class PostDAO {
  			//4.2 delete them
  			for(Long tagId: lonelyTags){
 	 			sql = "DELETE FROM tags WHERE tag_id = ? ";
-	 			st = DBManager.getInstance().getConnection().prepareStatement(sql);
+	 			st = conn.prepareStatement(sql);
 	 			st.setLong(1, tagId);
 	 			st.execute();
  			}
 					
 			//AND fifth delete post 
-			DBManager.getInstance().getConnection().setAutoCommit(false);
+			conn.setAutoCommit(false);
 			sql = "DELETE FROM posts WHERE post_id = ?; ";
 			try {
-				st = DBManager.getInstance().getConnection().prepareStatement(sql);
+				st = conn.prepareStatement(sql);
 				st.setString(1, post.getPostId());
 		 		st.execute();
 			} catch (SQLException e) {
@@ -360,14 +376,14 @@ public class PostDAO {
 	
  		}catch (SQLException e1) {
  			try {
-				DBManager.getInstance().getConnection().rollback();
+				conn.rollback();
 	 			System.out.println("Error#5 in PostDAO. Error message: " + e1.getMessage());
 			} catch (SQLException e) {
 	 			System.out.println("Error#6 in PostDAO. Error message: " + e.getMessage());
 			}
  	 	}finally{
  			try {
- 				DBManager.getInstance().getConnection().setAutoCommit(true);
+ 				conn.setAutoCommit(true);
  			} catch (SQLException e) {
  				System.out.println("Error#7 in PostDAO. Error message: " + e.getMessage());
  			}
@@ -383,11 +399,16 @@ public class PostDAO {
 	  		PreparedStatement st = null;
 	  		String sql = "";
 	 		ResultSet result = null;
-	 		try {
-	 			DBManager.getInstance().getConnection().setAutoCommit(false);
+	    	ApplicationContext context =
+	        		new ClassPathXmlApplicationContext("Spring-Module.xml");
+			CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
+			Connection conn = null;
+ 			try {
+ 				conn = (Connection) dataSource.getConnection();
+	 			conn.setAutoCommit(false);
 	 			//select all post_id
 	 			sql = "SELECT post_id, album_id FROM albums_posts";
-	 		 	st = DBManager.getInstance().getConnection().prepareStatement(sql);
+	 		 	st = conn.prepareStatement(sql);
 	 		 	st.execute();
 	 		 	result = st.getResultSet();
 	 			while(result.next()){
@@ -403,7 +424,7 @@ public class PostDAO {
 			 			sql = "SELECT t.name FROM tags t "
 			 				+ "JOIN tags_posts tp ON t.tag_id = tp.tag_id "
 			 				+ "WHERE tp.post_id = ? ";
-			 		 	st = DBManager.getInstance().getConnection().prepareStatement(sql);
+			 		 	st = conn.prepareStatement(sql);
 			 		 	st.setString(1, str);
 			 		 	st.execute();
 			 		 	result = st.getResultSet();
@@ -415,7 +436,7 @@ public class PostDAO {
 				 			+ "FROM posts WHERE post_id = ? ";
 				 		//initialization
 				 		try {
-				 		 	st = DBManager.getInstance().getConnection().prepareStatement(sql);
+				 		 	st = conn.prepareStatement(sql);
 				 		 	st.setString(1, str);
 				 		 	st.execute();
 				 		} catch (SQLException e2) {
@@ -428,7 +449,7 @@ public class PostDAO {
 				 				try {
 					 				User user = CachedObjects.getInstance().getOneUser(result.getLong("user_id"));
 					 				Post post = new Post(user, result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), result.getString("picture_path"), tags, str, result.getString("delete_hash"));
-					 				CommentDAO.getInstance().getAllComments(post);
+					 				commentDAO.getAllComments(post);
 				 					//add all post in right albums
 					 				CachedObjects.getInstance().addPost(post, albumId);
 				 				} catch (SQLException e) {
@@ -442,14 +463,14 @@ public class PostDAO {
 	 			}
 	 		}catch (SQLException e1) {
 	 			try {
-					DBManager.getInstance().getConnection().rollback();
+					conn.rollback();
 		 			System.out.println("Error#5 in PostDAO. Error message: " + e1.getMessage());
 				} catch (SQLException e) {
 		 			System.out.println("Error#6 in PostDAO. Error message: " + e.getMessage());
 				}
 	 	 	}finally{
 	 			try {
-	 				DBManager.getInstance().getConnection().setAutoCommit(true);
+	 				conn.setAutoCommit(true);
 	 			} catch (SQLException e) {
 	 				System.out.println("Error#7 in PostDAO. Error message: " + e.getMessage());
 	 			}

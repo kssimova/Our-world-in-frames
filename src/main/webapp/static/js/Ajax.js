@@ -5,10 +5,11 @@ $(function() {
 		var $img = $('#ajaxGetImg');
 		var $comment = $('#comment-content');
 		var $user = $();
+		var postID = 1;
 	$('#getImgButton').on('click', function(){
 		$.ajax({
 			type:'Get',
-			url: '../getImg',
+			url: '/post/get/' + postID,
 			success: function(img) {
 			    $img.find('li').remove();
 				$img.append('<li>ID: '+ img.id+'</li> ');

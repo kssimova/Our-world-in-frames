@@ -4,6 +4,10 @@ import java.util.List;
 
 import javax.xml.bind.ValidationException;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.ourwif.DAO.PostDAO;
 import com.ourwif.DAO.UserDAO;
 import com.ourwif.model.User;
 import com.ourwif.model.User.Gender;
@@ -13,7 +17,11 @@ public class UserTest {
 	
 	public static void main(String[] args) throws ValidationException {
 		
-		List<User> allUsers = UserDAO.getInstance().getAllUsers();
+    	ApplicationContext context =
+        		new ClassPathXmlApplicationContext("Spring-Module.xml");
+		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
+		
+		List<User> allUsers = userDAO.getAllUsers();
 		
 		for(User u : allUsers){
 			System.out.println("User nomer " + u.getUserId() + " s username " + u.getUsername() + " i imena " + u.getFirstName() + " " + u.getLastName() + 
@@ -41,27 +49,27 @@ public class UserTest {
 		mimi.changeDescription("dofngdfnbdibkn");
 		mimi.changeBirthDate(LocalDate.now());
 		mimi.changeGender(Gender.FEMALE);
-		UserDAO.getInstance().addUser(mimi);
+		userDAO.addUser(mimi);
 		
-		UserDAO.getInstance().changeFirstName(krisi, "KRISTINA");
+		userDAO.changeFirstName(krisi, "KRISTINA");
 		
-		UserDAO.getInstance().changeLastName(krisi, "SIMOVAAAA");
+		userDAO.changeLastName(krisi, "SIMOVAAAA");
 		
-		UserDAO.getInstance().changePassword(krisi, "kriska5678");
+		userDAO.changePassword(krisi, "kriska5678");
 		
-		UserDAO.getInstance().changeEmail(krisi, "krisisisisi@abv.bg");
+		userDAO.changeEmail(krisi, "krisisisisi@abv.bg");
 		
-		UserDAO.getInstance().changeDescription(krisi, "yoxoxoxo");
+		userDAO.changeDescription(krisi, "yoxoxoxo");
 		
-		UserDAO.getInstance().changeProfilePhoto(krisi, "poskwienfwoi4353o4n");
+		userDAO.changeProfilePhoto(krisi, "poskwienfwoi4353o4n");
 		
-		UserDAO.getInstance().changeCityCountry(krisi, "england", "london");
+		userDAO.changeCityCountry(krisi, "england", "london");
 		
-		UserDAO.getInstance().changeMobileNumber(krisi, "0883411090");
+		userDAO.changeMobileNumber(krisi, "0883411090");
 		
-		UserDAO.getInstance().changeBirthdate(krisi, LocalDate.of(1996, 8, 31));
+		userDAO.changeBirthdate(krisi, LocalDate.of(1996, 8, 31));
 		
-		UserDAO.getInstance().followUser(krisi, mimi);
+		userDAO.followUser(krisi, mimi);
 	}
 
 }

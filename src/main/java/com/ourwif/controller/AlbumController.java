@@ -18,7 +18,7 @@ public class AlbumController {
 	@RequestMapping(value="/{album_id}",method = RequestMethod.GET)
 	public String getAlbum(Model model, @PathVariable("album_id") Integer productId) {
 		//this should get one album the JSON should contain the album id	
-		return "basic response";
+		return "Albums";
 	}
 
 

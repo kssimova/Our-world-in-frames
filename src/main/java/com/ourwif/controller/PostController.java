@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.ValidationException;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +41,9 @@ import com.ourwif.model.User;
 @RestController
 @RequestMapping(value= "/post")
 public class PostController {
+	ApplicationContext context =
+    		new ClassPathXmlApplicationContext("Spring-Module.xml");
+	PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
 
 	
 	@RequestMapping(value="/get/{post_id}",method = RequestMethod.GET)
@@ -50,7 +55,7 @@ public class PostController {
 			post = CachedObjects.getInstance().getOnePost(postId); 
 		}else{
 			try {
-				PostDAO.getInstance().getAllPosts();
+				postDAO.getAllPosts();
 			} catch (ValidationException e) {
 				System.out.println("Validation fail");
 			}
@@ -140,14 +145,14 @@ public class PostController {
 			String description = request.getParameter("description");
 			if(!title.isEmpty() && title != null){
 				try {
-					PostDAO.getInstance().editPostName(post, user, title);
+					postDAO.editPostName(post, user, title);
 				} catch (ValidationException e) {
 					System.out.println("Validation fail");
 				}
 			}
 			if(!description.isEmpty() && description != null){
 				try {
-					PostDAO.getInstance().editPostInfo(post, user, description);
+					postDAO.editPostInfo(post, user, description);
 				} catch (ValidationException e) {
 					System.out.println("Validation fail");
 				}
@@ -173,7 +178,7 @@ public class PostController {
 			
 			CachedObjects.getInstance().removePost(post, album);
 			try {
-				PostDAO.getInstance().deletePost(post, user, album);
+				postDAO.deletePost(post, user, album);
 			} catch (ValidationException e) {
 				System.out.println("something went wrong");
 			}
@@ -209,7 +214,7 @@ public class PostController {
 			User user = CachedObjects.getInstance().getOneUser((long)session.getAttribute("user_id"));
 			Post post = CachedObjects.getInstance().getOnePost(request.getParameter("post_id"));
 			try {
-				PostDAO.getInstance().addLike(post, user);
+				postDAO.addLike(post, user);
 			} catch (ValidationException e) {
 				System.out.println("Error in validation");
 			}	
@@ -226,7 +231,7 @@ public class PostController {
 			User user = CachedObjects.getInstance().getOneUser((long)session.getAttribute("user_id"));
 			Post post = CachedObjects.getInstance().getOnePost(request.getParameter("post_id"));
 			try {
-				PostDAO.getInstance().removeLike(post, user);
+				postDAO.removeLike(post, user);
 			} catch (ValidationException e) {
 				System.out.println("Error in validation");
 			}	

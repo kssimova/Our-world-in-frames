@@ -5,12 +5,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.ValidationException;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ourwif.DAO.PostDAO;
 import com.ourwif.DAO.UserDAO;
 import com.ourwif.model.CachedObjects;
 import com.ourwif.model.User;
@@ -18,6 +21,9 @@ import com.ourwif.model.User;
 @RestController
 @RequestMapping(value= "/user")
 public class UserController {
+	ApplicationContext context =
+    		new ClassPathXmlApplicationContext("Spring-Module.xml");
+	UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
     
 	@RequestMapping(value="/login",method = RequestMethod.POST)
 	public String login(Model model, HttpSession session, HttpServletRequest request) {
@@ -27,14 +33,14 @@ public class UserController {
 		//TODO create login.jsp
 		String fileName = "JSP/Login.jsp";
 		User u = null;
-			if(UserDAO.getInstance().validLogin(username, password)){
+			if(userDAO.validLogin(username, password)){
 				if(CachedObjects.getInstance().containsUser(username)){
 					session.setAttribute("username", username);
 					session.setAttribute("user", u);
 					session.setAttribute("logged", true);
 				}else{
 					try {
-						UserDAO.getInstance().getAllUsers();
+						userDAO.getAllUsers();
 					} catch (ValidationException e) {
 						System.out.println("ops cant log in");
 					}{
