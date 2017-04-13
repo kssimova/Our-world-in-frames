@@ -1,7 +1,12 @@
 package com.ourwif.controller;
 
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.ValidationException;
 
@@ -13,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ourwif.DAO.PostDAO;
 import com.ourwif.DAO.UserDAO;
+import com.ourwif.model.Basic;
 import com.ourwif.model.CachedObjects;
 import com.ourwif.model.User;
 
@@ -24,6 +29,16 @@ public class UserController {
 	ApplicationContext context =
     		new ClassPathXmlApplicationContext("Spring-Module.xml");
 	UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
+	
+	
+	@RequestMapping(value="/api", method=RequestMethod.GET)
+	public void getApi(HttpServletResponse response) {
+	    try {
+			response.sendRedirect("apiJSP");
+		} catch (IOException e) {
+			System.out.println("ops");
+		}
+	}
     
 	@RequestMapping(value="/login",method = RequestMethod.POST)
 	public String login(Model model, HttpSession session, HttpServletRequest request) {

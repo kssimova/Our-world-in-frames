@@ -150,5 +150,10 @@ public class CachedObjects {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public boolean containsAlbum(Integer albumId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }

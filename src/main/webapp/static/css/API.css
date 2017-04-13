@@ -13,3 +13,15 @@ td{
 h1{
 	margin-right: 50px;
 }
+
+.noMods{
+	width   : 100px;
+    cursor  : pointer;
+    font-family : "Monospace", Lucida Console, serif;
+   	font-size: 15px;
+   	background: #222222;
+   	color: #9d9d99;
+    border : none;
+    margin : 0px;
+	padding: 15px 0 0 0 ;
+}

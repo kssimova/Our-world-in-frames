@@ -4,9 +4,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Album</title>
 </head>
 <body>
-<h1>this is the album page</h1>
+	<jsp:include page="nav.jsp" />
+	<h1>this is the album page</h1>
 </body>
 </html>

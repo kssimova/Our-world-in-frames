@@ -1,12 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Demo</title>
+	<link rel="stylesheet" type="text/css" href=css/bootstrap.css></link>
+	<link rel="stylesheet" type="text/css" href=css/bootstrap.min.css></link>
+	<link rel="stylesheet" type="text/css" href=css/bootstrap-theme.css></link>
+	<link rel="stylesheet" type="text/css" href=css/bootstrap-theme.min.css></link>
+	<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.0.min.js"></script>
+	<script src=js/tether.js></script>
+	<script src=js/tether.min.js></script>
+<title>Hello</title>
 </head>
 <body>
+	<jsp:include page="nav.jsp" />
+	
 <script>
   window.fbAsyncInit = function() {
     FB.init({
@@ -24,7 +34,6 @@
      fjs.parentNode.insertBefore(js, fjs);
    }(document, 'script', 'facebook-jssdk'));
 </script>
-
 <div
   class="fb-like"
   data-share="true"
@@ -37,7 +46,7 @@
 <br>
 
 
-<input id = "getImgButton" type="submit" value="getImg">
+<input id ="getImgButton" type="submit" value="getImg">
 Response from ajax : <ul id="ajaxGetImg"></ul>
 
 <br>
@@ -67,5 +76,9 @@ this is just one demo button for comments :
 <br>
 <br>
 
+<f:form commandName="getApi" action="/ourwif/api" method = "POST">
+	<button class= "removeStyle" type="submit" value="Go to API"></button>
+</f:form>
 </body>
+
 </html>

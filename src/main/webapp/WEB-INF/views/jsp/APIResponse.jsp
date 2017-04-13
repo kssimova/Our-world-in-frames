@@ -9,9 +9,10 @@
 <link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 <script src="../bootstrap/js/bootstrap.min.js"></script>
-<title>Insert title here</title>
+<title>ApiResp</title>
 </head>
 <body>
+	<jsp:include page="nav.jsp" />
 <h1>USER</h1>
 <div class="col-md-6">
 	<table class="table table-hover">

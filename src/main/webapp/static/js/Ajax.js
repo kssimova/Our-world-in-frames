@@ -45,3 +45,21 @@ $(function() {
 		});	
 	});
 });
+
+
+$(function() {
+
+	$('#getAPI').on('click', function(){
+		$.ajax({
+			type:'Get',
+			url: 'user/api',
+			data: JSON,
+	        success : function(data) {
+	        	 console.log(data.url);
+            },
+            error : function(data) {
+    	        alert.log(data);
+            }
+        });
+	});	
+});
