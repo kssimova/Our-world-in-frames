@@ -12,7 +12,7 @@
 <title>ApiResp</title>
 </head>
 <body>
-	<jsp:include page="nav.jsp" />
+	<jsp:include page="UnlogedNav.jsp" />
 <h1>USER</h1>
 <div class="col-md-6">
 	<table class="table table-hover">

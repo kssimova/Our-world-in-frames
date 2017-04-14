@@ -5,13 +5,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/API.css">
 	<link rel="stylesheet" type="text/css" href="css/login.css">
 	<script src=js/login.js></script>
 <title>login</title>
 </head>
 <body>
-<nav><jsp:include page="nav.jsp" /></nav>
+	<jsp:include page="UnlogedNav.jsp" />
 
 <div class="container">
     <div class="row">
@@ -25,12 +26,10 @@
                 </div>
             </div>
             <div class="wrap">
-                <p class="form-title">
-                    Sign In</p>
-                <form class="login form1">
-                <input type="text" placeholder="Username" />
-                <input type="password" placeholder="Password" />
-                <input type="submit" value="Sign In" class="btn btn-info btn-sm" />
+                <p class="form-title">Sign In</p>
+                <input id = "username" type="text" placeholder="Username" >
+                <input id = "password" type="password" placeholder="Password" >
+                <input id = "login" type="submit" value="Sign In" class="btn btn-info btn-sm" >
                 <div class="remember-forgot">
                     <div class="row">
                         <div class="col-md-6">
@@ -41,12 +40,8 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-md-6 forgot-pass-content">
-                            <a href="javascription:void(0)" class="forgot-pass">Forgot Password</a>
-                        </div>
                     </div>
                 </div>
-                </form>
                 <f:form class="login form1" commandName="register" action="/ourwif/registerPage" method = "POST">
               		 <input type="submit" value="Register" class="btn btn-info btn-sm" />
                </f:form>
@@ -54,6 +49,11 @@
         </div>
     </div>
 </div>
+
+<p id = "hello">Hello
+
+</p>
+
 	
 	
 </body>

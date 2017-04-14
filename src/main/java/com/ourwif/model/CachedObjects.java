@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.jws.soap.SOAPBinding.Use;
+
 
 public class CachedObjects {
 	
@@ -27,7 +29,13 @@ public class CachedObjects {
 	}
 	
 	public User getOneUser(long userId) {
-		return allUsers.get(userId);
+		User u = null;
+		for(long userIds : allUsers.keySet()){
+			if(userIds == userId){
+				u = allUsers.get(userIds);	
+			}
+		}		
+		return u;
 	}
 	public User getOneUser(String username) {
 		User user = null;
@@ -154,6 +162,10 @@ public class CachedObjects {
 	public boolean containsAlbum(Integer albumId) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public Map<Long, User> getAllUsers() {
+		return  Collections.unmodifiableSortedMap(allUsers);
 	}
 	
 }

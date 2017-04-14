@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-    <%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -41,14 +41,21 @@
 	                <input type="text" placeholder="Search" class="form-control">
 	            </div>
 	        </form>
-	        <ul class="nav navbar-nav navbar-right">
+	        <ul id = "navRightBar" class="nav navbar-nav navbar-right">
+	          	<li>
+	            	<f:form commandName="goToProfile" action="/ourwif/profile" method = "POST">
+						<input class= "noMods" type="submit" value="Profile">
+					</f:form>
+	            </li>
 	            <li>
-	            	<f:form commandName="getApi" action="/ourwif/loginPage" method = "POST">
-						<input class= "noMods" type="submit" value="login">
+	            	<f:form commandName="goToProfile" action="/ourwif/user/logout" method = "GET">
+						<input class= "noMods" type="submit" value="LogOut">
 					</f:form>
 	            </li>
 	        </ul>
 	    </div>
 	</nav>
+
+
 </body>
 </html>

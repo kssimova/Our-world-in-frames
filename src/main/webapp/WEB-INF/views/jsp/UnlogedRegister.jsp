@@ -11,7 +11,7 @@
 <title>register</title>
 </head>
 <body>
-	<jsp:include page="nav.jsp" />
+	<jsp:include page="UnlogedNav.jsp" />
 	
 	<div class="container">
     <div class="row">

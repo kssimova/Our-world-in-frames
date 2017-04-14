@@ -15,7 +15,7 @@
 <title>Hello</title>
 </head>
 <body>
-	<jsp:include page="nav.jsp" />
+	<jsp:include page="UnlogedNav.jsp" />
 	
 <script>
   window.fbAsyncInit = function() {

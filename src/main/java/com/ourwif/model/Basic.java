@@ -2,21 +2,21 @@ package com.ourwif.model;
 
 public class Basic {
 	
-	private int Status;
+	private boolean status;
 	private String url;
 	private Long id;
 	
 	
-	public Basic(int status, String url, Long id) {
+	public Basic(boolean loged, String url, Long id) {
 		super();
-		Status = status;
+		status = loged;
 		this.url = url;
 		this.id = id;
 	}
 
 
-	public int getStatus() {
-		return Status;
+	public boolean getStatus() {
+		return status;
 	}
 
 
@@ -30,8 +30,8 @@ public class Basic {
 	}
 
 
-	public void setStatus(int status) {
-		Status = status;
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 
 

@@ -23,6 +23,8 @@ import com.ourwif.model.Basic;
 import com.ourwif.model.CachedObjects;
 import com.ourwif.model.User;
 
+import io.netty.handler.codec.http.HttpResponse;
+
 @RestController
 @RequestMapping(value= "/user")
 public class UserController {
@@ -41,17 +43,16 @@ public class UserController {
 	}
     
 	@RequestMapping(value="/login",method = RequestMethod.POST)
-	public String login(Model model, HttpSession session, HttpServletRequest request) {
+	public Basic login(Model model, HttpSession session, HttpServletRequest request) {
 		String username = request.getParameter("username");
+		System.out.println(username);
 		String password = request.getParameter("password");	
-		
-		//TODO create login.jsp
-		String fileName = "JSP/Login.jsp";
+		System.out.println(password);
+		Basic basic = null;
 		User u = null;
 			if(userDAO.validLogin(username, password)){
 				if(CachedObjects.getInstance().containsUser(username)){
 					session.setAttribute("username", username);
-					session.setAttribute("user", u);
 					session.setAttribute("logged", true);
 				}else{
 					try {
@@ -60,24 +61,31 @@ public class UserController {
 						System.out.println("ops cant log in");
 					}{
 					u = CachedObjects.getInstance().getOneUser(username);
+					session.setAttribute("username", username);
+					session.setAttribute("logged", true);
 				}
 			}	
 		}
+		basic = new Basic(true, "/ourwif/index", u.getUserId());
 		//this will delete one comment.. request should contain the id of this comment 
-		return "redirect:index.html";
+		return basic;
 	}
 	
 	@RequestMapping(value="/logout",method = RequestMethod.GET)
-	public String logout(HttpSession session) {
-		// for viewing one profile
-		return null;
+	public void logout(HttpSession session, HttpServletResponse response) {
+		session.invalidate();
+		try {
+			response.sendRedirect("../index");
+		} catch (IOException e) {
+			System.out.println("ops");
+		}
 	}
 	
 	@RequestMapping(value="/register",method = RequestMethod.POST)
 	public String register(Model model, HttpSession session, HttpServletRequest request) {
 
 		//this will delete one comment.. request should contain the id of this comment 
-		return "redirect:index.html";
+		return "UnlogedLogin";
 	}
 	
 
