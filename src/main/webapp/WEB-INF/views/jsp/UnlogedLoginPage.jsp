@@ -27,33 +27,18 @@
             </div>
             <div class="wrap">
                 <p class="form-title">Sign In</p>
-                <input id = "username" type="text" placeholder="Username" >
-                <input id = "password" type="password" placeholder="Password" >
-                <input id = "login" type="submit" value="Sign In" class="btn btn-info btn-sm" >
-                <div class="remember-forgot">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" />
-                                    Remember Me
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <f:form class="login form1" commandName="register" action="/ourwif/registerPage" method = "POST">
-              		 <input type="submit" value="Register" class="btn btn-info btn-sm" />
-               </f:form>
+                <p class="login form1">
+	                <input id = "username" type="text" placeholder="Username" >
+	                <input id = "password" type="password" placeholder="Password" >
+	                <input id = "login" type="submit" value="Sign In" class="btn btn-info btn-sm" > 	                       
+                </p>
+	            <f:form class="size" commandName="register" action="/ourwif/registerPage" method = "POST">
+	                <input type="submit" value="Register" class="btn btn-info btn-sm" />
+	            </f:form>   
             </div>
         </div>
     </div>
 </div>
-
-<p id = "hello">Hello
-
-</p>
-
 	
 	
 </body>
