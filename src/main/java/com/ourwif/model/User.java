@@ -278,5 +278,9 @@ public class User implements Comparable<User>{
 	public int compareTo(User user) {
 		return this.username.compareTo(user.username);
 	}
+
+	public void addAllAlbums(TreeMap<Long, Album> userAlbums) {
+		this.albums.putAll(userAlbums);	
+	}
 	
 }

@@ -13,6 +13,9 @@ import java.util.Collections;
 import javax.sql.DataSource;
 import javax.xml.bind.ValidationException;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import com.ourwif.model.CachedObjects;
 import com.ourwif.model.User;
 
@@ -56,6 +59,8 @@ public class UserDAO {
 	
 	//create new user with default album and insert into cachedObjects
 	public synchronized void addUser(User user){
+		ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
+		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		Connection connection = null;
 		// get city_id and country_id 
 		String sql = "SELECT city_id, country_id FROM ourwif.cities WHERE name = '" + user.getCity() + "'";
@@ -70,6 +75,12 @@ public class UserDAO {
 				city_id = result.getLong("city_id");
 				country_id = result.getLong("country_id");
 			}
+			try {
+				user.addAllAlbums(albumDAO.getUserAlbums(user));
+			} catch (ValidationException e) {
+				System.out.println("cant add all albums to user");
+			}
+			
 		} catch (SQLException e1) {
 			System.out.println("Error in 1st catch block in UserDAO method addUser() - " + e1.getMessage());
 		}

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.sql.DataSource;
@@ -255,4 +256,79 @@ public class AlbumDAO {
  			}
  		}
 	}
+ 	
+	//get all albums From DB
+ 	public TreeMap <Long, Album> getUserAlbums(User user) throws ValidationException {
+ 		TreeMap <Long, Album> albums = new TreeMap<>();
+ 		TreeSet<Long> allAlbumIDs = new TreeSet<>();
+  		TreeSet<Post> posts = new TreeSet<>();
+  		Album album = null;
+ 		PreparedStatement st = null;
+  		String sql = "";
+ 		ResultSet result = null;
+    	ApplicationContext context =
+        		new ClassPathXmlApplicationContext("Spring-Module.xml");
+		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
+		Connection conn = null;
+		try {
+	 		conn = (Connection) dataSource.getConnection();
+ 			conn.setAutoCommit(false);
+ 			//select all albums
+ 			sql = "SELECT album_id from albums where user_id = ?";
+ 		 	st = conn.prepareStatement(sql);
+ 		 	st.setLong(1, user.getUserId());
+ 		 	st.execute();
+ 		 	result = st.getResultSet();
+ 			while(result.next()){
+ 				allAlbumIDs.add(result.getLong("album_id"));
+ 			}		
+ 			//get posts
+ 			for(Long albumId : allAlbumIDs){
+	 			sql = "SELECT p.user_id, p.post_id, p.name, p.description, p.delete_hash, p.date_created, p.picture_path "
+	 				+ "FROM posts p JOIN albums_posts ap ON p.post_id = ap.post_id WHERE ap.album_id = ? ;";
+	 		 	st = conn.prepareStatement(sql);
+	 	 		st.setLong(1, albumId);
+	 		 	st.execute();
+	 		 	result = st.getResultSet();
+	 			while(result.next()){
+	 				Post p = postDAO.getPost(result.getString("post_id"), result.getString("delete_hash"));
+	 				posts.add(p);
+	 			}
+	 			sql = "SELECT a.name, a.description, a.date_created, a.user_id FROM albums a wHERE a.album_id = ? ;";
+		 		//create the album
+	 			try {
+		 		 	st = conn.prepareStatement(sql);
+		 		 	st.setLong(1, albumId);
+		 		 	st.execute();
+		 		 	//get result
+		 			result = st.getResultSet();
+		 			while(result.next()){
+		 				album = new Album(result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), user);
+		 		 		album.setAlbumId(albumId);
+		 		 		albums.put(albumId, album);
+		 			}
+		 			//fill this album
+		 			for(Post p : posts){
+		 				album.addPosts(p);
+		 			}
+		 		} catch (SQLException e1) {
+		 			System.out.println("Error#1 in AlbumDAO. Error message: " + e1.getMessage());
+		 		}		
+ 			}
+ 		}catch (SQLException e1) {
+ 			try {
+				conn.rollback();
+	 			System.out.println("Error#2 in AlbumDAO. Error message: " + e1.getMessage());
+			} catch (SQLException e) {
+	 			System.out.println("Error#3 in AlbumDAO. Error message: " + e.getMessage());
+			}
+ 	 	}finally{
+ 			try {
+ 				conn.setAutoCommit(true);
+ 			} catch (SQLException e) {
+ 				System.out.println("Error#4 in AlbumDAO. Error message: " + e.getMessage());
+ 			}
+ 		}
+		return albums;
+	} 	
 }

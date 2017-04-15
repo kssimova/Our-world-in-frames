@@ -62,6 +62,7 @@ public class UserController {
 					}{
 					u = CachedObjects.getInstance().getOneUser(username);
 					session.setAttribute("username", username);
+					session.setAttribute("userID", u.getUserId());
 					session.setAttribute("logged", true);
 				}
 			}	
@@ -114,4 +115,51 @@ public class UserController {
 		return "user";
 	}
 
+	@RequestMapping(value="/profile", method=RequestMethod.POST)
+	public void getProfilePage(HttpSession session, Model m) {
+		//TODO Model is a server side thing can be used in jS .... create object 
+		String url = "UnlogedIndex";
+		if(session.getAttribute("logged")!= null){
+			if(CachedObjects.getInstance().getAllUsers().size() == 0){
+				try {
+					userDAO.getAllUsers();
+				} catch (ValidationException e) {
+					System.out.println("can't get all users");
+				}
+			}
+			long l = (long)session.getAttribute("userID");
+			System.out.println(l);
+			User u = CachedObjects.getInstance().getOneUser(l);
+			m.addAttribute("username", u.getUsername());
+			System.out.println(u.getUsername());
+			m.addAttribute("email", u.getEmail());
+			System.out.println(u.getEmail());
+			m.addAttribute("firstName", u.getFirstName());
+			System.out.println(u.getFirstName());
+			m.addAttribute("lastName", u.getLastName());
+			System.out.println(u.getLastName());
+			m.addAttribute("country", u.getCountry());
+			System.out.println(u.getCountry());
+			m.addAttribute("city", u.getCity());
+			System.out.println(u.getCity());
+			m.addAttribute("descriprion", u.getDescription());
+			System.out.println(u.getDescription());
+			m.addAttribute("birthdate", u.getBirthdate());
+			System.out.println(u.getBirthdate());
+			m.addAttribute("gender", u.getGender().toString());
+			System.out.println(u.getGender().toString());
+			m.addAttribute("mobileNumber", u.getMobileNumber());
+			System.out.println(u.getMobileNumber());
+			m.addAttribute("profilePhotoPath", u.getProfilePhotoPath());
+			System.out.println(u.getProfilePhotoPath());
+			m.addAttribute("albums", u.getAlbums());
+			System.out.println(u.getAlbums());
+			m.addAttribute("followers", u.getFollowers().size());
+			System.out.println(u.getFollowers().size());
+			m.addAttribute("following", u.getFollowing().size());
+			System.out.println(u.getFollowing().size());
+			url = "/LogedUserPage";
+		}
+		m.addAttribute("url", url);
+	}
 }

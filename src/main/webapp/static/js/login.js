@@ -18,10 +18,6 @@ $(function () {
 			data: user,
 			success: function(ourUser){
 				window.location = ourUser.url;
-				var $li = $('.loged');
-				var Sli1 = $('.unloged');
-				$li.addClass('loged');
-				$li1.addClass('unloged');
 			},
 			error: function(){
 				alert("cant load");

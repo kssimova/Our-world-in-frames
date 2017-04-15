@@ -29,14 +29,10 @@ public class CachedObjects {
 	}
 	
 	public User getOneUser(long userId) {
-		User u = null;
-		for(long userIds : allUsers.keySet()){
-			if(userIds == userId){
-				u = allUsers.get(userIds);	
-			}
-		}		
-		return u;
+		System.out.println(allUsers.size());
+		return allUsers.get(userId);
 	}
+	
 	public User getOneUser(String username) {
 		User user = null;
 		for(User users : allUsers.values()){

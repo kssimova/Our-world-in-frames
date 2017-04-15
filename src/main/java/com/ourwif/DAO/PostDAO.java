@@ -476,6 +476,5 @@ public class PostDAO {
 	 			}
 	 		}
 		}
-	}
-
+	}	
 }

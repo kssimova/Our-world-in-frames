@@ -7,6 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<link rel="stylesheet" type="text/css" href=css/bootstrap.min.css></link>
 	<link rel="stylesheet" type="text/css" href="css/API.css">
+	<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.0.min.js"></script>
+	<script src="js/profile.js"></script>
 <title>Insert title here</title>
 </head>
 <body>
@@ -25,7 +27,7 @@
 	
 	    <div id="navbarCollapse" class="collapse navbar-collapse">
 	        <ul class="nav navbar-nav">
-	            <li class="active">
+	            <li>
 	            	<f:form commandName="getApi" action="/ourwif/api" method = "POST">
 						<input class= "noMods" type="submit" value="API">
 					</f:form>
@@ -43,12 +45,10 @@
 	        </form>
 	        <ul id = "navRightBar" class="nav navbar-nav navbar-right">
 	          	<li>
-	            	<f:form commandName="goToProfile" action="/ourwif/profile" method = "POST">
-						<input class= "noMods" type="submit" value="Profile">
-					</f:form>
+					<input id = "profile" class= "noMods" type="submit" value="Profile">
 	            </li>
 	            <li>
-	            	<f:form commandName="goToProfile" action="/ourwif/user/logout" method = "GET">
+	            	<f:form commandName="goToProfile" action="user/logout" method = "GET">
 						<input class= "noMods" type="submit" value="LogOut">
 					</f:form>
 	            </li>
