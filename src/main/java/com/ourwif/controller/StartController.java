@@ -3,12 +3,9 @@ package com.ourwif.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.ourwif.model.CachedObjects;
-import com.ourwif.model.User;
 
 @Controller
 public class StartController {
@@ -58,4 +55,14 @@ public class StartController {
 		}
 		return url;
 	}
+	
+	@RequestMapping(value="/profile", method=RequestMethod.POST)
+	public String getProfilePage(HttpSession session) {
+		String url = "UnlogedHomePage";
+		if(session.getAttribute("logged")!= null){
+			url = "LogedUserPage";
+		}
+		return url;
+	}
 }
+

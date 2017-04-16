@@ -10,5 +10,6 @@
 </head>
 <body>
 	<jsp:include page="LogedNav.jsp" />
+	<jsp:include page="API.jsp" />
 </body>
 </html>

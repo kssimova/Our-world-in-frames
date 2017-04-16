@@ -10,17 +10,17 @@ $(function () {
 	var $profilePhotoPath = $("#password");
 	
 	$('#profile').on('click', function(){		
-		$.ajax({
-			type: "POST",
-			url: 'user/profile',
-			success: function(user){
-				window.location = user.url;
-			    $name.remove();
-				$name.append('<span id = "name" class="card-title"> ' + user.firstName + ' ' + user.lastName + '</span>');
-			},
-			error: function(user){
-				console.log(user);
-				alert(data);
+
+				$.ajax({
+					type: "POST",
+					url: 'user/profile',
+					dataType: "json",
+					success: function(user){
+
+					},
+					error: function(data){
+						console.log(data);
+						alert(data);
 			}
 		});
 	});

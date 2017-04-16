@@ -45,7 +45,9 @@
 	        </form>
 	        <ul id = "navRightBar" class="nav navbar-nav navbar-right">
 	          	<li>
-					<input id = "profile" class= "noMods" type="submit" value="Profile">
+	          		<f:form commandName="profile" action="/ourwif/profile" method = "POST">
+						<input class= "noMods" type="submit" value="Profile">	
+					</f:form>
 	            </li>
 	            <li>
 	            	<f:form commandName="goToProfile" action="user/logout" method = "GET">
