@@ -134,9 +134,10 @@ public class UserDAO {
 		CachedObjects.getInstance().addUser(user);
 		
 	}
-	
-	
+		
 	public List<User> getAllUsers() throws ValidationException{
+		ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
+		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
 		ArrayList<User> allUsers = new ArrayList<>();
@@ -161,6 +162,7 @@ public class UserDAO {
 				user.changeCountry(result.getString("country_name"));
 				allUsers.add(user);
 				CachedObjects.getInstance().addUser(user);
+				user.addAllAlbums(albumDAO.getUserAlbums(user));
 			}
 		} catch (SQLException e1) {
 			System.out.println("Error in 1st catch block in UserDAO method getAllUsers() - " + e1.getMessage());

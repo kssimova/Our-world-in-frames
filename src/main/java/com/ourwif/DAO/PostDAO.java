@@ -40,8 +40,7 @@ public class PostDAO {
   		Post post = null;
   		String sql = "";
  		ResultSet result = null;
-    	ApplicationContext context =
-        		new ClassPathXmlApplicationContext("Spring-Module.xml");
+    	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 		CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
 		Connection conn = null;
  		try {
@@ -62,43 +61,30 @@ public class PostDAO {
 	 		sql = "SELECT name, user_id, description, album_id, date_created, picture_path "
 	 			+ "FROM posts WHERE post_id = ? ";
 	 		//initialization
-	 		try {
 	 		 	st = conn.prepareStatement(sql);
 	 		 	st.setString(1, postId);
 	 		 	st.execute();
-	 		} catch (SQLException e2) {
-	 			System.out.println("Error#1 in create post. Error message: " + e2.getMessage());
-	 		}
 	 		//get result
-	 		try {
 	 			result = st.getResultSet();
 	 			while(result.next()){
-	 				try {
-		 				User user = CachedObjects.getInstance().getOneUser(result.getLong("user_id"));
-		 				post = new Post(user, result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), result.getString("picture_path"), tags, postId, deleteHash);
-		 				commentDAO.getAllComments(post);
-	 				} catch (SQLException e) {
-	 					System.out.println("Error#3 in PostDAO. Error message: " + e.getMessage());
-	 				}
-	 			}
-	 		} catch (SQLException e1) {
-	 			System.out.println("Error#4 in PostDAO. Error message: " + e1.getMessage());
-	 		}		
- 		}catch (SQLException e1) {
- 			try {
-				conn.rollback();
-	 			System.out.println("Error#5 in PostDAO. Error message: " + e1.getMessage());
-			} catch (SQLException e) {
-	 			System.out.println("Error#6 in PostDAO. Error message: " + e.getMessage());
-			}
- 	 	}finally{
- 			try {
- 				conn.setAutoCommit(true);
- 			} catch (SQLException e) {
- 				System.out.println("Error#7 in PostDAO. Error message: " + e.getMessage());
+		 			User user = CachedObjects.getInstance().getOneUser(result.getLong("user_id"));
+		 			post = new Post(user, result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), result.getString("picture_path"), tags, postId, deleteHash);
+		 			commentDAO.getAllComments(post);
+	 			}	
+ 			}catch (SQLException e1) {
+ 				try {
+					conn.rollback();
+				} catch (SQLException e) {
+					System.out.println("Error#6 in PostDAO. Error message: " + e.getMessage());
+				}
+ 			}finally{
+ 				try {
+					conn.setAutoCommit(true);
+				} catch (SQLException e) {
+					System.out.println("Error#6 in PostDAO. Error message: " + e.getMessage());
+				}
  			}
- 		}
- 	return post;
+ 		return post;
 	}
 	
 	// create new Post

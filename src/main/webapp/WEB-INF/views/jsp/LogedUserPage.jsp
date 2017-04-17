@@ -15,26 +15,57 @@
 <body>
 <script type="text/javascript">
 window.onload = function() {
-	var $username = $("#username");
-	var $country = $("#username");
-	var $descriprion = $("#password");
-	var $birthdate = $("#hello");
-	var $gender= $("#hello");
-	var $mobileNumber = $("#username");
-	var $profilePhotoPath = $("#password");	
-
 	
+	var $img = $('#img');
+	var count = 0;
+	var name = 'name';
+	var $album = $('#album');
 	
 	$.ajax({
 		type: "POST",
 		url: 'user/profile',
 		dataType: "json",
 		success: function(user){
+			$.each(user, function(index, val){
+				console.log(index + " : " + val);
+			});
 			$('#name').html(user.firstName + " " + user.lastName);
 			$('.followers').html("Followers: " + user.followers.length);
 			$('.following').html("Following: " + user.following.length);
 			$('.address').html(user.country + " " +  user.city);
-			
+			$.each(user.albums, function(index, val){
+				$.each(val, function(ind, v){
+					console.log(ind +  " : " + v);
+				});
+				console.log(val.photos.lenght);
+				$.each(val.photos, function(a, b){
+					if(name != val.name){
+						$album.append('<div class="col-md-4"><div class="thumbnail"><a href="' + b.picturePath + ' "><img src=" ' + b.picturePath + 
+							'" alt="Lights" style="height: 200px;width:auto;"><div class="caption"><p>' + val.name + '</p></div> </a></div></div>');
+						name = val.name;
+						if(a.lenght === 0){
+							$album.append('<div class="col-md-4"><div class="thumbnail"><a href="http://i.imgur.com/bjMeBux.jpg"><img src=" ' + b.picturePath + 
+									'" alt="Lights" style="height: 200px;width:auto;"><div class="caption"><p>' + val.name + '</p></div> </a></div></div>');
+							name = val.name;
+						}
+					}
+					if(count < 3){
+						console.log(b.picturePath);
+						$img.append('<div class="col-md-4"><div class="thumbnail"><a href="' + b.picturePath + ' "><img src=" ' + b.picturePath + 
+							'" alt="Lights" style="height: 200px;width:auto;"><div class="caption"><p>' + b.name +
+							'</p></div> </a></div></div>');
+						count++;
+					}else{
+						if(count <= 4){
+						$img.append('<div class="col-md-6"><div class="thumbnail"><a href="' + b.picturePath + ' "><img src=" ' + b.picturePath + 
+								'" alt="Lights" style="height:300px;width:auto;"><div class="caption"><p>' + b.name +
+								'</p></div> </a></div></div>');					
+						count++;
+						}else{
+						};
+					};
+				});
+			});
 		},
 		error: function(data){
 			console.log(data);
@@ -169,133 +200,14 @@ window.onload = function() {
 	</div>	
 	
 	
-	
+	<!--  image panel     -->
 <div id = "images" class = "panel active">
-	<div class="row">
-	  <div class="col-md-4">
-	    <div class="thumbnail">
-	      <a href="http://i.imgur.com/IFMSjda.jpg">
-	        <img src="http://i.imgur.com/IFMSjda.jpg" alt="Lights" style="width:100%">
-	        <div class="caption">
-	          <p>Lorem ipsum...</p>
-	        </div>
-	      </a>
-	    </div>
-	  </div>
-	  <div class="col-md-4">
-	    <div class="thumbnail">
-	      <a href="http://i.imgur.com/IFMSjda.jpg">
-	        <img src="http://i.imgur.com/IFMSjda.jpg" alt="Nature" style="width:100%">
-	        <div class="caption">
-	          <p>Lorem ipsum...</p>
-	        </div>
-	      </a>
-	    </div>
-	  </div>
-	  <div class="col-md-4">
-	    <div class="thumbnail">
-	      <a href="http://i.imgur.com/IFMSjda.jpg">
-	        <img src="http://i.imgur.com/IFMSjda.jpg" alt="Fjords" style="width:100%">
-	        <div class="caption">
-	          <p>Lorem ipsum...</p>
-	        </div>
-	      </a>
-	    </div>
-	  </div>
-	</div>
-	
-	<div class="row">
-	  <div class="col-md-6">
-	    <div class="thumbnail">
-	      <a href="http://i.imgur.com/IFMSjda.jpg">
-	        <img src="http://i.imgur.com/IFMSjda.jpg" alt="Lights" style="width:100%">
-	        <div class="caption">
-	          <p>Lorem ipsum...</p>
-	        </div>
-	      </a>
-	    </div>
-	  </div>
-	  <div class="col-md-6">
-	    <div class="thumbnail">
-	      <a href="http://i.imgur.com/IFMSjda.jpg">
-	        <img src="http://i.imgur.com/IFMSjda.jpg" alt="Nature" style="width:100%">
-	        <div class="caption">
-	          <p>Lorem ipsum...</p>
-	        </div>
-	      </a>
-	    </div>
-	  </div> 
-	</div>
+	<div id = "img" class="row"></div>
 </div>
 
-
-
+	<!--  album panel     -->
 <div id = "albums" class = "panel">
-		<div class="row">
-	  <div class="col-md-4">
-	    <div class="thumbnail">
-	      <a href="http://i.imgur.com/IFMSjda.jpg">
-	        <img src="http://i.imgur.com/IFMSjda.jpg" alt="Lights" style="width:100%">
-	        <div class="caption">
-	          <p>Lorem ipsum...</p>
-	        </div>
-	      </a>
-	    </div>
-	  </div>
-	  <div class="col-md-4">
-	    <div class="thumbnail">
-	      <a href="http://i.imgur.com/IFMSjda.jpg">
-	        <img src="http://i.imgur.com/IFMSjda.jpg" alt="Nature" style="width:100%">
-	        <div class="caption">
-	          <p>Lorem ipsum...</p>
-	        </div>
-	      </a>
-	    </div>
-	  </div>
-	  <div class="col-md-4">
-	    <div class="thumbnail">
-	      <a href="http://i.imgur.com/IFMSjda.jpg">
-	        <img src="http://i.imgur.com/IFMSjda.jpg" alt="Fjords" style="width:100%">
-	        <div class="caption">
-	          <p>Lorem ipsum...</p>
-	        </div>
-	      </a>
-	    </div>
-	  </div>
-	</div>
-	
-		<div class="row">
-	  <div class="col-md-4">
-	    <div class="thumbnail">
-	      <a href="http://i.imgur.com/IFMSjda.jpg">
-	        <img src="http://i.imgur.com/IFMSjda.jpg" alt="Lights" style="width:100%">
-	        <div class="caption">
-	          <p>Lorem ipsum...</p>
-	        </div>
-	      </a>
-	    </div>
-	  </div>
-	  <div class="col-md-4">
-	    <div class="thumbnail">
-	      <a href="http://i.imgur.com/IFMSjda.jpg">
-	        <img src="http://i.imgur.com/IFMSjda.jpg" alt="Nature" style="width:100%">
-	        <div class="caption">
-	          <p>Lorem ipsum...</p>
-	        </div>
-	      </a>
-	    </div>
-	  </div>
-	  <div class="col-md-4">
-	    <div class="thumbnail">
-	      <a href="http://i.imgur.com/IFMSjda.jpg">
-	        <img src="http://i.imgur.com/IFMSjda.jpg" alt="Fjords" style="width:100%">
-	        <div class="caption">
-	          <p>Lorem ipsum...</p>
-	        </div>
-	      </a>
-	    </div>
-	  </div>
-	</div>
+	<div id = "album" class="row"></div>
 </div>
 
 
