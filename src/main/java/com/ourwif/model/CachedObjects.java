@@ -38,6 +38,7 @@ public class CachedObjects {
 		for(User users : allUsers.values()){
 			if(users.getUsername().equals(username)){
 				user = users;
+				break;
 			}
 		}
 		return user;

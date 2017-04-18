@@ -176,6 +176,12 @@ public class UserDAOTest {
 
 	@Test
 	public void testValidLogin() {
+		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
+		try {
+			System.out.println(userDAO.validLogin("user123", "1234"));
+		} catch (ValidationException e) {
+			System.out.println(e.getMessage());
+		}
 		fail("Not yet implemented");
 	}
 

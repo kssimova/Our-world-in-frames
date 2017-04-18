@@ -47,25 +47,29 @@ public class UserController {
 		System.out.println(password);
 		Basic basic = null;
 		User u = null;
-			if(userDAO.validLogin(username, password)){
-				if(CachedObjects.getInstance().containsUser(username)){
-					u = CachedObjects.getInstance().getOneUser(username);
-					session.setAttribute("username", username);
-					session.setAttribute("userID", u.getUserId());
-					session.setAttribute("logged", true);
-				}else{
-					try {
-						userDAO.getAllUsers();
-					} catch (ValidationException e) {
-						System.out.println("ops cant log in");
-					}{
-					u = CachedObjects.getInstance().getOneUser(username);
-					session.setAttribute("username", username);
-					session.setAttribute("userID", u.getUserId());
-					session.setAttribute("logged", true);
-				}
-			}	
-		}
+			try {
+				if(userDAO.validLogin(username, password)){
+					if(CachedObjects.getInstance().containsUser(username)){
+						u = CachedObjects.getInstance().getOneUser(username);
+						session.setAttribute("username", username);
+						session.setAttribute("userID", u.getUserId());
+						session.setAttribute("logged", true);
+					}else{
+						try {
+							userDAO.getAllUsers();
+						} catch (ValidationException e) {
+							System.out.println("ops cant log in");
+						}{
+						u = CachedObjects.getInstance().getOneUser(username);
+						session.setAttribute("username", username);
+						session.setAttribute("userID", u.getUserId());
+						session.setAttribute("logged", true);
+					}
+				}	
+}
+			} catch (ValidationException e) {
+				System.out.println( e.getMessage());
+			}
 		basic = new Basic(true, "/ourwif/index", u.getUserId());
 		//this will delete one comment.. request should contain the id of this comment 
 		return basic;

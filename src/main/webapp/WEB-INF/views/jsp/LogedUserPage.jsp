@@ -33,6 +33,20 @@ window.onload = function() {
 			$('.followers').html("Followers: " + user.followers.length);
 			$('.following').html("Following: " + user.following.length);
 			$('.address').html(user.country + " " +  user.city);
+			$('.description').html(user.description);
+			$('.mobileNumber').html(user.mobileNumber);
+			if(user.birthdate != null){
+				$('.birthdate').html(user.birthdate);
+			}
+			$('.gender').html(user.gender);
+			if(user.profilePhotoPath != null){
+				$('.useravatar').finf('img').remove();
+				$('.useravatar').append('<img alt="" src="' + user.profilePhotoPath + '">');
+				$('.card-background').finf('img').remove();
+				$('.card-background').append('<img class="card-bkimg" alt="" src= "' + user.profilePhotoPath + '" >');
+			}
+			
+			
 			$.each(user.albums, function(index, val){
 				if(val.photos.length == 0){
 					$album.append('<div class="col-md-4"><div class="thumbnail"><a href="#"><img src="http://i.imgur.com/bjMeBux.jpg" alt="Lights" style="height: 200px;width:auto;"><div class="caption"><p>' 
@@ -204,7 +218,26 @@ window.onload = function() {
 
 
 <div id = "about" class = "panel">
-some text
+    <div class="col-md-3 thumbnail">
+  		 Description: 
+    	<div class = "description thumbnail" ></div>
+		<input class = "button btn3" type="submit" value="Edit">
+    </div>
+    <div class="col-md-3 thumbnail">
+    	Mobile Number:
+    	<div class = "mobileNumber thumbnail" ></div>
+		<input class = "button btn3" type="submit" value="Edit">
+    </div>
+    <div class="col-md-3 thumbnail">
+  		Birthday: 
+    	<div class = "birthdate thumbnail" ></div>
+		<input class = "button btn3" type="submit" value="Edit">
+    </div>
+    <div class="col-md-3 thumbnail">
+    	Gender: 
+    	<div class = "gender thumbnail" ></div>
+		<input class = "button btn3" type="submit" value="Edit">
+    </div>
 </div>
 
 
