@@ -21,15 +21,13 @@ import com.ourwif.model.User;
 public class AlbumDAOTest {
 	
 	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
-	AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
-	UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
-	
 	User u = null;
 	Album a = null;
 	Album newAlbum = null;
 	
 	@Before
 	public void setUp(){
+		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		try {
 			userDAO.getAllUsers();
 		} catch (ValidationException e2) {
@@ -40,6 +38,7 @@ public class AlbumDAOTest {
 
 	@Test
 	public void testCreateAlbum() {	
+		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		
 		try {
 			assertSame(new Album("", "", LocalDate.now(), u), albumDAO.createAlbum(u, "new album", "default album"));
@@ -52,7 +51,7 @@ public class AlbumDAOTest {
 
 	@Test
 	public void testDeleteAlbum() {
-		
+		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		System.out.println("This user have : " + u.getAlbums().size() + " albums");
 		
 		try {
@@ -67,7 +66,7 @@ public class AlbumDAOTest {
 
 	@Test
 	public void testEditAlbumName() {
-		
+		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		System.out.print("Before... ");
 		System.out.println("Album name: " + a.getName());
 		
@@ -85,7 +84,7 @@ public class AlbumDAOTest {
 
 	@Test
 	public void testEditAlbumInfo() {
-		
+		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		System.out.print("Before... ");
 		System.out.println("Album description: " + a.getDescription());
 		
@@ -103,6 +102,7 @@ public class AlbumDAOTest {
 
 	@Test
 	public void testGetAlbum() {
+		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		CachedObjects.getInstance().addUser(u);
 		System.out.println("Do we have ne album: " + (newAlbum != null));
 		try {
@@ -116,6 +116,7 @@ public class AlbumDAOTest {
 
 	@Test
 	public void testGetAllAlbums() {
+		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		
 		System.out.println("First delete all albums:");
 		CachedObjects.getInstance().clearAlbums();
@@ -135,6 +136,7 @@ public class AlbumDAOTest {
 
 	@Test
 	public void testGetUserAlbums() {
+		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		
 		System.out.println("First delete all albums:");
 		CachedObjects.getInstance().clearAlbums();

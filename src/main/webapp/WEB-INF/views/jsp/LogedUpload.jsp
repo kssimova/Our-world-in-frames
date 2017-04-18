@@ -16,54 +16,80 @@
     <div>
        	Choose or drag a file:<br>
         <input type="file" id="filePicker">    <br>
-        Name: <input type="text" id= "fileName">    <br>
-        description: <input type="text" id= "fileName">    <br>
+        Name: <input id= "name" type="text">    <br>
+        description: <input id = "description" type="text">    <br>
         album: <select id = "albums">
 			   </select>
     </div>
-    <br>
-    
-    <input type= "submit" value="Upload">
+    <input id = "upload" type= "submit" value="Upload">
 
 
 <script type="text/javascript">
-var handleFileSelect = function(evt) {
-    var files = evt.target.files;
-    var file = files[0];
-    var base64;
-
-    if (files && file) {
-        var reader = new FileReader();
-
-        reader.onload = function(readerEvt) {
-            var binaryString = readerEvt.target.result;
-            console.log(base64);
-        };
-        
-        reader.readAsBinaryString(file);
-    }
-};
-
-var $albums = $('#albums');
-
-$.ajax({
-	type: "POST",
-	url: 'user/profile',
-	dataType: "json",
-	success: function(user){
-		$.each(user.albums, function(index, val){
-			console.log(val.albumId);
-			$albums.append('<option value="'+val.albumId+'">'+ val.name +'</option>');
-		});
-	},
-	error: function(data){
-		console.log(data);
-		alert();
+$(function (){	
+	$.ajax({
+		type: "POST",
+		url: 'user/profile',
+		dataType: "json",
+		success: function(user){
+			$.each(user.albums, function(index, val){
+				console.log(val.albumId);
+				$albums.append('<option value="'+val.albumId+'">'+ val.name +'</option>');
+			});
+		},
+		error: function(data){
+			console.log(data);
+			alert();
+		}
+	});
+	
+	var base64;
+	var $albums = $('#albums');
+	
+	var handleFileSelect = function(evt, colback) {
+	    var files = evt.target.files;
+	    var file = files[0];
+	
+	    if (files && file) {
+	        var reader = new FileReader();
+	        reader.onload = function(readerEvt, makeCall) {
+	            var binaryString = readerEvt.target.result;
+	            base64 = btoa(binaryString);
+	            console.log(base64);
+	            callback(postFunction);
+	        };
+	        reader.readAsBinaryString(file);
+	    }
+	    
+	if (window.File && window.FileReader && window.FileList && window.Blob) {
+	    document.getElementById('filePicker').addEventListener('change', handleFileSelect, false);
+	} else {
+	    alert('The File APIs are not fully supported in this browser.');
 	}
+};	
+	$('#upload').on('click', function(){	
+		var $name = $("#name");
+		var $description = $("#description");
+		var $albumId = $("#albums");
+		
+		var user = {
+			name: $name.val(),
+			description: $description.val(),
+			albumId: $albumId.val(),
+			file: base64
+		};
+		$.ajax({
+			type: "POST",
+			url: 'post/add',
+			data: user,
+			success: function(data, handleFileSelect){
+				alert();
+			},
+			error: function(){
+				alert("cant load");
+			}
+		});
+	});
 });
-
-
-
 
 
 </script>

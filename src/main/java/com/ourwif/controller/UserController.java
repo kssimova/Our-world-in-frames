@@ -2,8 +2,6 @@ package com.ourwif.controller;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +21,6 @@ import com.ourwif.model.Basic;
 import com.ourwif.model.CachedObjects;
 import com.ourwif.model.User;
 
-import io.netty.handler.codec.http.HttpResponse;
 
 @RestController
 @RequestMapping(value= "/user")

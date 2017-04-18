@@ -33,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ourwif.DAO.PostDAO;
 import com.ourwif.model.Album;
+import com.ourwif.model.Basic;
 import com.ourwif.model.CachedObjects;
 import com.ourwif.model.Post;
 import com.ourwif.model.User;
@@ -67,33 +68,13 @@ public class PostController {
 	}
 	
 	@RequestMapping(value="/add",method = RequestMethod.POST)
-	public String addPost(@ModelAttribute Post post, @RequestParam("file") MultipartFile file, HttpSession session) throws IOException {
+	public Basic addPost(HttpServletRequest request, HttpSession session) throws IOException {
 		// this should add new post to the database and in imgur 
 		//this should return JSON with the id and name of this new post
 		//working Request is OK
+		Basic basic = null;
 		if(session.getAttribute("logged")!= null){
-			Path folder = Paths.get(System.getProperty("catalina.base"));
-			String folder1 = folder.toString().replace("\\", "/");
-			String data = "";
-			File ff = null;
-			
-		    if (!file.isEmpty()) {
-		    	 BufferedImage src = ImageIO.read(new ByteArrayInputStream(file.getBytes()));
-		    	 ff = new File(folder1);
-		    	 ImageIO.write(src, "png", ff);
-		    }  		
-			//encode file into base64 string
-			BufferedImage image = null;
-			//read image
-			image = ImageIO.read(ff);
-			ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
-			ImageIO.write(image, "png", byteArray);
-			byte[] byteImage = byteArray.toByteArray();	
-			String dataImage = Base64.getEncoder().encodeToString(byteImage);
-			System.out.println(dataImage);
-			data = URLEncoder.encode("image", "UTF-8") + "="
-				     + URLEncoder.encode(dataImage, "UTF-8");	
-				
+			String data = (String) request.getAttribute("file");
 			//connect to imgur
 			URL url = new URL("https://api.imgur.com/3/upload.json");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -127,9 +108,9 @@ public class PostController {
 			//TODO if something fails make basic JSON with fail response
 		
 		}else{
-			return "login";
+			basic.setUrl("login");
 		}
-		return null;
+		return basic;
 	}	
 	
 	

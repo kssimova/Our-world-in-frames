@@ -19,7 +19,6 @@ import com.ourwif.model.User.Gender;
 public class UserDAOTest {
 	
 	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
-	UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 	List<User> allUsers = new ArrayList<>();
 	User krisi = null;
 	User mimi = null;
@@ -30,7 +29,8 @@ public class UserDAOTest {
 	}
 
 	@Test
-	public void testGetAllUsers() {		
+	public void testGetAllUsers() {	
+		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		try {
 			List<User> allUsers = userDAO.getAllUsers();
 		} catch (ValidationException e) {
@@ -47,6 +47,7 @@ public class UserDAOTest {
 
 	@Test
 	public void testChangeFirstName() {
+		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		try {
 			this.user();
 			userDAO.changeFirstName(krisi, "KRISTINA");
@@ -59,6 +60,7 @@ public class UserDAOTest {
 
 	@Test
 	public void testChangeLastName() {
+		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		try {
 			this.user();
 			userDAO.changeLastName(krisi, "SIMOVAAAA");
@@ -71,6 +73,7 @@ public class UserDAOTest {
 
 	@Test
 	public void testChangeEmail() {	
+		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		try {
 			this.user();
 			userDAO.changeEmail(krisi, "krisisisisi@abv.bg");
@@ -83,6 +86,7 @@ public class UserDAOTest {
 
 	@Test
 	public void testChangeMobileNumber() {
+		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		try {
 			this.user();
 			userDAO.changeMobileNumber(krisi, "0883411090");
@@ -95,6 +99,7 @@ public class UserDAOTest {
 
 	@Test
 	public void testChangePassword() {
+		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		try {
 			this.user();
 			userDAO.changePassword(krisi, "kriska5678");
@@ -106,6 +111,7 @@ public class UserDAOTest {
 
 	@Test
 	public void testChangeCityCountry() {
+		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		try {
 			this.user();
 			userDAO.changeCityCountry(krisi, "england", "london");
@@ -118,6 +124,7 @@ public class UserDAOTest {
 
 	@Test
 	public void testChangeDescription() {
+		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		try {
 			this.user();
 			userDAO.changeDescription(krisi, "yoxoxoxo");
@@ -130,6 +137,7 @@ public class UserDAOTest {
 
 	@Test
 	public void testChangeBirthdate() {
+		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		
 		try {
 			this.user();
@@ -143,6 +151,7 @@ public class UserDAOTest {
 
 	@Test
 	public void testChangeProfilePhoto() {
+		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		try {
 			this.user();
 			userDAO.changeProfilePhoto(krisi, "poskwienfwoi4353o4n");
@@ -154,6 +163,7 @@ public class UserDAOTest {
 
 	@Test
 	public void testFollowUser() {
+		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		this.user();
 		userDAO.followUser(krisi, mimi);	
 		fail("Not yet implemented");
@@ -172,6 +182,7 @@ public class UserDAOTest {
 	
 	
 	private void user(){
+		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 
 		try {
 			krisi = new User("krisi", "krisi@abv.bg", "krisi123", 4);

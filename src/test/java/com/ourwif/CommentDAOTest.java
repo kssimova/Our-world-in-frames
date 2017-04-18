@@ -25,8 +25,6 @@ import com.ourwif.model.User;
 public class CommentDAOTest {
 	
 	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
-	PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
-	CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
 	User u = null;
 	Post p = null;
 	Album a = null;
@@ -35,6 +33,7 @@ public class CommentDAOTest {
 	
 	@Before
 	public void setUp(){
+		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
 		tags.add("cute");
 		tags.add("cat");	
 		try {
@@ -59,6 +58,7 @@ public class CommentDAOTest {
 
 	@Test
 	public void testGetAllComments() {
+		CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
 		CachedObjects.getInstance().addUser(u);	
 		TreeMap<Long, Comment> comments = null;
 		
@@ -73,6 +73,7 @@ public class CommentDAOTest {
 
 	@Test
 	public void testCreateComment() {
+		CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
 		System.out.println("Comments before: " + p.getComments().size());
 		try {
 			c = commentDAO.createComment(p, u, "Sooo cute");
@@ -86,7 +87,7 @@ public class CommentDAOTest {
 
 	@Test
 	public void testEditComment() {
-		
+		CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
 		for(Comment comm : p.getComments()){
 			System.out.println("Comment before:" + comm.getContent());
 		}
@@ -106,7 +107,7 @@ public class CommentDAOTest {
 
 	@Test
 	public void testDeleteComment() {
-		
+		CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
 		System.out.println(p.getComments().toString());
 		
 		try {

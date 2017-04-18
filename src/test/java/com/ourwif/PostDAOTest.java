@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.ourwif.DAO.CommentDAO;
 import com.ourwif.DAO.PostDAO;
 import com.ourwif.model.Album;
 import com.ourwif.model.CachedObjects;
@@ -23,8 +22,6 @@ import com.ourwif.model.User;
 public class PostDAOTest {
 	
 	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
-	PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
-	CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
 	User u = null;
 	Post p = null;
 	Album a = null;
@@ -50,6 +47,7 @@ public class PostDAOTest {
 
 	@Test
 	public void testGetPost() {
+		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
 		Post postchence = null;
 		System.out.println("Get the post... ");
 		try {
@@ -62,6 +60,7 @@ public class PostDAOTest {
 
 	@Test
 	public void testCreatePost() {	
+		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
 		try {
 			postDAO.createPost(u, p.getName(), p.getDescription(), p.getDateCreated(), p.getPicturePath(), tags, a, "EOdEWqM", "sasdafs");
 		} catch (ValidationException | SQLException e) {
@@ -79,6 +78,7 @@ public class PostDAOTest {
 
 	@Test
 	public void testEditPostName() {
+		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
 		System.out.println("Old name: " + p.getName());
 		try {
 			p = postDAO.editPostName(p, u, "Whaaat?");
@@ -91,6 +91,7 @@ public class PostDAOTest {
 
 	@Test
 	public void testEditPostInfo() {
+		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
 		System.out.println("Old description: " + p.getDescription());	
 		try {
 			p = postDAO.editPostInfo(p, u, "Cats cats cat1");
@@ -102,7 +103,9 @@ public class PostDAOTest {
 	}
 
 	@Test
-	public void testEditTags() {
+	public void testEditTags() {	
+		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
+
 		
 		TreeSet<String> newTags = new TreeSet<>();
 		newTags.add("nope");
@@ -133,6 +136,7 @@ public class PostDAOTest {
 
 	@Test
 	public void testDeletePost() {
+		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
 		System.out.println("Post exists: " + CachedObjects.getInstance().getAllPosts().get(a.getAlbumId()).containsKey(p.getPostId()));
 		
 		try {
@@ -147,6 +151,7 @@ public class PostDAOTest {
 
 	@Test
 	public void testGetAllPosts() {
+		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
 		
 		CachedObjects.getInstance().clearPosts();
 		System.out.println(CachedObjects.getInstance().getAllPosts().size());
