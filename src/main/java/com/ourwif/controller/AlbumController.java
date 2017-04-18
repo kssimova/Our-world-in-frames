@@ -1,5 +1,7 @@
 package com.ourwif.controller;
 
+import java.sql.SQLException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.ValidationException;
 
@@ -33,6 +35,8 @@ public class AlbumController {
 			try {
 				albumDAO.getAllAlbums();
 			} catch (ValidationException e) {
+				System.out.println("Validation error");
+			} catch (SQLException e) {
 				System.out.println("Can't connect to DB");
 			}
 			//try again to find it

@@ -212,10 +212,7 @@ window.onload = function() {
 
 
 <div id = "about" class = "panel">
-
 some text
-
-
 </div>
 
 
@@ -235,7 +232,6 @@ some text
 	    });
 	});
 	
-	//TODO make img dynamic
 </script>
 	
 </body>

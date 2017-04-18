@@ -11,6 +11,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.Base64;
 import java.util.Scanner;
 
@@ -54,7 +55,7 @@ public class PostController {
 		}else{
 			try {
 				postDAO.getAllPosts();
-			} catch (ValidationException e) {
+			} catch (ValidationException | SQLException e) {
 				System.out.println("Validation fail");
 			}
 			post = CachedObjects.getInstance().getOnePost(postId);
@@ -146,6 +147,8 @@ public class PostController {
 					postDAO.editPostName(post, user, title);
 				} catch (ValidationException e) {
 					System.out.println("Validation fail");
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
 				}
 			}
 			if(!description.isEmpty() && description != null){
@@ -153,6 +156,8 @@ public class PostController {
 					postDAO.editPostInfo(post, user, description);
 				} catch (ValidationException e) {
 					System.out.println("Validation fail");
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
 				}
 			}
 			return "PostView";
@@ -177,7 +182,7 @@ public class PostController {
 			CachedObjects.getInstance().removePost(post, album);
 			try {
 				postDAO.deletePost(post, user, album);
-			} catch (ValidationException e) {
+			} catch (ValidationException | SQLException e) {
 				System.out.println("something went wrong");
 			}
 			//this will delete one album the request should contain album id					
@@ -215,6 +220,8 @@ public class PostController {
 				postDAO.addLike(post, user);
 			} catch (ValidationException e) {
 				System.out.println("Error in validation");
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
 			}	
 			return "PageView";
 		}else{
@@ -230,7 +237,7 @@ public class PostController {
 			Post post = CachedObjects.getInstance().getOnePost(request.getParameter("post_id"));
 			try {
 				postDAO.removeLike(post, user);
-			} catch (ValidationException e) {
+			} catch (ValidationException | SQLException e) {
 				System.out.println("Error in validation");
 			}	
 			return "PageView";
