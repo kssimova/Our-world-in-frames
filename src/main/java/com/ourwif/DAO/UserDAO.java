@@ -48,6 +48,8 @@ public class UserDAO {
 	// works
 	private static final String FOLLOW_USER = "INSERT INTO ourwif.followers (user_id, followed_id) VALUES (?, ?);";
 	
+	private static final String CHECK_IF_VALID_LOGIN = "SELECT first_name, last_name FROM ourwif.users WHERE username = ? AND password = ?";
+	
 	// TODO
 	private static final String GET_ALL_FOLLOWERS = "";
 
@@ -507,9 +509,50 @@ public class UserDAO {
 		return null;
 	}
 
-	public boolean validLogin(String username, String password) {
-		//TODO
-		return true;
+	public boolean validLogin(String username, String password) throws ValidationException {
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		Connection connection = null;
+		boolean valid = false;
+		try {
+			connection = (Connection) dataSource.getConnection();
+			preparedStatement = connection.prepareStatement(CHECK_IF_VALID_LOGIN);
+			preparedStatement.setString(1, username);
+			preparedStatement.setString(2, password);
+			resultSet = preparedStatement.executeQuery();
+			int size= 0;
+			if (resultSet != null)   {  
+				resultSet.beforeFirst();  
+				resultSet.last();  
+			    size = resultSet.getRow();  
+			    if(size == 1){
+			    	valid = true;
+			    }
+			} 
+			System.out.println(size + " e dyljinata na resultseta");
+//			if(resultSet.wasNull()){
+//				return false;
+//			}
+		} catch (SQLException e1) {
+			System.out.println("Error in 1st catch block in UserDAO method validLogin() - " + e1.getMessage());
+		}
+		finally{
+			if(preparedStatement != null){
+				try {
+					preparedStatement.close();
+				} catch (SQLException e2) {
+					System.out.println("Error when closing statement in 1st catch block in UserDAO method validLogin() - " + e2.getMessage());
+				}
+			}
+			if(resultSet != null){
+				try {
+					resultSet.close();
+				} catch (SQLException e3) {
+					System.out.println("Error when closing resultSet in 1st catch block in UserDAO method validLogin() - " + e3.getMessage());
+				}
+			}
+		}
+		return valid;
 	}
 	
 }

@@ -70,6 +70,10 @@ public class UserTest {
 		userDAO.changeBirthdate(krisi, LocalDate.of(1996, 8, 31));
 		
 		userDAO.followUser(krisi, mimi);
+		
+		System.out.println(userDAO.validLogin("user123", "1234"));
+		
+		System.out.println(userDAO.validLogin("user123tdh", "12345dg"));
 	}
 
 }
