@@ -34,35 +34,26 @@ window.onload = function() {
 			$('.following').html("Following: " + user.following.length);
 			$('.address').html(user.country + " " +  user.city);
 			$.each(user.albums, function(index, val){
-				$.each(val, function(ind, v){
-					console.log(ind +  " : " + v);
-				});
-				console.log(val.photos.lenght);
-				$.each(val.photos, function(a, b){
+				if(val.photos.length == 0){
+					$album.append('<div class="col-md-4"><div class="thumbnail"><a href="#"><img src="http://i.imgur.com/bjMeBux.jpg" alt="Lights" style="height: 200px;width:auto;"><div class="caption"><p>' 
+							+ val.name + '</p></div> </a></div></div>');
+				}
+				$.each(val.photos, function(a, b){	
 					if(name != val.name){
 						$album.append('<div class="col-md-4"><div class="thumbnail"><a href="' + b.picturePath + ' "><img src=" ' + b.picturePath + 
 							'" alt="Lights" style="height: 200px;width:auto;"><div class="caption"><p>' + val.name + '</p></div> </a></div></div>');
 						name = val.name;
-						if(a.lenght === 0){
-							$album.append('<div class="col-md-4"><div class="thumbnail"><a href="http://i.imgur.com/bjMeBux.jpg"><img src=" ' + b.picturePath + 
-									'" alt="Lights" style="height: 200px;width:auto;"><div class="caption"><p>' + val.name + '</p></div> </a></div></div>');
-							name = val.name;
-						}
 					}
 					if(count < 3){
-						console.log(b.picturePath);
 						$img.append('<div class="col-md-4"><div class="thumbnail"><a href="' + b.picturePath + ' "><img src=" ' + b.picturePath + 
 							'" alt="Lights" style="height: 200px;width:auto;"><div class="caption"><p>' + b.name +
 							'</p></div> </a></div></div>');
 						count++;
-					}else{
-						if(count <= 4){
+					}else if(count <= 4){
 						$img.append('<div class="col-md-6"><div class="thumbnail"><a href="' + b.picturePath + ' "><img src=" ' + b.picturePath + 
 								'" alt="Lights" style="height:300px;width:auto;"><div class="caption"><p>' + b.name +
 								'</p></div> </a></div></div>');					
 						count++;
-						}else{
-						};
 					};
 				});
 			});
@@ -203,6 +194,7 @@ window.onload = function() {
 	<!--  image panel     -->
 <div id = "images" class = "panel active">
 	<div id = "img" class="row"></div>
+	
 </div>
 
 	<!--  album panel     -->
@@ -228,6 +220,10 @@ some text
 					//add active class
 					$(this).addClass('active');	
 				});			
+			});	
+	    });
+	   $('#addImg').on('click', function() {
+			$('.imgPanel').toggle(300, function(){					
 			});	
 	    });
 	});
