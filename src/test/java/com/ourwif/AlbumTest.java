@@ -4,15 +4,14 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.TreeSet;
 
-import javax.swing.text.ChangedCharSetException;
 import javax.xml.bind.ValidationException;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.ourwif.DAO.AlbumDAO;
-import com.ourwif.DAO.CommentDAO;
 import com.ourwif.DAO.PostDAO;
+import com.ourwif.DAO.UserDAO;
 import com.ourwif.model.Album;
 import com.ourwif.model.CachedObjects;
 import com.ourwif.model.Post;
@@ -23,23 +22,22 @@ public class AlbumTest {
 
 	public static void main(String[] args) {
 		
-    	ApplicationContext context =
-        		new ClassPathXmlApplicationContext("Spring-Module.xml");
-		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
+    	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
+		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		
 		System.out.println("---------------------TEST 1 ---------------------");
 		System.out.println("------------------CREATE NEW ALBUM-------------------");	
 		
 		User u = null;
 		Album a = null;
-		Post p = null;
 		
 		try {
-			u = new User("werewolf", "werewolfss@abv.bg", "12345", 4L);
-		} catch (ValidationException e) {
-			System.out.println("ops" + e.getMessage());
-		}		
+			userDAO.getAllUsers();
+		} catch (ValidationException e2) {
+			System.out.println("ops");
+		}	
+			u = CachedObjects.getInstance().getOneUser("user123");
 		
 		System.out.println("This user have : " + u.getAlbums().size() + " albums");
 		
@@ -49,22 +47,7 @@ public class AlbumTest {
 			System.out.println("ops");
 		}
 		System.out.println("This user have : " + u.getAlbums().size() + " albums");
-		//working
 		
-		//put 1 post in this album
-		TreeSet<String> tags = new TreeSet<>();
-		tags.add("cute");
-		tags.add("cat");
-		try {
-			p = new Post(u, "cat", "one cat", LocalDate.now(), "http://i.imgur.com/EOdEWqM.png", tags);
-			TreeSet<String> tagsss = new TreeSet<>();		
-			tagsss.addAll(p.getTags());
-			p.setPostId("EOdEWqM");
-			postDAO.createPost(u, p.getName(), p.getDescription(), p.getDateCreated(), p.getPicturePath(), tagsss, a, "EOdEWqM", "sasdafs");
-		} catch (ValidationException e1) {
-			System.out.println("ops");
-		}		
-	
 		
 		System.out.println("---------------------TEST 2 ---------------------");
 		System.out.println("------------------CHANGE DESCRIPTION -------------------");
@@ -145,5 +128,28 @@ public class AlbumTest {
 		System.out.println("All albums: " + CachedObjects.getInstance().getAllAlbums().toString());
 	
 		//working
+		
+		
+		
+		System.out.println("---------------------TEST 6 ---------------------");
+		System.out.println("------------------GET ONE USER ALBUM FROM DB -------------------");
+		
+		System.out.println("First delete all albums:");
+		CachedObjects.getInstance().clearAlbums();
+		System.out.println("All albums: " + CachedObjects.getInstance().getAllAlbums().toString());
+		
+		try {
+			albumDAO.getUserAlbums(u);
+		} catch (ValidationException e) {
+			System.out.println("ops");
+		}
+		
+		System.out.println("Try getting all albums");
+		System.out.println("All albums: " + CachedObjects.getInstance().getAllAlbums().toString());
+	
+		//working
+		
+		
+		
 	}
 }

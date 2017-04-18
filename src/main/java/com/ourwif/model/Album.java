@@ -7,6 +7,8 @@ import java.util.TreeSet;
 
 import javax.xml.bind.ValidationException;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 
 public class Album implements Comparable<Album>{
@@ -15,6 +17,7 @@ public class Album implements Comparable<Album>{
 	private String name;
 	private String description;
 	private LocalDate dateCreated;
+	@JsonIgnore
 	private User user;
 	private TreeSet <Post> photos;
 	

@@ -4,10 +4,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Album</title>
+	<link rel="stylesheet" type="text/css" href=css/bootstrap.min.css></link>
+	<link rel="stylesheet" type="text/css" href="css/API.css">
+<title>Insert title here</title>
 </head>
 <body>
-	<jsp:include page="nav.jsp" />
-	<h1>this is the album page</h1>
+	<jsp:include page="LogedNav.jsp" />
 </body>
 </html>

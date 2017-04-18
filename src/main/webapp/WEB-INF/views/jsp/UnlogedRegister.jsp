@@ -11,7 +11,7 @@
 <title>register</title>
 </head>
 <body>
-	<jsp:include page="nav.jsp" />
+	<jsp:include page="UnlogedNav.jsp" />
 	
 	<div class="container">
     <div class="row">
@@ -27,7 +27,7 @@
             <div class="wrap">
                 <p class="form-title">
                     Register</p>
-                <form class="login form1">
+                <p class="login form1">
                 <input type="text" placeholder="Username" required/>
                 <input type="text" placeholder="Email" required/>
                 <input type="password" placeholder="Password" required/>
@@ -50,8 +50,8 @@
                 
                 
                 <input type="submit" value="Register" class="btn btn-info btn-sm" />
-                </form>
-                <f:form class="login form1" commandName="login" action="/ourwif/loginPage" method = "POST">
+                </p>
+                <f:form class="size" commandName="login" action="/ourwif/loginPage" method = "POST">
               		 <input type="submit" value="Login" class="btn btn-info btn-sm" />
                </f:form>
             </div>

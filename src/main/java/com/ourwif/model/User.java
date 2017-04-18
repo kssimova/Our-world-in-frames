@@ -12,6 +12,9 @@ import java.util.regex.Pattern;
 
 import javax.xml.bind.ValidationException;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class User implements Comparable<User>{
 	public enum Gender {MALE, FEMALE}
 	private final String EMAIL_PATTERN = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9]+.[a-z.]+$";
@@ -19,7 +22,9 @@ public class User implements Comparable<User>{
 	
 	private long userId;
 	private String username;
+	@JsonIgnore
 	private String email;
+	@JsonIgnore
 	private String password;
 	private String firstName;
 	private String lastName;
@@ -64,11 +69,11 @@ public class User implements Comparable<User>{
 	public String getUsername() {
 		return username;
 	}
-	
+	@JsonIgnore
 	public String getEmail() {
 		return email;
 	}
-	
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
@@ -130,7 +135,7 @@ public class User implements Comparable<User>{
 	}
 	
 	// change properties
-	
+	@JsonProperty
 	public void changeEmail(String email) throws ValidationException {
 		if(validEmail(email)){
 			this.email = email;		
@@ -146,7 +151,7 @@ public class User implements Comparable<User>{
 			throw new ValidationException("User phone number not valid");
 		}
 	}
-	
+	@JsonProperty
 	public void changePassword(String password) throws ValidationException {
 		if (validPassword(password)) {
 			this.password = password;
@@ -277,6 +282,10 @@ public class User implements Comparable<User>{
 	@Override
 	public int compareTo(User user) {
 		return this.username.compareTo(user.username);
+	}
+
+	public void addAllAlbums(TreeMap<Long, Album> userAlbums) {
+		this.albums.putAll(userAlbums);	
 	}
 	
 }

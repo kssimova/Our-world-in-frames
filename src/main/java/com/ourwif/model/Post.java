@@ -8,10 +8,13 @@ import java.util.TreeSet;
 
 import javax.xml.bind.ValidationException;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Post implements Comparable<Post>{
 	
 	private String postId;
 	private String deleteHash;
+	@JsonIgnore
 	private User user;
 	private String name;
 	private String description;

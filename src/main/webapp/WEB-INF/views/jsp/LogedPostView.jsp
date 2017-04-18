@@ -6,6 +6,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<link rel="stylesheet" type="text/css" href=css/bootstrap.min.css></link>
+	<link rel="stylesheet" type="text/css" href="css/API.css">
 <title>post</title>
     <link href="bootstrap.min" rel="stylesheet">
     <link href="portfolio-item" rel="stylesheet">
@@ -13,7 +15,7 @@
 </head>
 
 <body>
-	<jsp:include page="nav.jsp" />
+	<jsp:include page="LogedNav.jsp" />
 
     <!-- Page Content -->
     <div class="container">

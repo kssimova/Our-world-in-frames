@@ -10,6 +10,6 @@
 <title>Home</title>
 </head>
 <body>
-	<jsp:include page="nav.jsp" />
+	<jsp:include page="UnlogedNav.jsp" />
 </body>
 </html>
