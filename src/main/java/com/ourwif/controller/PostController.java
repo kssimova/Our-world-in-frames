@@ -1,21 +1,14 @@
 package com.ourwif.controller;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.Base64;
+import java.time.LocalDate;
 import java.util.Scanner;
+import java.util.TreeSet;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.ValidationException;
@@ -23,14 +16,13 @@ import javax.xml.bind.ValidationException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.ourwif.DAO.PostDAO;
 import com.ourwif.model.Album;
 import com.ourwif.model.Basic;
@@ -41,8 +33,7 @@ import com.ourwif.model.User;
 @RestController
 @RequestMapping(value= "/post")
 public class PostController {
-	ApplicationContext context =
-    		new ClassPathXmlApplicationContext("Spring-Module.xml");
+	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 	PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
 
 	
@@ -69,46 +60,96 @@ public class PostController {
 	
 	@RequestMapping(value="/add",method = RequestMethod.POST)
 	public Basic addPost(HttpServletRequest request, HttpSession session) throws IOException {
-		// this should add new post to the database and in imgur 
-		//this should return JSON with the id and name of this new post
-		//working Request is OK
+		
+		TreeSet<String> tags = new TreeSet<>();
+		String tagStr = request.getParameter("tags");
+		if(!tagStr.isEmpty() && tagStr != null){
+			tags = addTags(tagStr);
+		}
+		
+		String name = request.getParameter("name");
+		String description = request.getParameter("description");
+		
+		String albumName = request.getParameter("album");
+		Album album = null;
+
+		User u = (User)session.getAttribute("user");
+		for(Album albums : u.getAlbums().values()){
+			if (albums.getName().equals(albumName)){
+				album = albums;
+			}
+		}
+		
+		
+		String picturePath = "";
 		Basic basic = null;
+		String postId = "";
+		String deleteHash = "";
+		
+		String file = request.getParameter("file");
+		file = file.substring(file.indexOf(",")+1);
+	
+		//working Request is OK
 		if(session.getAttribute("logged")!= null){
-			String data = (String) request.getAttribute("file");
 			//connect to imgur
-			URL url = new URL("https://api.imgur.com/3/upload.json");
+			URL url = new URL("https://api.imgur.com/3/image.json");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 					
 			//set request
+			String access_token = "bc232b87907ff074efdffbbdaaaaa53aada282a2";
+			// String expires_in="2419200";
+			// String token_type = "bearer";
+			// String refresh_token = "412b9ea1f4dfefb804e5746e8f6590311b2e0e26"; 
+			// String account_username = "werewolfgirl";
+			// String account_id = "335056";
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
-			connection.setRequestProperty("authorization", "Bearer ef5590f1e88e136817e6a544f174c567fec38215");
+			connection.setRequestProperty("authorization", "Bearer " + access_token);
 			connection.setRequestMethod("POST");
 			connection.connect();
+			System.out.println(file);
 				   
 			//send base64 String
 			final OutputStreamWriter osw = new OutputStreamWriter(connection.getOutputStream());
-			osw.write(data);
+			osw.write(file);
 			osw.flush();
 			connection.connect();
 			System.out.println(connection.getResponseMessage());	
 			
 			//get response
-			StringBuilder sb = new StringBuilder();		
-			Scanner sc = new Scanner(connection.getInputStream());
-			while(sc.hasNextLine()){
-				  sb.append(sc.nextLine());
-			}
-			sc.close();	
-			
-			//TODO get photo id and photo link and deleteHash !!!!	
-			//TODO get all other request Attributes AND THE ALBUM THAT THE USER WANTS TO PUT IT IN!!!
-			//TODO call DAO makePost method
-			//TODO make basic JSON response with this photo id		
-			//TODO if something fails make basic JSON with fail response
-		
+			if(connection.getResponseCode() == 200){
+				StringBuilder sb = new StringBuilder();		
+				Scanner sc = new Scanner(connection.getInputStream());
+				while(sc.hasNextLine()){
+					  sb.append(sc.nextLine());
+				}
+				sc.close();
+				
+				//response to JSON object
+				String responseData = sb.toString();
+				JsonParser parser = new JsonParser();
+				JsonObject jsonObj = parser.parse(responseData).getAsJsonObject();
+				JsonObject obj2 = jsonObj.getAsJsonObject("data");
+				System.out.println(obj2.toString());	
+				postId = obj2.get("id").toString();
+				System.out.println(postId);
+				picturePath = obj2.get("link").toString();
+				System.out.println(picturePath);
+				deleteHash = obj2.get("deletehash").toString();
+				System.out.println(deleteHash);
+				
+				Post p = null;
+				try {
+					p = postDAO.createPost((User)session.getAttribute("user"), name, description, LocalDate.now(), picturePath, tags, album, postId, deleteHash);
+				} catch (ValidationException e) {
+					System.out.println(e.getMessage());
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
+				}	
+			}	
 		}else{
-			basic.setUrl("login");
+			basic = new Basic(true, "login", 0L);
+			basic.setStrId(postId);
 		}
 		return basic;
 	}	
@@ -226,4 +267,19 @@ public class PostController {
 			return "login";
 		}
 	}	
+	
+ 	public TreeSet<String> addTags(String tag) {
+		TreeSet<String> tags = new TreeSet<>();
+  		if (tag.length() == 0) {
+  			return tags;
+  		}
+ 		if (tag.indexOf(',') < 0) {
+ 			tags.add(tag.trim());
+ 			return tags;
+ 		}
+ 		tags.add(tag.substring(0, tag.indexOf(',')));
+ 		String a = tag.substring(tag.indexOf(',') + 1).trim();
+ 		addTags(a);
+ 		return tags;
+ 	}
 }

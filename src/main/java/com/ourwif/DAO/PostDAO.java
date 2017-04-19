@@ -74,7 +74,7 @@ public class PostDAO {
 	}
 	
 	// create new Post
-	public void createPost(User user, String name, String description, LocalDate dateCreated, String picturePath, TreeSet<String> tags, Album album, String postId, String deleteHash) throws SQLException, ValidationException{
+	public Post createPost(User user, String name, String description, LocalDate dateCreated, String picturePath, TreeSet<String> tags, Album album, String postId, String deleteHash) throws SQLException, ValidationException{
 		Post post = null;
 		String sql = null;
 		PreparedStatement st = null;
@@ -135,6 +135,7 @@ public class PostDAO {
 	 		}
 	 	}				
  		CachedObjects.getInstance().addPost(post, album);
+ 		return post;
 	}
 		
 	// change name

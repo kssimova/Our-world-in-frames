@@ -52,7 +52,7 @@ public class UserController {
 					if(CachedObjects.getInstance().containsUser(username)){
 						u = CachedObjects.getInstance().getOneUser(username);
 						session.setAttribute("username", username);
-						session.setAttribute("userID", u.getUserId());
+						session.setAttribute("user", u);
 						session.setAttribute("logged", true);
 					}else{
 						try {
@@ -62,13 +62,13 @@ public class UserController {
 						}{
 						u = CachedObjects.getInstance().getOneUser(username);
 						session.setAttribute("username", username);
-						session.setAttribute("userID", u.getUserId());
+						session.setAttribute("user", u);
 						session.setAttribute("logged", true);
 					}
 				}	
 }
 			} catch (ValidationException e) {
-				System.out.println( e.getMessage());
+				System.out.println(e.getMessage());
 			}
 		basic = new Basic(true, "/ourwif/index", u.getUserId());
 		//this will delete one comment.. request should contain the id of this comment 
@@ -120,19 +120,10 @@ public class UserController {
 
 	@RequestMapping(value="/profile", method=RequestMethod.POST)
 	public User getProfilePage(HttpSession session, Model m) {
-		User u = null;
+		User user = null;
 		if(session.getAttribute("logged")!= null){
-			if(CachedObjects.getInstance().getAllUsers().size() == 0){
-				try {
-					userDAO.getAllUsers();
-				} catch (ValidationException e) {
-					System.out.println("can't get all users");
-				}
-			}
-			long l = (long)session.getAttribute("userID");
-			System.out.println(l);
-			u = CachedObjects.getInstance().getOneUser(l);
+			user = (User)session.getAttribute("user");
 		}
-		return u;
+		return user;
 	}
 }

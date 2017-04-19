@@ -151,9 +151,20 @@ public class CachedObjects {
 		return false;
 	}
 
-	public Album getOneAlbum(Integer albumId) {
-		// TODO Auto-generated method stub
-		return null;
+	public Album getOneAlbum(long albumId) {
+		return allAlbums.get(albumId);
+	}
+	
+	public Album getOneAlbum(String name) {
+		Album album = null;
+		System.out.println(name);
+		for(Entry<Long, Album> e : allAlbums.entrySet()){
+			System.err.println("hiiiddddddddddddddddd");
+			if (e.getValue().getName().equals(name)){
+				album = e.getValue();
+			}
+		}
+		return album;
 	}
 
 	public boolean containsAlbum(Integer albumId) {
