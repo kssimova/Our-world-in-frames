@@ -50,8 +50,8 @@ public class UserDAO {
 	
 	private static final String CHECK_IF_VALID_LOGIN = "SELECT first_name, last_name FROM ourwif.users WHERE username = ? AND password = ?";
 	
-	// TODO
-	private static final String GET_ALL_FOLLOWERS = "";
+	// WITHOUT CITY AND COUNTRY
+	private static final String GET_ALL_FOLLOWERS = "SELECT USERS.user_id, first_name, last_name, username, email, password, mobile_number, birthdate, description, gender, profilephoto_path FROM ourwif.users USERS JOIN ourwif.followers FOLLOWERS ON (USERS.user_id = FOLLOWERS.user_id) WHERE followed_id = ?";
 
 	private DataSource dataSource;
 
@@ -505,15 +505,58 @@ public class UserDAO {
 	}
 	
 	// get user's followers
-	public List<User> getFollowers(User user){
-		return null;
+	public List<User> getFollowers(User user) throws ValidationException{
+		PreparedStatement preparedStatement = null;
+		List<User> followers = null;
+		ResultSet resultSet = null;
+		Connection connection = null;
+		try {
+			connection = (Connection) dataSource.getConnection();
+			preparedStatement = connection.prepareStatement(GET_ALL_FOLLOWERS);
+			preparedStatement.setLong(1, user.getUserId());
+			resultSet = preparedStatement.executeQuery();
+			if (!resultSet.next() ) {
+			    return followers;
+			} 
+			followers = new ArrayList<>();
+			while(resultSet.next()){
+				User follower = new User(resultSet.getString("username"), resultSet.getString("email"),resultSet.getString("password"), resultSet.getLong("user_id"));
+				follower.changeFirstName(resultSet.getString("first_name"));
+				follower.changeLastName(resultSet.getString("last_name"));
+				follower.changeDescription(resultSet.getString("description"));
+				follower.changeGender(Enum.valueOf(User.Gender.class, resultSet.getString("gender").toUpperCase()));
+				follower.changeBirthDate(resultSet.getDate("birthdate").toLocalDate());
+				follower.changeMobileNumber(resultSet.getString("mobile_number"));
+				follower.changeProfilePhoto(resultSet.getString("profilephoto_path"));
+				followers.add(follower);
+				user.addFollower(follower);
+			}
+		} catch (SQLException e1) {
+			System.out.println("Error in 1st catch block in UserDAO method getFollowers() - " + e1.getMessage());
+		}
+		finally{
+			if(preparedStatement != null){
+				try {
+					preparedStatement.close();
+				} catch (SQLException e2) {
+					System.out.println("Error when closing statement in 1st catch block in UserDAO method getFollowers() - " + e2.getMessage());
+				}
+			}
+			if(resultSet != null){
+				try {
+					resultSet.close();
+				} catch (SQLException e3) {
+					System.out.println("Error when closing resultSet in 1st catch block in UserDAO method getFollowers() - " + e3.getMessage());
+				}
+			}
+		}
+		return Collections.unmodifiableList(followers);
 	}
 
 	public boolean validLogin(String username, String password) throws ValidationException {
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
-		boolean valid = false;
 		try {
 			connection = (Connection) dataSource.getConnection();
 			preparedStatement = connection.prepareStatement(CHECK_IF_VALID_LOGIN);
@@ -526,13 +569,9 @@ public class UserDAO {
 				resultSet.last();  
 			    size = resultSet.getRow();  
 			    if(size == 1){
-			    	valid = true;
+			    	return true;
 			    }
 			} 
-			System.out.println(size + " e dyljinata na resultseta");
-//			if(resultSet.wasNull()){
-//				return false;
-//			}
 		} catch (SQLException e1) {
 			System.out.println("Error in 1st catch block in UserDAO method validLogin() - " + e1.getMessage());
 		}
@@ -552,7 +591,7 @@ public class UserDAO {
 				}
 			}
 		}
-		return valid;
+		return false;
 	}
 	
 }
