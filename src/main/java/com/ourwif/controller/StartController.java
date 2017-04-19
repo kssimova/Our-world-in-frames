@@ -72,5 +72,23 @@ public class StartController {
 		}
 		return url;
 	}
+	
+	@RequestMapping(value="/postView", method=RequestMethod.POST)
+	public String getPostPage(HttpSession session) {
+		String url = "UnlogedIndex";
+		if(session.getAttribute("logged")!= null){
+			url = "LogedPostView";
+		}
+		return url;
+	}
+	
+	@RequestMapping(value="/album", method=RequestMethod.POST)
+	public String getAlbumPage(HttpSession session) {
+		String url = "UnlogedIndex";
+		if(session.getAttribute("logged")!= null){
+			url = "LogedAlbums";
+		}
+		return url;
+	}
 }
 

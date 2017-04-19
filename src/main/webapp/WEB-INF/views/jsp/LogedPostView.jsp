@@ -9,7 +9,7 @@
 	<link rel="stylesheet" type="text/css" href=css/bootstrap.min.css></link>
 	<link rel="stylesheet" type="text/css" href="css/API.css">
 <title>post</title>
-    <link href="bootstrap.min" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="portfolio-item" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="PostView">
 </head>
@@ -26,11 +26,11 @@
         <!-- Portfolio Item Row -->
         <div class="row">
 
-            <div class="col-md-8">
+            <div class="col-md-9">
                 <img class="img-fluid" src="http://placehold.it/750x500" alt="">
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <h3 class="my-3">Project Description</h3>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae. Sed dui lorem, adipiscing in adipiscing et, interdum nec metus. Mauris ultricies, justo eu convallis placerat, felis enim.</p>
                 <h3 class="my-3">Project Details</h3>
@@ -49,36 +49,106 @@
         <h3 class="my-4">Related Projects</h3>
 
         <div class="row">
-
-            <div class="col-md-3 col-sm-6 mb-4">
+            <div class="col-md-3 col-sm-6 mb-4 thumbnail">
                 <a href="#">
-                    <img class="img-fluid" src="http://placehold.it/500x300" alt="">
+                    <img class="img-fluid" src="http://placehold.it/500x300" style="height:200px;width:auto;max-width:300px;">
                 </a>
             </div>
 
-            <div class="col-md-3 col-sm-6 mb-4">
+            <div class="col-md-3 col-sm-6 mb-4 thumbnail">
                 <a href="#">
-                    <img class="img-fluid" src="http://placehold.it/500x300" alt="">
+                    <img class="img-fluid" src="http://placehold.it/500x300" style="height:200px;width:auto;max-width:300px;">
                 </a>
             </div>
 
-            <div class="col-md-3 col-sm-6 mb-4">
+            <div class="col-md-3 col-sm-6 mb-4 thumbnail">
                 <a href="#">
-                    <img class="img-fluid" src="http://placehold.it/500x300" alt="">
+                   <img class="img-fluid" src="http://placehold.it/500x300" style="height:200px;width:auto;max-width:300px;">
                 </a>
             </div>
 
-            <div class="col-md-3 col-sm-6 mb-4">
+            <div class="col-md-3 col-sm-6 mb-4 thumbnail">
                 <a href="#">
-                    <img class="img-fluid" src="http://placehold.it/500x300" alt="">
+                    <img class="img-fluid" src="http://placehold.it/500x300" style="height:200px;width:auto;max-width:300px;">
                 </a>
             </div>
        </div>
     </div>
+    
+    <div class="container">
+  <div class="row">
+    <div class="col-sm-10 col-sm-offset-1" id="logout">
+        <div class="comment-tabs">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="active"><a href="#comments-logout" role="tab" data-toggle="tab"><h4 class="reviews text-capitalize">Comments</h4></a></li>
+                <li><a href="#add-comment" role="tab" data-toggle="tab"><h4 class="reviews text-capitalize">Add comment</h4></a></li>
+            </ul>            
+            <div class="tab-content">
+                <div class="tab-pane active" id="comments-logout">                
+                    <ul class="media-list">
+                      <li class="media">
+                        <a class="pull-left" href="#">
+                          <img class="media-object img-circle" src="https://s3.amazonaws.com/uifaces/faces/twitter/dancounsell/128.jpg" alt="profile">
+                        </a>
+                        <div class="media-body">
+                          <div class="well well-lg">
+                              <h4 class="media-heading text-uppercase reviews">Marco </h4>
+                              <ul class="media-date text-uppercase reviews list-inline">
+                                <li class="dd">22</li>
+                                <li class="mm">09</li>
+                                <li class="aaaa">2014</li>
+                              </ul>
+                              <p class="media-comment">
+                                Great snippet! Thanks for sharing.
+                              </p>
+                            </div>              
+                        </div>
+                      </li>      
+                      <li class="media">
+                        <a class="pull-left" href="#">
+                          <img class="media-object img-circle" src="https://s3.amazonaws.com/uifaces/faces/twitter/lady_katherine/128.jpg" alt="profile">
+                        </a>
+                        <div class="media-body">
+                          <div class="well well-lg">
+                              <h4 class="media-heading text-uppercase reviews">Kriztine</h4>
+                              <ul class="media-date text-uppercase reviews list-inline">
+                                <li class="dd">22</li>
+                                <li class="mm">09</li>
+                                <li class="aaaa">2014</li>
+                              </ul>
+                              <p class="media-comment">
+                                Yehhhh... Thanks for sharing.
+                              </p>
+                          </div>              
+                        </div>
+                      </li>
+                    </ul> 
+                </div>
+                <div class="tab-pane" id="add-comment">
+                    <form action="#" method="post" class="form-horizontal" id="commentForm" role="form"> 
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">Comment</label>
+                            <div class="col-sm-10">
+                              <textarea class="form-control" name="addComment" id="addComment" rows="5"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">                    
+                                <button class="btn btn-success btn-circle text-uppercase" type="submit" id="submitComment"><span class="glyphicon glyphicon-send"></span> Summit comment</button>
+                            </div>
+                        </div>            
+                    </form>
+                </div>
+            </div>
+        </div>
+	</div>
+  </div>
+</div>
+
 
     <!-- Bootstrap core JavaScript -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/tether/tether.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/tether.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 </body>
 </html>

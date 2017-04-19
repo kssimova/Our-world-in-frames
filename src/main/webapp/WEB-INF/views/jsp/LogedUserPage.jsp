@@ -49,25 +49,70 @@ window.onload = function() {
 			
 			$.each(user.albums, function(index, val){
 				if(val.photos.length == 0){
-					$album.append('<div class="col-md-4"><div class="thumbnail"><a href="#"><img src="http://i.imgur.com/bjMeBux.jpg" alt="Lights" style="height: 200px;width:auto;"><div class="caption"><p>' 
-							+ val.name + '</p></div> </a></div></div>');
+					$album.append(
+					'<div class="col-md-4">' +
+						'<div class="thumbnail">'+
+							'<f:form commandName="goToPostPage" action="album" method = "POST" align="center" >' + 
+								'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
+								'<input type="hidden" name = "imgId" value="' + val.albumId + '" >' +  
+								'<div class="caption">' + 
+									'<p>' +
+										val.name + 
+									'</p>' + 
+								'</div>'+ 
+							'</f:form>' + 
+						'</div> ' +
+					'</div>');
 				}
+				
 				$.each(val.photos, function(a, b){	
 					if(name != val.name){
-						$album.append('<div class="col-md-4"><div class="thumbnail"><a href="' + b.picturePath + ' "><img src=" ' + b.picturePath + 
-							'" alt="Lights" style="height: 200px;width:auto;"><div class="caption"><p>' + val.name + '</p></div> </a></div></div>');
-						name = val.name;
+						$album.append(
+								'<div class="col-md-4">' + 
+									'<div class="thumbnail">' + 
+										'<f:form commandName="goToPostPage" action="album" method = "POST" align="center" >' + 
+											'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
+											'<input type="hidden" name = "imgId" value="' + val.albumId + '" >' +  
+											'<div class="caption">' + 
+												'<p>' + 
+													val.name + 
+												'</p>' + 
+											'</div>' + 
+										'</f:form>' + 
+									'</div>' +
+								'</div>');
+						name = val.name;				
 					}
 					if(count < 3){
-						$img.append('<div class="col-md-4"><div class="thumbnail"><a href="' + b.picturePath + ' "><img src=" ' + b.picturePath + 
-							'" alt="Lights" style="height: 200px;width:auto;"><div class="caption"><p>' + b.name +
-							'</p></div> </a></div></div>');
+						$img.append('<div class="col-md-4">' + 
+								'<div class="thumbnail">' + 
+									'<f:form commandName="goToPostPage" action="postView" method = "POST" align="center" >' + 
+										'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
+										'<input type="hidden" name = "imgId" value="' + b.postId + '" >' +  
+										'<div class="caption">' + 
+											'<p>' + 
+												b.name +
+											'</p>' + 
+										'</div>' + 
+									'</f:form>' + 
+									'</div>' + 
+								'</div>');			
 						count++;
 					}else if(count <= 4){
-						$img.append('<div class="col-md-6"><div class="thumbnail"><a href="' + b.picturePath + ' "><img src=" ' + b.picturePath + 
-								'" alt="Lights" style="height:300px;width:auto;"><div class="caption"><p>' + b.name +
-								'</p></div> </a></div></div>');					
-						count++;
+						$img.append('<div class="col-md-6">' + 
+								'<div class="thumbnail">' + 
+									'<f:form commandName="goToPostPage" action="postView" method = "POST" align="center" >' +
+										'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:300px;width:auto;">' +
+										'<input type="hidden" name = "imgId" value="' + b.postId + '" >' + 
+										'<div class="caption">' +
+											'<p>' + 
+												b.name +
+											'</p>' + 
+										'</div>' + 
+									'</f:form>' + 
+									'</div>' +
+								'</div>');					
+						count++;				
 					};
 				});
 			});
@@ -202,8 +247,7 @@ window.onload = function() {
 				<input rel = "about" class = "button btn3" type="submit" value="About">
        		</div>
      	 </div>
-	</div>	
-	
+	</div>		
 	
 	<!--  image panel     -->
 <div id = "images" class = "panel active">
