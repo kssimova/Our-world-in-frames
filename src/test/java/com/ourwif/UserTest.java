@@ -7,7 +7,6 @@ import javax.xml.bind.ValidationException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.ourwif.DAO.PostDAO;
 import com.ourwif.DAO.UserDAO;
 import com.ourwif.model.User;
 import com.ourwif.model.User.Gender;
@@ -74,6 +73,8 @@ public class UserTest {
 		System.out.println(userDAO.validLogin("user123", "1234"));
 		
 		System.out.println(userDAO.validLogin("user123tdh", "12345dg"));
+		
+		System.out.println(userDAO.validLogin("krisi", "kriska5678"));
 	}
 
 }
