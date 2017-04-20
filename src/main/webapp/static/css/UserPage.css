@@ -1,4 +1,12 @@
 /* USER PROFILE PAGE */
+.imgPanel.active {
+    display:block;
+}
+
+.imgPanel{
+	display:none;
+}
+
  .card {
     margin-top: 20px;
     padding: 30px;
@@ -94,8 +102,6 @@
     margin : 0px;
 	padding: 15px 0 10px 0 ;
 }
-
-
 
 .panel {
     display:none;

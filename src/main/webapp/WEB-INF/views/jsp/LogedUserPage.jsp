@@ -33,36 +33,86 @@ window.onload = function() {
 			$('.followers').html("Followers: " + user.followers.length);
 			$('.following').html("Following: " + user.following.length);
 			$('.address').html(user.country + " " +  user.city);
+			$('.description').html(user.description);
+			$('.mobileNumber').html(user.mobileNumber);
+			if(user.birthdate != null){
+				$('.birthdate').html(user.birthdate);
+			}
+			$('.gender').html(user.gender);
+			if(user.profilePhotoPath != null){
+				$('.useravatar').finf('img').remove();
+				$('.useravatar').append('<img alt="" src="' + user.profilePhotoPath + '">');
+				$('.card-background').finf('img').remove();
+				$('.card-background').append('<img class="card-bkimg" alt="" src= "' + user.profilePhotoPath + '" >');
+			}
+			
+			
 			$.each(user.albums, function(index, val){
-				$.each(val, function(ind, v){
-					console.log(ind +  " : " + v);
-				});
-				console.log(val.photos.lenght);
-				$.each(val.photos, function(a, b){
+				if(val.photos.length == 0){
+					$album.append(
+					'<div class="col-md-4">' +
+						'<div class="thumbnail">'+
+							'<f:form commandName="goToPostPage" action="album" method = "POST" align="center" >' + 
+								'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
+								'<input type="hidden" name = "imgId" value="' + val.albumId + '" >' +  
+								'<div class="caption">' + 
+									'<p>' +
+										val.name + 
+									'</p>' + 
+								'</div>'+ 
+							'</f:form>' + 
+						'</div> ' +
+					'</div>');
+				}
+				
+				$.each(val.photos, function(a, b){	
 					if(name != val.name){
-						$album.append('<div class="col-md-4"><div class="thumbnail"><a href="' + b.picturePath + ' "><img src=" ' + b.picturePath + 
-							'" alt="Lights" style="height: 200px;width:auto;"><div class="caption"><p>' + val.name + '</p></div> </a></div></div>');
-						name = val.name;
-						if(a.lenght === 0){
-							$album.append('<div class="col-md-4"><div class="thumbnail"><a href="http://i.imgur.com/bjMeBux.jpg"><img src=" ' + b.picturePath + 
-									'" alt="Lights" style="height: 200px;width:auto;"><div class="caption"><p>' + val.name + '</p></div> </a></div></div>');
-							name = val.name;
-						}
+						$album.append(
+								'<div class="col-md-4">' + 
+									'<div class="thumbnail">' + 
+										'<f:form commandName="goToPostPage" action="album" method = "POST" align="center" >' + 
+											'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
+											'<input type="hidden" name = "imgId" value="' + val.albumId + '" >' +  
+											'<div class="caption">' + 
+												'<p>' + 
+													val.name + 
+												'</p>' + 
+											'</div>' + 
+										'</f:form>' + 
+									'</div>' +
+								'</div>');
+						name = val.name;				
 					}
 					if(count < 3){
-						console.log(b.picturePath);
-						$img.append('<div class="col-md-4"><div class="thumbnail"><a href="' + b.picturePath + ' "><img src=" ' + b.picturePath + 
-							'" alt="Lights" style="height: 200px;width:auto;"><div class="caption"><p>' + b.name +
-							'</p></div> </a></div></div>');
+						$img.append('<div class="col-md-4">' + 
+								'<div class="thumbnail">' + 
+									'<f:form commandName="goToPostPage" action="postView" method = "POST" align="center" >' + 
+										'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
+										'<input type="hidden" name = "imgId" value="' + b.postId + '" >' +  
+										'<div class="caption">' + 
+											'<p>' + 
+												b.name +
+											'</p>' + 
+										'</div>' + 
+									'</f:form>' + 
+									'</div>' + 
+								'</div>');			
 						count++;
-					}else{
-						if(count <= 4){
-						$img.append('<div class="col-md-6"><div class="thumbnail"><a href="' + b.picturePath + ' "><img src=" ' + b.picturePath + 
-								'" alt="Lights" style="height:300px;width:auto;"><div class="caption"><p>' + b.name +
-								'</p></div> </a></div></div>');					
-						count++;
-						}else{
-						};
+					}else if(count <= 4){
+						$img.append('<div class="col-md-6">' + 
+								'<div class="thumbnail">' + 
+									'<f:form commandName="goToPostPage" action="postView" method = "POST" align="center" >' +
+										'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:300px;width:auto;">' +
+										'<input type="hidden" name = "imgId" value="' + b.postId + '" >' + 
+										'<div class="caption">' +
+											'<p>' + 
+												b.name +
+											'</p>' + 
+										'</div>' + 
+									'</f:form>' + 
+									'</div>' +
+								'</div>');					
+						count++;				
 					};
 				});
 			});
@@ -197,12 +247,12 @@ window.onload = function() {
 				<input rel = "about" class = "button btn3" type="submit" value="About">
        		</div>
      	 </div>
-	</div>	
-	
+	</div>		
 	
 	<!--  image panel     -->
 <div id = "images" class = "panel active">
 	<div id = "img" class="row"></div>
+	
 </div>
 
 	<!--  album panel     -->
@@ -212,10 +262,26 @@ window.onload = function() {
 
 
 <div id = "about" class = "panel">
-
-some text
-
-
+    <div class="col-md-3 thumbnail">
+  		 Description: 
+    	<div class = "description thumbnail" ></div>
+		<input class = "button btn3" type="submit" value="Edit">
+    </div>
+    <div class="col-md-3 thumbnail">
+    	Mobile Number:
+    	<div class = "mobileNumber thumbnail" ></div>
+		<input class = "button btn3" type="submit" value="Edit">
+    </div>
+    <div class="col-md-3 thumbnail">
+  		Birthday: 
+    	<div class = "birthdate thumbnail" ></div>
+		<input class = "button btn3" type="submit" value="Edit">
+    </div>
+    <div class="col-md-3 thumbnail">
+    	Gender: 
+    	<div class = "gender thumbnail" ></div>
+		<input class = "button btn3" type="submit" value="Edit">
+    </div>
 </div>
 
 
@@ -233,9 +299,12 @@ some text
 				});			
 			});	
 	    });
+	   $('#addImg').on('click', function() {
+			$('.imgPanel').toggle(300, function(){					
+			});	
+	    });
 	});
 	
-	//TODO make img dynamic
 </script>
 	
 </body>

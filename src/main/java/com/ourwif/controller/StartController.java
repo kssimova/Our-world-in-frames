@@ -58,9 +58,35 @@ public class StartController {
 	
 	@RequestMapping(value="/profile", method=RequestMethod.POST)
 	public String getProfilePage(HttpSession session) {
-		String url = "UnlogedHomePage";
+		String url = "UnlogedIndex";
 		if(session.getAttribute("logged")!= null){
 			url = "LogedUserPage";
+		}
+		return url;
+	}
+	@RequestMapping(value="/upload", method=RequestMethod.POST)
+	public String getUploadPage(HttpSession session) {
+		String url = "UnlogedHomePage";
+		if(session.getAttribute("logged")!= null){
+			url = "LogedUpload";
+		}
+		return url;
+	}
+	
+	@RequestMapping(value="/postView", method=RequestMethod.POST)
+	public String getPostPage(HttpSession session) {
+		String url = "UnlogedIndex";
+		if(session.getAttribute("logged")!= null){
+			url = "LogedPostView";
+		}
+		return url;
+	}
+	
+	@RequestMapping(value="/album", method=RequestMethod.POST)
+	public String getAlbumPage(HttpSession session) {
+		String url = "UnlogedIndex";
+		if(session.getAttribute("logged")!= null){
+			url = "LogedAlbums";
 		}
 		return url;
 	}

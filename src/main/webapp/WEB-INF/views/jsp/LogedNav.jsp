@@ -44,6 +44,11 @@
 	            </div>
 	        </form>
 	        <ul id = "navRightBar" class="nav navbar-nav navbar-right">
+	        	 <li>
+	            	<f:form commandName="goToUpload" action="upload" method = "POST">
+						<input class= "noMods" type="submit" value="Upload">
+					</f:form>
+	            </li>
 	          	<li>
 	          		<f:form commandName="profile" action="/ourwif/profile" method = "POST">
 						<input class= "noMods" type="submit" value="Profile">	
@@ -57,7 +62,6 @@
 	        </ul>
 	    </div>
 	</nav>
-
-
+	
 </body>
 </html>

@@ -5,6 +5,7 @@ public class Basic {
 	private boolean status;
 	private String url;
 	private Long id;
+	private String strId;
 	
 	
 	public Basic(boolean loged, String url, Long id) {
@@ -43,8 +44,15 @@ public class Basic {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	
-	
+
+
+	public String getStrId() {
+		return strId;
+	}
+
+
+	public void setStrId(String strId) {
+		this.strId = strId;
+	}	
 
 }
