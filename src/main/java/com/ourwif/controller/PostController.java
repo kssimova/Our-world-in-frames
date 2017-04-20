@@ -10,6 +10,7 @@ import java.util.Scanner;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.ValidationException;
 
@@ -23,12 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.ourwif.DAO.PostDAO;
 import com.ourwif.model.Album;
 import com.ourwif.model.Basic;
 import com.ourwif.model.CachedObjects;
 import com.ourwif.model.Post;
 import com.ourwif.model.User;
+
 
 @RestController
 @RequestMapping(value= "/post")
@@ -38,38 +41,40 @@ public class PostController {
 
 	
 	@RequestMapping(value="/get/{post_id}",method = RequestMethod.GET)
-	public Post getPost(Model model, @PathVariable("post_id") String postId){
-		Post post = null;
-		//if we receive a get request with id of the post
-		//we should return this post :)
-		if(CachedObjects.getInstance().containsPost(postId)){
-			post = CachedObjects.getInstance().getOnePost(postId); 
-		}else{
-			try {
-				postDAO.getAllPosts();
-			} catch (ValidationException | SQLException e) {
-				System.out.println("Validation fail");
-			}
-			post = CachedObjects.getInstance().getOnePost(postId);
+	public synchronized Post getPost(Model model, @PathVariable("post_id") String postId, HttpSession session, HttpServletResponse response){
+		System.out.println(postId);
+		try {
+			response.sendRedirect("/ourwif/WEB-INF/views/jsp/LogedPostView.jsp");
+		} catch (IOException e1) {
+			System.out.println("ops, cant redirect");
 		}
-		if(post != null){
-		return  post;
+		Post post = null;
+		if(postId != null){
+			if(CachedObjects.getInstance().getAllPosts().isEmpty()){
+				try {
+					postDAO.getAllPosts();
+				} catch (ValidationException | SQLException e) {
+					System.out.println("i cant get all posts");
+				}
+			}else{
+				post = CachedObjects.getInstance().getOnePost(postId);
+			}
+		}
+		if(session.getAttribute("logged")!= null){
 		}
 		return post;
 	}
 	
 	@RequestMapping(value="/add",method = RequestMethod.POST)
-	public Basic addPost(HttpServletRequest request, HttpSession session) throws IOException {
+	public Basic addPost(HttpServletRequest request, HttpSession session){
 		
 		TreeSet<String> tags = new TreeSet<>();
 		String tagStr = request.getParameter("tags");
 		if(!tagStr.isEmpty() && tagStr != null){
 			tags = addTags(tagStr);
-		}
-		
+		}		
 		String name = request.getParameter("name");
-		String description = request.getParameter("description");
-		
+		String description = request.getParameter("description");		
 		String albumName = request.getParameter("album");
 		Album album = null;
 
@@ -79,22 +84,23 @@ public class PostController {
 				album = albums;
 			}
 		}
-		
-		
 		String picturePath = "";
 		Basic basic = null;
 		String postId = "";
-		String deleteHash = "";
-		
+		String deleteHash = "";		
 		String file = request.getParameter("file");
-		file = file.substring(file.indexOf(",")+1);
-	
+		file = file.substring(file.indexOf(",")+1);	
 		//working Request is OK
 		if(session.getAttribute("logged")!= null){
 			//connect to imgur
-			URL url = new URL("https://api.imgur.com/3/image.json");
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-					
+			URL url;
+			HttpURLConnection connection = null;
+			try {
+				url = new URL("https://api.imgur.com/3/image.json");
+				connection = (HttpURLConnection) url.openConnection();
+			} catch (IOException e2) {
+				System.out.println(e2.getMessage());
+			}				
 			//set request
 			String access_token = "bc232b87907ff074efdffbbdaaaaa53aada282a2";
 			// String expires_in="2419200";
@@ -105,50 +111,58 @@ public class PostController {
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
 			connection.setRequestProperty("authorization", "Bearer " + access_token);
-			connection.setRequestMethod("POST");
-			connection.connect();
-			System.out.println(file);
-				   
+			try {
+				connection.setRequestMethod("POST");
+				connection.connect();
+			} catch (IOException e1) {
+				System.out.println(e1.getMessage());
+			}		   
 			//send base64 String
-			final OutputStreamWriter osw = new OutputStreamWriter(connection.getOutputStream());
-			osw.write(file);
-			osw.flush();
-			connection.connect();
-			System.out.println(connection.getResponseMessage());	
-			
+			OutputStreamWriter osw = null;
+			try {
+				osw = new OutputStreamWriter(connection.getOutputStream());
+				osw.write(file);
+				osw.flush();
+				connection.connect();
+				System.out.println(connection.getResponseMessage());
+			} catch (IOException e1) {
+				System.out.println(e1.getMessage());
+			}		
 			//get response
-			if(connection.getResponseCode() == 200){
-				StringBuilder sb = new StringBuilder();		
-				Scanner sc = new Scanner(connection.getInputStream());
-				while(sc.hasNextLine()){
-					  sb.append(sc.nextLine());
+			try {
+				if(connection.getResponseCode() == 200){
+					StringBuilder sb = new StringBuilder();		
+					Scanner sc = new Scanner(connection.getInputStream());
+					while(sc.hasNextLine()){
+						  sb.append(sc.nextLine());
+					}
+					sc.close();	
+					//response to JSON object
+					String responseData = sb.toString();
+					JsonParser parser = new JsonParser();
+					JsonObject jsonObj = parser.parse(responseData).getAsJsonObject();
+					JsonObject obj2 = jsonObj.getAsJsonObject("data");
+					postId = obj2.get("id").toString();
+					postId.replaceAll("\"", " ").trim();
+					picturePath = obj2.get("link").toString();
+					picturePath.replaceAll("\"", " ").trim();
+					deleteHash = obj2.get("deletehash").toString();
+					deleteHash.replaceAll("\"", " ").trim();					
+					try {
+						postDAO.createPost((User)session.getAttribute("user"), name, description, LocalDate.now(), picturePath, tags, album, postId, deleteHash);
+					} catch (ValidationException e) {
+						System.out.println(e.getMessage());
+					} catch (SQLException e) {
+						System.out.println(e.getMessage());
+					}	
 				}
-				sc.close();
-				
-				//response to JSON object
-				String responseData = sb.toString();
-				JsonParser parser = new JsonParser();
-				JsonObject jsonObj = parser.parse(responseData).getAsJsonObject();
-				JsonObject obj2 = jsonObj.getAsJsonObject("data");
-				System.out.println(obj2.toString());	
-				postId = obj2.get("id").toString();
-				System.out.println(postId);
-				picturePath = obj2.get("link").toString();
-				System.out.println(picturePath);
-				deleteHash = obj2.get("deletehash").toString();
-				System.out.println(deleteHash);
-				
-				Post p = null;
-				try {
-					p = postDAO.createPost((User)session.getAttribute("user"), name, description, LocalDate.now(), picturePath, tags, album, postId, deleteHash);
-				} catch (ValidationException e) {
-					System.out.println(e.getMessage());
-				} catch (SQLException e) {
-					System.out.println(e.getMessage());
-				}	
+			} catch (JsonSyntaxException e) {
+				System.out.println(e.getMessage());
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
 			}	
 		}else{
-			basic = new Basic(true, "login", 0L);
+			basic = new Basic(true, "login");
 			basic.setStrId(postId);
 		}
 		return basic;
@@ -160,8 +174,7 @@ public class PostController {
 		//if we get a put request with JSON with name/ description and id of one post we will change what's in the database accordingly
 		if(session.getAttribute("logged")!= null){
 			Post post = CachedObjects.getInstance().getOnePost(request.getParameter("post_id"));
-			User user = CachedObjects.getInstance().getOneUser( request.getParameter("user_id"));
-			
+			User user = CachedObjects.getInstance().getOneUser( request.getParameter("user_id"));			
 			String title = request.getParameter("tittle");
 			String description = request.getParameter("description");
 			if(!title.isEmpty() && title != null){

@@ -27,7 +27,6 @@ public class CachedObjects {
 	}
 	
 	public User getOneUser(long userId) {
-		System.out.println(allUsers.size());
 		return allUsers.get(userId);
 	}
 	
@@ -155,9 +154,7 @@ public class CachedObjects {
 	
 	public Album getOneAlbum(String name) {
 		Album album = null;
-		System.out.println(name);
 		for(Entry<Long, Album> e : allAlbums.entrySet()){
-			System.err.println("hiiiddddddddddddddddd");
 			if (e.getValue().getName().equals(name)){
 				album = e.getValue();
 			}

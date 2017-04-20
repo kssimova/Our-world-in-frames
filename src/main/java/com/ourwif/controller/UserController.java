@@ -70,7 +70,8 @@ public class UserController {
 			} catch (ValidationException e) {
 				System.out.println(e.getMessage());
 			}
-		basic = new Basic(true, "/ourwif/index", u.getUserId());
+		basic = new Basic(true, "/ourwif/index");
+		basic.setId(u.getUserId());
 		//this will delete one comment.. request should contain the id of this comment 
 		return basic;
 	}

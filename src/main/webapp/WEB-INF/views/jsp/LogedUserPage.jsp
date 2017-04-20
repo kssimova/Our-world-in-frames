@@ -52,15 +52,15 @@ window.onload = function() {
 					$album.append(
 					'<div class="col-md-4">' +
 						'<div class="thumbnail">'+
-							'<f:form commandName="goToPostPage" action="album" method = "POST" align="center" >' + 
-								'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
-								'<input type="hidden" name = "imgId" value="' + val.albumId + '" >' +  
+							'<div class = "inputAlb" align="center">' +
+								'<input type="image" src="http://i.imgur.com/fK51fmR.jpg" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
+								'<input class = "inputAlbVal" type="hidden" name = "albumId" value="' + val.albumId + '" >' +  
 								'<div class="caption">' + 
 									'<p>' +
 										val.name + 
 									'</p>' + 
 								'</div>'+ 
-							'</f:form>' + 
+							'</div>' + 
 						'</div> ' +
 					'</div>');
 				}
@@ -70,46 +70,48 @@ window.onload = function() {
 						$album.append(
 								'<div class="col-md-4">' + 
 									'<div class="thumbnail">' + 
-										'<f:form commandName="goToPostPage" action="album" method = "POST" align="center" >' + 
+										'<div class = "inputAlb" align="center">' +
 											'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
-											'<input type="hidden" name = "imgId" value="' + val.albumId + '" >' +  
+											'<input class = "inputAlbVal" type="hidden" name = "albumId" value="' + val.albumId + '" >' +  
 											'<div class="caption">' + 
 												'<p>' + 
 													val.name + 
 												'</p>' + 
 											'</div>' + 
-										'</f:form>' + 
+										'</div>' + 
 									'</div>' +
 								'</div>');
 						name = val.name;				
 					}
 					if(count < 3){
-						$img.append('<div class="col-md-4">' + 
+						$img.append(
+							'<div class="col-md-4">' + 
 								'<div class="thumbnail">' + 
-									'<f:form commandName="goToPostPage" action="postView" method = "POST" align="center" >' + 
-										'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
-										'<input type="hidden" name = "imgId" value="' + b.postId + '" >' +  
+									'<div class = "inputImg" align="center">' +
+										'<input  type="image" src="' + b.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
+										'<input class = "inputImgVal" type="hidden" name = "imgId" value="' + b.postId + '" >' +  
 										'<div class="caption">' + 
 											'<p>' + 
 												b.name +
 											'</p>' + 
-										'</div>' + 
-									'</f:form>' + 
+										'</div>' +  
+										'</div>' +
 									'</div>' + 
 								'</div>');			
 						count++;
 					}else if(count <= 4){
-						$img.append('<div class="col-md-6">' + 
+						$img.append(
+							'<div class="col-md-6">' + 
 								'<div class="thumbnail">' + 
-									'<f:form commandName="goToPostPage" action="postView" method = "POST" align="center" >' +
-										'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:300px;width:auto;">' +
-										'<input type="hidden" name = "imgId" value="' + b.postId + '" >' + 
-										'<div class="caption">' +
-											'<p>' + 
-												b.name +
-											'</p>' + 
-										'</div>' + 
-									'</f:form>' + 
+										'<div class = "inputImg" align="center">' +
+											'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:300px;width:auto;">' +
+											'<input class = "inputImgVal" type="hidden" name = "imgId" value="' + b.postId + '"  >' + 
+											'<div class="caption">' +
+												'<p>' + 
+													b.name +
+												'</p>' + 
+											'</div>' + 
+										'</div>' +
 									'</div>' +
 								'</div>');					
 						count++;				
@@ -123,6 +125,35 @@ window.onload = function() {
 		}
 	});
 };
+
+$(function () {	
+	$('.inputImg input').on('click', function(){
+		$.ajax({
+			type: "GET",
+			url: 'post/get/' + $(this).next('input').val(),
+			success: function(){
+				console.log('hihi');
+			},
+			error: function(){
+				alert("cant load");
+			}
+		});
+	});
+
+	$('.inputAlb input').on('click', function(){		
+		$.ajax({
+			type: "GET",
+			url: 'album/get/' + $(this).next('input').val(),
+			success: function(){
+				console.log('hihi');
+			},
+			error: function(){
+				alert("cant load");
+			}
+		});
+	});
+});
+
 </script>
 	<jsp:include page="LogedNav.jsp" />
 	

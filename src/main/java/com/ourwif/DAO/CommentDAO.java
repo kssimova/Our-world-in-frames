@@ -37,17 +37,21 @@ public class CommentDAO {
   		Comment comment = null;
   		User user = null;
 		Connection conn = null;
- 		conn = (Connection) dataSource.getConnection();
- 		st = conn.prepareStatement(sql);
- 		st.setString(1, post.getPostId());
- 		//get result
- 		st.execute();
- 		result = st.getResultSet();
- 		while(result.next()){
- 				user = CachedObjects.getInstance().getOneUser(result.getLong("user_id"));
- 				comment = new Comment(post, user, result.getString("content"), result.getDate("date_created").toLocalDate(), result.getLong("comment_id"));
- 				allComments.put(result.getLong("comment_id"), comment);
- 			}
+		try{
+			conn = (Connection) dataSource.getConnection();
+			st = conn.prepareStatement(sql);
+			st.setString(1, post.getPostId());
+			//get result
+			st.execute();
+			result = st.getResultSet();
+			while(result.next()){
+					user = CachedObjects.getInstance().getOneUser(result.getLong("user_id"));
+					comment = new Comment(post, user, result.getString("content"), result.getDate("date_created").toLocalDate(), result.getLong("comment_id"));
+					allComments.put(result.getLong("comment_id"), comment);
+ 				}
+		}finally {
+			conn.close();
+		}
  		return allComments;
 	}
 	
@@ -81,6 +85,7 @@ public class CommentDAO {
  				throw e1;
  			}
  		}finally{
+			conn.close();
  			try {
  				conn.setAutoCommit(true);
  			} catch (SQLException e) {
@@ -99,7 +104,6 @@ public class CommentDAO {
  		try {
  			conn = (Connection) dataSource.getConnection();
 			conn.setAutoCommit(false);
-			conn = (Connection) dataSource.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			st.setString(1, str);
 			st.setLong(2, comment.getCommentId());
@@ -114,6 +118,7 @@ public class CommentDAO {
  				throw e1;
  			}
  		}finally{
+ 			conn.close();
  			try {
  				conn.setAutoCommit(true);
  			} catch (SQLException e) {
@@ -131,7 +136,6 @@ public class CommentDAO {
  		try {
  			conn = (Connection) dataSource.getConnection();
 			conn.setAutoCommit(false);
-			conn = (Connection) dataSource.getConnection();
 			st = conn.prepareStatement(sql);
 			st.setLong(1, comment.getCommentId());
 			st.execute();
@@ -146,6 +150,7 @@ public class CommentDAO {
  				throw e1;
  			}
  		}finally{
+ 			conn.close();
  			try {
  				conn.setAutoCommit(true);
  			} catch (SQLException e) {

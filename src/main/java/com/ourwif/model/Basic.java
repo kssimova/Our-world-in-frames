@@ -8,11 +8,10 @@ public class Basic {
 	private String strId;
 	
 	
-	public Basic(boolean loged, String url, Long id) {
+	public Basic(boolean loged, String url) {
 		super();
 		status = loged;
 		this.url = url;
-		this.id = id;
 	}
 
 

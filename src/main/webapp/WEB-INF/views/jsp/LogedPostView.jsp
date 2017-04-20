@@ -8,14 +8,37 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<link rel="stylesheet" type="text/css" href=css/bootstrap.min.css></link>
 	<link rel="stylesheet" type="text/css" href="css/API.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 <title>post</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="portfolio-item" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="PostView">
 </head>
+
+<script type="text/javascript">
+$(function () {	
+	
+	$.ajax({
+		type: "GET",
+		url: 'post',
+		data: user,
+		success: function(response){
+			var id = response.imgId;
+			console.log(id);
+		},
+		error: function(){
+			alert("cant load");
+		}
+	});
+});
+
+
+</script>
+
+
 
 <body>
 	<jsp:include page="LogedNav.jsp" />
+	
+	
 
     <!-- Page Content -->
     <div class="container">

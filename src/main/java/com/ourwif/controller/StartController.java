@@ -1,5 +1,6 @@
 package com.ourwif.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -83,7 +84,7 @@ public class StartController {
 	}
 	
 	@RequestMapping(value="/album", method=RequestMethod.POST)
-	public String getAlbumPage(HttpSession session) {
+	public String getAlbumPage(HttpSession session, HttpServletRequest request) {
 		String url = "UnlogedIndex";
 		if(session.getAttribute("logged")!= null){
 			url = "LogedAlbums";
