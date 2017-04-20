@@ -74,11 +74,13 @@ public class PostDAO {
 	}
 	
 	// create new Post
-	public Post createPost(User user, String name, String description, LocalDate dateCreated, String picturePath, TreeSet<String> tags, Album album, String postId, String deleteHash) throws SQLException, ValidationException{
+	public synchronized Post createPost(User user, String name, String description, LocalDate dateCreated, String picturePath, TreeSet<String> tags, Album album, String postId, String deleteHash) throws SQLException, ValidationException{
 		Post post = null;
 		String sql = null;
 		PreparedStatement st = null;
 		Connection conn = null;
+		ResultSet result = null;
+	 	ArrayList<Long> lonelyTags = new ArrayList<>();
  		try {
  			conn = (Connection) dataSource.getConnection();
 			conn.setAutoCommit(false);
@@ -101,8 +103,39 @@ public class PostDAO {
 			}
 		 	try {
 			 	post = new Post(user, name, description, dateCreated, picturePath, tags, postId, deleteHash);
-			 	editTags(post, user, tags);
-				post.addTags(tags);
+				post.addTags(tags);		
+				//add new tags in tag table if needed! tags are unique they won't be added in if they are already in it
+	 			for(String tag_name: tags){
+	 				System.out.println(tag_name);
+	 				sql = "INSERT INTO tags (name) value (?)";
+		 			st = conn.prepareStatement(sql);
+		 			st.setString(1, tag_name);
+		 			st.execute();
+	 			}
+	 			//select all new tag id-s
+	 			lonelyTags = new ArrayList<>();
+	 			for(String tag_name : tags){
+	 				System.out.println(tag_name);
+	 				sql = "SELECT tag_id FROM tags where name = ?";
+	 	 			st = conn.prepareStatement(sql);
+		 			st.setString(1, tag_name);
+	 	 			result = st.executeQuery();
+	 	 			while(result.next()){
+	 	 				lonelyTags.add(result.getLong("tag_id"));		
+	 	 			}		
+	 			}
+	 	 		//insert them
+	 	 		for(Long tagId: lonelyTags){			
+	 	 			System.out.println(tagId);
+	 	 			sql = "INSERT INTO tags_posts (tag_id, post_id) VALUES (?, ?) ";
+	 	 			st = conn.prepareStatement(sql);
+	 	 			st.setLong(1, tagId);
+	 	 			st.setString(2, post.getPostId());
+	 	 			st.execute();
+	 	 		}
+				
+				
+				
 			} catch (ValidationException e1) {
 				System.out.println("Error#2 in PostDAO. Error message: " + e1.getMessage());
 				throw e1;
@@ -240,6 +273,7 @@ public class PostDAO {
  			}
  			//add new tags in tag table if needed! tags are unique they won't be added in if they are already in it
  			for(String tag_name: tags){
+ 				System.out.println(tag_name);
  				sql = "INSERT INTO tags (name) value (?)";
 	 			st = conn.prepareStatement(sql);
 	 			st.setString(1, tag_name);
@@ -248,6 +282,7 @@ public class PostDAO {
  			//select all new tag id-s
  			lonelyTags = new ArrayList<>();
  			for(String tag_name : tags){
+ 				System.out.println(tag_name);
  				sql = "SELECT tag_id FROM tags where name = ?";
  	 			st = conn.prepareStatement(sql);
 	 			st.setString(1, tag_name);
@@ -257,12 +292,13 @@ public class PostDAO {
  	 			}		
  			}
  	 		//insert them
- 	 		for(Long tagId: lonelyTags){
-				sql = "INSERT INTO tags_posts (tag_id, post_id) VALUES (?, ?) ";
- 				st = conn.prepareStatement(sql);
- 				st.setLong(1, tagId);
- 				st.setString(2, post.getPostId());
- 				st.execute();
+ 	 		for(Long tagId: lonelyTags){			
+ 	 			System.out.println(tagId);
+ 	 			sql = "INSERT INTO tags_posts (tag_id, post_id) VALUES (?, ?) ";
+ 	 			st = conn.prepareStatement(sql);
+ 	 			st.setLong(1, tagId);
+ 	 			st.setString(2, post.getPostId());
+ 	 			st.execute();
  	 		}
  	 	}catch (SQLException e1) {
  			try {
