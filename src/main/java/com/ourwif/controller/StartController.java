@@ -1,6 +1,5 @@
 package com.ourwif.controller;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -43,6 +42,14 @@ public class StartController {
 	public String getLoginPage() {
 		return "index";
 	}
+	
+	//just for tests
+	//
+	//@RequestMapping(value="/loginPage", method=RequestMethod.POST)
+  	//public String getLoginPage() {
+ 	//	return "UnlogedLoginPage";
+  	//}
+	
 	
 	@RequestMapping(value="/registerPage", method=RequestMethod.POST)
 	public String getRegisterPage() {

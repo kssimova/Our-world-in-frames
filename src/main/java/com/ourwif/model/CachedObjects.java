@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 
 public class CachedObjects {
@@ -14,6 +15,7 @@ public class CachedObjects {
 	private final TreeMap<Long, User> allUsers = new TreeMap<>();
 	private final TreeMap<Long, TreeMap<String, Post>> allPosts = new TreeMap<>();
 	private final TreeMap<Long, Album> allAlbums = new TreeMap<>();
+	private final TreeMap<String, TreeSet<String>> allTags = new TreeMap<>();
 	
 	private CachedObjects() {
 
@@ -162,6 +164,35 @@ public class CachedObjects {
 
 	public Map<Long, User> getAllUsers() {
 		return  Collections.unmodifiableSortedMap(allUsers);
+	}
+
+	public Map<String, TreeSet<String>> getAllTags() {
+		return  Collections.unmodifiableSortedMap(allTags);
+	}
+	
+	public void addTags(TreeSet <String> t, Post post){
+		for(String tag: t){
+			String tagche = tag.toLowerCase().trim();
+			if (!allTags.containsKey(tag)){
+				allTags.put(tagche, new TreeSet<String>());
+				allTags.get(tagche).add(post.getPostId());
+			}else{
+				allTags.get(tagche).add(post.getPostId());
+			}	
+		}
+	}
+	
+	public TreeSet<String> getPhotosWithTag(TreeSet <String> t){
+		TreeSet<String> posts = new TreeSet<>();
+		for(String alltag : allTags.keySet()){
+			for(String tag: t){
+				String tagche = tag.toLowerCase().trim();
+				if(alltag.contains(tagche)){
+					posts.addAll(allTags.get(tagche));
+				}
+			}
+		}
+		return posts;
 	}
 	
 }

@@ -167,6 +167,7 @@ public class PostDAO {
  			conn.close();
 	 	}				
  		CachedObjects.getInstance().addPost(post, album);
+		CachedObjects.getInstance().addTags(tags, post);
  		return post;
 	}
 		
@@ -511,6 +512,7 @@ public class PostDAO {
 							commentDAO.getAllComments(post);
 							//add all post in right albums
 							CachedObjects.getInstance().addPost(post, albumId);
+							CachedObjects.getInstance().addTags(tags, post);
 						}
 						tags.clear();
 			 		}

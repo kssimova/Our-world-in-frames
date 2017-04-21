@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.ValidationException;
 
+import org.apache.catalina.webresources.Cache;
+import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ui.Model;
@@ -280,9 +282,40 @@ public class PostController {
 		}
 	}	
 	
+	@RequestMapping(value="/tag",method = RequestMethod.POST)
+	public TreeSet<Post> getTags(HttpSession session, HttpServletRequest request){
+		TreeSet<Post> posts = new TreeSet<>();
+		System.out.println(request.getParameter("tagche"));
+		if(request.getParameter("tagche") != null){
+			TreeSet<String> tags = addTags(request.getParameter("tagcheta"));
+			TreeSet<String> postIds = new TreeSet<>();
+			if(session.getAttribute("logged")!= null){
+				if(tags.size() > 0){
+					if(CachedObjects.getInstance().getAllTags().isEmpty()){
+						try {
+							postDAO.getAllPosts();
+							postIds.addAll(CachedObjects.getInstance().getPhotosWithTag(tags));
+							for(String postId : postIds){
+								posts.add(CachedObjects.getInstance().getOnePost(postId));
+							}
+						} catch (ValidationException | SQLException e) {
+							System.out.println("i cant get all posts");
+						}
+					}else{
+						postIds.addAll(CachedObjects.getInstance().getPhotosWithTag(tags));
+						for(String postId : postIds){
+							posts.add(CachedObjects.getInstance().getOnePost(postId));
+						}
+					}
+				}
+			}
+		}
+		return posts;
+	}
+		
  	public TreeSet<String> addTags(String tag) {
 		TreeSet<String> tags = new TreeSet<>();
-  		if (tag.length() == 0) {
+  		if (tag.length() <= 0) {
   			return tags;
   		}
  		if (tag.indexOf(',') < 0) {

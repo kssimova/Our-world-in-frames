@@ -6,12 +6,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<link rel="stylesheet" type="text/css" href=css/bootstrap.min.css></link>
 	<link rel="stylesheet" type="text/css" href="css/API.css">
 	<link rel="stylesheet" type="text/css" href="css/UserPage.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <title>post</title>
 </head>
 
@@ -24,6 +23,7 @@ $(function () {
 		postId: $postId
 	};
 	var $tags = $('#tags');
+	var tagcheta = "";
 	
 	$.ajax({
 		type: "GET",
@@ -38,11 +38,30 @@ $(function () {
   			$('#img').html(' <img class="img-fluid" src="'+ post.picturePath +'" alt="">');
   			$('#desc').html(post.description);
 			$.each(post.tags, function(index, val){
+				tagcheta += val + ", ";
 				$tags.append('<button>' + val + '</button>');
   			});
 		},
 		error: function(e){
 			alert(e);
+		}
+	});
+	
+	var tagche = {
+		tags: tagcheta
+	};
+	
+	$.ajax({
+		type: "POST",
+		url: 'post/tag',
+		data: tagche,
+		success: function(post){
+			$.each(post, function(index, val){
+  				console.log(index + " : " + val);
+  			});
+		},
+		error: function(e){
+			console.log(tagche);
 		}
 	});
 });
@@ -66,7 +85,7 @@ $(function () {
         <div class="row">
 
             <div id = "img" class="col-md-9">
-                <img class="img-fluid" src="http://placehold.it/750x500" alt="">
+                <img class="img-fluid" src="#" alt="">
             </div>
 
             <div class="col-md-3">
