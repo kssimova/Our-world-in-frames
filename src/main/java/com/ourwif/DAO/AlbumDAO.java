@@ -84,13 +84,13 @@ public class AlbumDAO {
 				throw e1;
 			}
 		}finally{
-			conn.close();
 			try {
 				conn.setAutoCommit(true);
 			} catch (SQLException e) {
 				System.out.println("Error#3 in AlbumDAO. Error message: " + e.getMessage());
 				throw e;
 			}
+ 			conn.close();
 		}
  		user.deleteAlbum(album);
  	}
@@ -118,13 +118,13 @@ public class AlbumDAO {
 				throw e1;
 			}
 		}finally{
-			conn.close();
 			try {
 				conn.setAutoCommit(true);
 			} catch (SQLException e) {
 				System.out.println("Error#3 in AlbumDAO. Error message: " + e.getMessage());
 				throw e;
 			}
+ 			conn.close();
 		}
 		return album;
 		

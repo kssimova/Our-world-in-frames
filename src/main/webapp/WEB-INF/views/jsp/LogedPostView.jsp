@@ -8,9 +8,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<link rel="stylesheet" type="text/css" href=css/bootstrap.min.css></link>
 	<link rel="stylesheet" type="text/css" href="css/API.css">
+	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 <title>post</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <script type="text/javascript">

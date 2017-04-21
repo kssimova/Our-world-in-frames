@@ -12,7 +12,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<nav role="navigation" class="navbar navbar-inverse">
+	<nav role="navigation" class="navbar navbar-inverse">
 	    <div class="navbar-header">
 	        <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
 	            <span class="sr-only">Toggle navigation</span>

@@ -158,13 +158,13 @@ public class PostDAO {
 			System.out.println("Error#5 in PostDAO. Error message: " + e3.getMessage());
 			throw e3;
 		}finally{
-			conn.close();
 	 		try {
 	 			conn.setAutoCommit(true);
 	 		} catch (SQLException e) {
 	 			System.out.println("Error#6 in PostDAO. Error message: " + e.getMessage());
 				throw e;
 	 		}
+ 			conn.close();
 	 	}				
  		CachedObjects.getInstance().addPost(post, album);
  		return post;
@@ -194,13 +194,13 @@ public class PostDAO {
  				throw e1;
  			}
  		}finally{
- 			conn.close();
  			try {
  				conn.setAutoCommit(true);
  			} catch (SQLException e) {
  				System.out.println("Error#3 in AlbumDAO. Error message: " + e.getMessage());
  				throw e;
  			}
+ 			conn.close();
  		}
  	}
 	
@@ -227,13 +227,13 @@ public class PostDAO {
  				throw e1;
  			}
  		}finally{
- 			conn.close();
  			try {
  				conn.setAutoCommit(true);
  			} catch (SQLException e) {
  				System.out.println("Error#3 in AlbumDAO. Error message: " + e.getMessage());
  				throw e;
  			}
+ 			conn.close();
  		}
 		return post;
  	}
@@ -306,13 +306,14 @@ public class PostDAO {
 	 			throw e;
 			}
  	 	}finally{
- 	 		conn.close();
  			try {
  				conn.setAutoCommit(true);
+ 	 		
  			} catch (SQLException e) {
  				System.out.println("Error#3 in PostDAO. Error message: " + e.getMessage());
 	 			throw e;
  			}
+ 			conn.close();
  		}
  		post.addTags(tags);
  		return post;
@@ -342,13 +343,13 @@ public class PostDAO {
 	 			throw e;
 			}
  	 	}finally{
- 	 		conn.close();
  			try {
  				conn.setAutoCommit(true);
  			} catch (SQLException e) {
  				System.out.println("Error#3 in PostDAO. Error message: " + e.getMessage());
 	 			throw e;
  			}
+ 			conn.close();
  		}
  	}
  	
@@ -373,13 +374,13 @@ public class PostDAO {
 	 			throw e;
 			}
  	 	}finally{
- 	 		conn.close();
  			try {
  				conn.setAutoCommit(true);
  			} catch (SQLException e) {
  				System.out.println("Error#3 in PostDAO. Error message: " + e.getMessage());
 	 			throw e;
  			}
+ 			conn.close();
  		}
  	}
  	
@@ -445,13 +446,13 @@ public class PostDAO {
 				throw e;
 			}
  	 	}finally{
- 	 		conn.close();
  			try {
  				conn.setAutoCommit(true);
  			} catch (SQLException e) {
  				System.out.println("Error#7 in PostDAO. Error message: " + e.getMessage());
 				throw e;
  			}
+ 			conn.close();
  		}	
 		CachedObjects.getInstance().removePost(post, album);
  	}

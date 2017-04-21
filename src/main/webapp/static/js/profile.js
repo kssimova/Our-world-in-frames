@@ -1,3 +1,4 @@
+
 $(function () {
 	
 	var $username = $("#username");
