@@ -41,7 +41,7 @@ public class StartController {
 	}
 	@RequestMapping(value="/loginPage", method=RequestMethod.POST)
 	public String getLoginPage() {
-		return "UnlogedLoginPage";
+		return "index";
 	}
 	
 	@RequestMapping(value="/registerPage", method=RequestMethod.POST)
