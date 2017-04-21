@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ourwif.DAO.AlbumDAO;
 import com.ourwif.model.Album;
 import com.ourwif.model.CachedObjects;
+import com.ourwif.model.Post;
 import com.ourwif.model.User;
 
 @RestController
@@ -25,26 +26,27 @@ public class AlbumController {
 	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 	AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 	
-	@RequestMapping(value="/{album_id}",method = RequestMethod.GET)
-	public Album getAlbum(Model model, @PathVariable("album_id") Integer albumId) {
+	@RequestMapping(value="/get",method = RequestMethod.GET)
+	public Album getAlbum(Model model, HttpServletRequest request, HttpSession session) {
+		Long albumId = Long.parseLong(request.getParameter("postId"));		
+		System.out.println(albumId);
 		Album album = null;
-		//find this album in cached object if it dosen't exist try finding it in DB
-		if(CachedObjects.getInstance().containsAlbum(albumId)){
-			album = CachedObjects.getInstance().getOneAlbum(albumId);
-		}else{
-			try {
-				albumDAO.getAllAlbums();
-			} catch (ValidationException e) {
-				System.out.println("Validation error");
-			} catch (SQLException e) {
-				System.out.println("Can't connect to DB");
-			}
-			//try again to find it
-			if(CachedObjects.getInstance().containsAlbum(albumId)){
-				album = CachedObjects.getInstance().getOneAlbum(albumId);
+		if(session.getAttribute("logged")!= null){
+			if(albumId != null){
+				if(CachedObjects.getInstance().getAllAlbums().isEmpty()){
+					try {
+						albumDAO.getAllAlbums();
+						album = CachedObjects.getInstance().getOneAlbum(albumId);
+						System.out.println(album.toString());
+					} catch (ValidationException | SQLException e) {
+						System.out.println("i cant get all posts");
+					}
+				}else{
+					album = CachedObjects.getInstance().getOneAlbum(albumId);
+					System.out.println(album.toString());
+				}
 			}
 		}
-		//return this object 
 		return album;
 	}
 

@@ -119,7 +119,6 @@ public class AlbumDAOTest {
 		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		
 		System.out.println("First delete all albums:");
-		CachedObjects.getInstance().clearAlbums();
 		System.out.println("All albums: " + CachedObjects.getInstance().getAllAlbums().toString());
 		
 		try {
@@ -139,7 +138,6 @@ public class AlbumDAOTest {
 		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		
 		System.out.println("First delete all albums:");
-		CachedObjects.getInstance().clearAlbums();
 		System.out.println("All albums: " + CachedObjects.getInstance().getAllAlbums().toString());
 		
 		try {

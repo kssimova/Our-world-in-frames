@@ -512,6 +512,7 @@ public class PostDAO {
 							//add all post in right albums
 							CachedObjects.getInstance().addPost(post, albumId);
 						}
+						tags.clear();
 			 		}
 	 			}
 	 		} finally {

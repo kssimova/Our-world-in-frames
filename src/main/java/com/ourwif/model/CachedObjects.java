@@ -59,6 +59,7 @@ public class CachedObjects {
 			for(Entry<String, Post> e1 : e.getValue().entrySet()){
 				if(e1.getKey().equals(postId)){
 					p = e1.getValue();
+					break;
 				}
 			}
 		}
@@ -133,14 +134,6 @@ public class CachedObjects {
 	
 	public Map <Long, Album> getAllAlbums(){
 		return  Collections.unmodifiableSortedMap(allAlbums);
-	}
-	
-	public void clearAlbums(){
-		allAlbums.clear();
-	}
-	
-	public void clearPosts(){
-		allPosts.clear();
 	}
 
 	public boolean containsPost(String postId) {

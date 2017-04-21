@@ -9,6 +9,8 @@ import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.TreeSet;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -40,30 +42,30 @@ public class PostController {
 	PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
 
 	
-	@RequestMapping(value="/get/{post_id}",method = RequestMethod.GET)
-	public synchronized Post getPost(Model model, @PathVariable("post_id") String postId, HttpSession session, HttpServletResponse response){
+	@RequestMapping(value="/get",method = RequestMethod.GET)
+	public Post getPost(HttpSession session, HttpServletRequest request){
+		String postId = request.getParameter("postId");		
 		System.out.println(postId);
-		try {
-			response.sendRedirect("/ourwif/WEB-INF/views/jsp/LogedPostView.jsp");
-		} catch (IOException e1) {
-			System.out.println("ops, cant redirect");
-		}
 		Post post = null;
-		if(postId != null){
-			if(CachedObjects.getInstance().getAllPosts().isEmpty()){
-				try {
-					postDAO.getAllPosts();
-				} catch (ValidationException | SQLException e) {
-					System.out.println("i cant get all posts");
-				}
-			}else{
-				post = CachedObjects.getInstance().getOnePost(postId);
-			}
-		}
 		if(session.getAttribute("logged")!= null){
+			if(postId != null){
+				if(CachedObjects.getInstance().getAllPosts().isEmpty()){
+					try {
+						postDAO.getAllPosts();
+						post = CachedObjects.getInstance().getOnePost(postId);
+						System.out.println(post.toString());
+					} catch (ValidationException | SQLException e) {
+						System.out.println("i cant get all posts");
+					}
+				}else{
+					post = CachedObjects.getInstance().getOnePost(postId);
+					System.out.println(post.toString());
+				}
+			}
 		}
 		return post;
 	}
+	
 	
 	@RequestMapping(value="/add",method = RequestMethod.POST)
 	public Basic addPost(HttpServletRequest request, HttpSession session){
