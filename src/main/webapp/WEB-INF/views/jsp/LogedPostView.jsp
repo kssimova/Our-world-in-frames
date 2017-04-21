@@ -8,12 +8,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<link rel="stylesheet" type="text/css" href=css/bootstrap.min.css></link>
 	<link rel="stylesheet" type="text/css" href="css/API.css">
-	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/UserPage.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 <title>post</title>
 </head>
 
@@ -35,7 +33,8 @@ $(function () {
 			$.each(post, function(index, val){
   				console.log(index + " : " + val);
   			});
-  			$('#name').html(post.name + '<span rel = "heart" class="glyphicon glyphicon-heart heart"></span> <span rel = "emptyHeart" class="glyphicon glyphicon-heart-empty heart active"></span>');
+  			$('#name').html(post.name + '<span rel = "heart" class="glyphicon glyphicon-heart heart"></span> '+
+  										'<span rel = "emptyHeart" class="glyphicon glyphicon-heart-empty heart active"></span>');
   			$('#img').html(' <img class="img-fluid" src="'+ post.picturePath +'" alt="">');
   			$('#desc').html(post.description);
 			$.each(post.tags, function(index, val){
