@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 
 public class CachedObjects {
@@ -14,6 +15,7 @@ public class CachedObjects {
 	private final TreeMap<Long, User> allUsers = new TreeMap<>();
 	private final TreeMap<Long, TreeMap<String, Post>> allPosts = new TreeMap<>();
 	private final TreeMap<Long, Album> allAlbums = new TreeMap<>();
+	private final TreeMap<String, TreeSet<String>> allTags = new TreeMap<>();
 	
 	private CachedObjects() {
 
@@ -27,7 +29,6 @@ public class CachedObjects {
 	}
 	
 	public User getOneUser(long userId) {
-		System.out.println(allUsers.size());
 		return allUsers.get(userId);
 	}
 	
@@ -60,6 +61,7 @@ public class CachedObjects {
 			for(Entry<String, Post> e1 : e.getValue().entrySet()){
 				if(e1.getKey().equals(postId)){
 					p = e1.getValue();
+					break;
 				}
 			}
 		}
@@ -135,14 +137,6 @@ public class CachedObjects {
 	public Map <Long, Album> getAllAlbums(){
 		return  Collections.unmodifiableSortedMap(allAlbums);
 	}
-	
-	public void clearAlbums(){
-		allAlbums.clear();
-	}
-	
-	public void clearPosts(){
-		allPosts.clear();
-	}
 
 	public boolean containsPost(String postId) {
 		// TODO Auto-generated method stub
@@ -155,9 +149,7 @@ public class CachedObjects {
 	
 	public Album getOneAlbum(String name) {
 		Album album = null;
-		System.out.println(name);
 		for(Entry<Long, Album> e : allAlbums.entrySet()){
-			System.err.println("hiiiddddddddddddddddd");
 			if (e.getValue().getName().equals(name)){
 				album = e.getValue();
 			}
@@ -172,6 +164,35 @@ public class CachedObjects {
 
 	public Map<Long, User> getAllUsers() {
 		return  Collections.unmodifiableSortedMap(allUsers);
+	}
+
+	public Map<String, TreeSet<String>> getAllTags() {
+		return  Collections.unmodifiableSortedMap(allTags);
+	}
+	
+	public void addTags(TreeSet <String> t, Post post){
+		for(String tag: t){
+			String tagche = tag.toLowerCase().trim();
+			if (!allTags.containsKey(tag)){
+				allTags.put(tagche, new TreeSet<String>());
+				allTags.get(tagche).add(post.getPostId());
+			}else{
+				allTags.get(tagche).add(post.getPostId());
+			}	
+		}
+	}
+	
+	public TreeSet<String> getPhotosWithTag(TreeSet <String> t){
+		TreeSet<String> posts = new TreeSet<>();
+		for(String alltag : allTags.keySet()){
+			for(String tag: t){
+				String tagche = tag.toLowerCase().trim();
+				if(alltag.contains(tagche)){
+					posts.addAll(allTags.get(tagche));
+				}
+			}
+		}
+		return posts;
 	}
 	
 }

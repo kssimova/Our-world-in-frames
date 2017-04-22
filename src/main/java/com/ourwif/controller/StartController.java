@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 
+
 @Controller
 public class StartController {
 	
@@ -42,6 +43,14 @@ public class StartController {
 		return "index";
 	}
 	
+	//just for tests
+	//
+	//@RequestMapping(value="/loginPage", method=RequestMethod.POST)
+  	//public String getLoginPage() {
+ 	//	return "UnlogedLoginPage";
+  	//}
+	
+	
 	@RequestMapping(value="/registerPage", method=RequestMethod.POST)
 	public String getRegisterPage() {
 		return "UnlogedRegister";
@@ -73,7 +82,7 @@ public class StartController {
 		return url;
 	}
 	
-	@RequestMapping(value="/postView", method=RequestMethod.POST)
+	@RequestMapping(value="/postView", method=RequestMethod.GET)
 	public String getPostPage(HttpSession session) {
 		String url = "UnlogedIndex";
 		if(session.getAttribute("logged")!= null){
@@ -82,7 +91,7 @@ public class StartController {
 		return url;
 	}
 	
-	@RequestMapping(value="/album", method=RequestMethod.POST)
+	@RequestMapping(value="/album", method=RequestMethod.GET)
 	public String getAlbumPage(HttpSession session) {
 		String url = "UnlogedIndex";
 		if(session.getAttribute("logged")!= null){

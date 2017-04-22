@@ -27,7 +27,8 @@ import com.ourwif.model.User;
 public class AlbumDAO {
 
 	private DataSource dataSource;
-
+	private ApplicationContext context = null;
+	
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
@@ -38,25 +39,29 @@ public class AlbumDAO {
 		String sql = "INSERT INTO albums (name, description, date_created, user_id) " +
  					"VALUES (?, ?, ?, ?)";
 		Connection conn = null;
- 		conn = (Connection) dataSource.getConnection();
- 		PreparedStatement st = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
- 		st.setString(1, name);
- 		st.setString(2, description);
- 		st.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
- 		st.setLong(4, user.getUserId());
- 		st.execute();
- 		ResultSet res = st.getGeneratedKeys();
- 		res.next();
- 		long albumId = res.getLong(1);
- 		album = user.createAlbum(name, description, albumId);
+ 		try {
+			conn = (Connection) dataSource.getConnection();
+	 		PreparedStatement st = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+	 		st.setString(1, name);
+	 		st.setString(2, description);
+	 		st.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+	 		st.setLong(4, user.getUserId());
+	 		st.execute();
+	 		ResultSet res = st.getGeneratedKeys();
+	 		res.next();
+	 		long albumId = res.getLong(1);
+	 		album = user.createAlbum(name, description, albumId);
+		}finally {
+			conn.close();
+		}
  		return album;
  	}
 	
 	//delete album	
 	public void deleteAlbum(User user, Album album) throws ValidationException, SQLException{
-		Connection conn = null;
-    	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
+    	context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
+		Connection conn = null;
  		try {
  			conn = (Connection) dataSource.getConnection();
 			conn.setAutoCommit(false);		
@@ -79,12 +84,13 @@ public class AlbumDAO {
 				throw e1;
 			}
 		}finally{
-				try {
+			try {
 				conn.setAutoCommit(true);
 			} catch (SQLException e) {
 				System.out.println("Error#3 in AlbumDAO. Error message: " + e.getMessage());
 				throw e;
 			}
+ 			conn.close();
 		}
  		user.deleteAlbum(album);
  	}
@@ -93,7 +99,7 @@ public class AlbumDAO {
 	public Album editAlbumName(Album album, User user, String str) throws ValidationException, SQLException{
 		String sql = "UPDATE albums SET name = ? WHERE album_id = ? ";
  		PreparedStatement st;
-		Connection conn = null;
+ 		Connection conn = null;
 	 	conn = (Connection) dataSource.getConnection();
 	 	try{
 	 		conn.setAutoCommit(false);
@@ -118,21 +124,27 @@ public class AlbumDAO {
 				System.out.println("Error#3 in AlbumDAO. Error message: " + e.getMessage());
 				throw e;
 			}
+ 			conn.close();
 		}
 		return album;
+		
  	}
 		
 	//change album description
  	public Album editAlbumInfo(Album album, User user, String str) throws ValidationException, SQLException{
 		String sql = "UPDATE albums SET description = ? WHERE album_id = ? ";
  		PreparedStatement st;
-		Connection conn = null;
-	 	conn = (Connection) dataSource.getConnection();
-		st = conn.prepareStatement(sql);
-		st.setString(1, str);
-		st.setLong(2, album.getAlbumId());
-	 	st.execute();
-		album.changeDescription(str);;
+ 		Connection conn = null;
+	 	try {
+			conn = (Connection) dataSource.getConnection();
+			st = conn.prepareStatement(sql);
+			st.setString(1, str);
+			st.setLong(2, album.getAlbumId());
+		 	st.execute();
+			album.changeDescription(str);
+		}finally{
+			conn.close();
+		}
 		return album;
  	}
  		
@@ -143,38 +155,42 @@ public class AlbumDAO {
  		PreparedStatement st = null;
   		String sql = "";
  		ResultSet result = null;
-    	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
+    	context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
 		Connection conn = null;
-	 	conn = (Connection) dataSource.getConnection();
- 		conn.setAutoCommit(false);
- 		//get posts
- 		sql = "SELECT p.user_id, p.post_id, p.name, p.description, p.delete_hash, p.date_created, p.picture_path "
- 			+ "FROM posts p JOIN albums_posts ap ON p.post_id = ap.post_id WHERE ap.album_id = ? ;";
- 		st = conn.prepareStatement(sql);
- 	 	st.setLong(1, albumId);
- 		st.execute();
- 		result = st.getResultSet();
- 		while(result.next()){
- 			Post p = postDAO.getPost(result.getString("post_id"), result.getString("delete_hash"));
- 			posts.add(p);
+		try{
+			conn = (Connection) dataSource.getConnection();
+			conn.setAutoCommit(false);
+			//get posts
+			sql = "SELECT p.user_id, p.post_id, p.name, p.description, p.delete_hash, p.date_created, p.picture_path "
+					+ "FROM posts p JOIN albums_posts ap ON p.post_id = ap.post_id WHERE ap.album_id = ? ;";
+ 			st = conn.prepareStatement(sql);
+ 			st.setLong(1, albumId);
+ 			st.execute();
+ 			result = st.getResultSet();
+ 			while(result.next()){
+ 				Post p = postDAO.getPost(result.getString("post_id"), result.getString("delete_hash"));
+ 				posts.add(p);
+ 			}
+ 			sql = "SELECT a.name, a.description, a.date_created, a.user_id FROM albums a wHERE a.album_id = ? ;";
+ 			//create the album
+ 			st = conn.prepareStatement(sql);
+ 			st.setLong(1, albumId);
+ 			st.execute();
+ 			//get result
+ 			result = st.getResultSet();
+ 			while(result.next()){
+ 				album = new Album(result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), user);
+ 			}
+ 			//fill this album
+ 			for(Post p : posts){
+ 				album.addPosts(p);
+ 			}	
+ 			album.setAlbumId(albumId);
+ 			CachedObjects.getInstance().addAlbums(album);
+ 		}finally{
+ 	 		conn.close();
  		}
- 		sql = "SELECT a.name, a.description, a.date_created, a.user_id FROM albums a wHERE a.album_id = ? ;";
-	 	//create the album
-	 	st = conn.prepareStatement(sql);
-	 	st.setLong(1, albumId);
-	 	st.execute();
-	 	//get result
-	 	result = st.getResultSet();
-	 	while(result.next()){
-	 		album = new Album(result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), user);
-	 	}
-	 	//fill this album
-	 	for(Post p : posts){
-	 		album.addPosts(p);
-	 	}	
- 		album.setAlbumId(albumId);
- 		CachedObjects.getInstance().addAlbums(album);
  		return album;
 	}
  	
@@ -186,48 +202,52 @@ public class AlbumDAO {
  		PreparedStatement st = null;
   		String sql = "";
  		ResultSet result = null;
-    	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
+    	context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
 		Connection conn = null;
-	 	conn = (Connection) dataSource.getConnection();
- 		//select all albums
- 		sql = "SELECT album_id from albums";
- 		st = conn.prepareStatement(sql);
- 		st.execute();
- 		result = st.getResultSet();
- 		while(result.next()){
- 			allAlbumIDs.add(result.getLong("album_id"));
- 		}		
- 		//get posts
- 		for(Long albumId : allAlbumIDs){
-	 		sql = "SELECT p.user_id, p.post_id, p.name, p.description, p.delete_hash, p.date_created, p.picture_path "
-	 			+ "FROM posts p JOIN albums_posts ap ON p.post_id = ap.post_id WHERE ap.album_id = ? ;";
-	 		st = conn.prepareStatement(sql);
-	 	 	st.setLong(1, albumId);
-	 		st.execute();
-	 		result = st.getResultSet();
-	 		while(result.next()){
-	 			Post p = postDAO.getPost(result.getString("post_id"), result.getString("delete_hash"));
-	 			posts.add(p);
-	 		}
-	 		sql = "SELECT a.name, a.description, a.date_created, a.user_id FROM albums a wHERE a.album_id = ? ;";
-		 	//create the album
-		 	st = conn.prepareStatement(sql);
-		 	st.setLong(1, albumId);
-		 	st.execute();
-		 	//get result
-		 	result = st.getResultSet();
-		 	while(result.next()){
-		 		User user = CachedObjects.getInstance().getOneUser(result.getLong("user_id"));
-		 		album = new Album(result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), user);
-		 		album.setAlbumId(albumId);
-		 		CachedObjects.getInstance().addAlbums(album);
-		 	}
-		 	//fill this album
-		 	for(Post p : posts){
-		 		album.addPosts(p);
-		 	}	
- 		}
+		try{
+			conn = (Connection) dataSource.getConnection();
+			//select all albums
+			sql = "SELECT album_id from albums";
+			st = conn.prepareStatement(sql);
+			st.execute();
+			result = st.getResultSet();
+			while(result.next()){
+				allAlbumIDs.add(result.getLong("album_id"));
+			}		
+			//get posts
+			for(Long albumId : allAlbumIDs){
+				sql = "SELECT p.user_id, p.post_id, p.name, p.description, p.delete_hash, p.date_created, p.picture_path "
+						+ "FROM posts p JOIN albums_posts ap ON p.post_id = ap.post_id WHERE ap.album_id = ? ;";
+				st = conn.prepareStatement(sql);
+				st.setLong(1, albumId);
+				st.execute();
+				result = st.getResultSet();
+				while(result.next()){
+					Post p = postDAO.getPost(result.getString("post_id"), result.getString("delete_hash"));
+					posts.add(p);
+				}
+				sql = "SELECT a.name, a.description, a.date_created, a.user_id FROM albums a wHERE a.album_id = ? ;";
+				//create the album
+				st = conn.prepareStatement(sql);
+				st.setLong(1, albumId);
+				st.execute();
+				//get result
+				result = st.getResultSet();
+				while(result.next()){
+					User user = CachedObjects.getInstance().getOneUser(result.getLong("user_id"));
+					album = new Album(result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), user);
+					album.setAlbumId(albumId);
+					CachedObjects.getInstance().addAlbums(album);
+				}
+				//fill this album
+				for(Post p : posts){
+					album.addPosts(p);
+				}	
+			}
+		}finally {
+	 		conn.close();
+		}
 	}
  	
 	//get all albums From DB
@@ -239,81 +259,84 @@ public class AlbumDAO {
   		String sql = "";
  		PreparedStatement st = null;
  		ResultSet result = null;
-    	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
+    	context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 		CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
 		Connection conn = null;
-	 	conn = (Connection) dataSource.getConnection();
- 		//select all album id-s
- 		sql = "SELECT album_id from albums where user_id = ?";
- 		st = conn.prepareStatement(sql);
- 		st.setLong(1, user.getUserId());
- 		st.execute();
- 		result = st.getResultSet();
- 		while(result.next()){
- 			//store them
- 			allAlbumIDs.add(result.getLong("album_id"));
- 		}		
- 		//get albums from there id-s
- 		for(Long albumId : allAlbumIDs){
- 			sql = "SELECT a.name, a.description, a.date_created, a.user_id FROM albums a wHERE a.album_id = ? ;";
-		 	//create the album
-		 	st = conn.prepareStatement(sql);
-		 	st.setLong(1, albumId);
-		 	st.execute();
-		 	//get result
-		 	result = st.getResultSet();
-		 	while(result.next()){
-		 		//store them
-		 		album = new Album(result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), user);
-		 		album.setAlbumId(albumId);
-		 		albums.put(albumId, album);
-		 	}
- 		}
-	 	//select all posts id-s and delete hash-s from one album with specific id
- 		for(Long albumId : allAlbumIDs){
-	 		sql = "SELECT p.post_id, p.delete_hash "
-	 			+ "FROM posts p JOIN albums_posts ap ON p.post_id = ap.post_id WHERE ap.album_id = ? ;";
-	 		st = conn.prepareStatement(sql);
-	 	 	st.setLong(1, albumId);
-	 		st.execute();
-	 		result = st.getResultSet();
-	 		while(result.next()){
-	 			postIds.put(result.getString("post_id"), result.getString("delete_hash"));
-	 		}
- 		}
- 		//get full posts
-	 	for(Entry <String, String> e : postIds.entrySet() ){
-	 		//get all post-s 			
-	 		TreeSet<String> tags = new TreeSet<>();
-	 		Post post = null;
-	 		//get tags
-	 		sql = "SELECT t.name FROM tags t "
-	 		 	+ "JOIN tags_posts tp ON t.tag_id = tp.tag_id "
-	 		 	+ "WHERE tp.post_id = ? ";
-	 		st = conn.prepareStatement(sql);
-	 		st.setString(1, e.getKey());
-	 		st.execute();
-	 		result = st.getResultSet();
-	 		while(result.next()){
-	 		 	tags.add(result.getString("name"));
-	 		}
-	 		//create post
-	 		sql = "SELECT name, user_id, description, album_id, date_created, picture_path "
-	 			+ "FROM posts WHERE post_id = ? ";
-	 		 //initialization
-	 		st = conn.prepareStatement(sql);
-	 		st.setString(1, e.getKey());
-	 		st.execute();
-	 		//get result
-	 		result = st.getResultSet();
-		 	System.out.println("hi");
-	 		while(result.next()){
-	 			post = new Post(user, result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), result.getString("picture_path"), tags, e.getKey(), e.getValue());
-	 			commentDAO.getAllComments(post);	
-	 			album = albums.get(result.getLong("album_id"));
-	 			album.addPosts(post);
-	 		}						
-	 	}			
+		try{
+			conn = (Connection) dataSource.getConnection();
+			//select all album id-s
+			sql = "SELECT album_id from albums where user_id = ?";
+			st = conn.prepareStatement(sql);
+			st.setLong(1, user.getUserId());
+			st.execute();
+			result = st.getResultSet();
+			while(result.next()){
+				//store them
+				allAlbumIDs.add(result.getLong("album_id"));
+			}		
+			//get albums from there id-s
+			for(Long albumId : allAlbumIDs){
+				sql = "SELECT a.name, a.description, a.date_created, a.user_id FROM albums a wHERE a.album_id = ? ;";
+				//create the album
+				st = conn.prepareStatement(sql);
+				st.setLong(1, albumId);
+				st.execute();
+				//get result
+				result = st.getResultSet();
+				while(result.next()){
+					//store them
+					album = new Album(result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), user);
+					album.setAlbumId(albumId);
+					albums.put(albumId, album);
+				}
+			}
+			//select all posts id-s and delete hash-s from one album with specific id
+			for(Long albumId : allAlbumIDs){
+				sql = "SELECT p.post_id, p.delete_hash "
+						+ "FROM posts p JOIN albums_posts ap ON p.post_id = ap.post_id WHERE ap.album_id = ? ;";
+				st = conn.prepareStatement(sql);
+				st.setLong(1, albumId);
+				st.execute();
+				result = st.getResultSet();
+				while(result.next()){
+					postIds.put(result.getString("post_id"), result.getString("delete_hash"));
+				}
+			}
+			//get full posts
+			for(Entry <String, String> e : postIds.entrySet() ){
+				//get all post-s 			
+				TreeSet<String> tags = new TreeSet<>();
+				Post post = null;
+				//get tags
+				sql = "SELECT t.name FROM tags t "
+						+ "JOIN tags_posts tp ON t.tag_id = tp.tag_id "
+						+ "WHERE tp.post_id = ? ";
+				st = conn.prepareStatement(sql);
+				st.setString(1, e.getKey());
+				st.execute();
+				result = st.getResultSet();
+				while(result.next()){
+					tags.add(result.getString("name"));
+				}
+				//create post
+				sql = "SELECT name, user_id, description, album_id, date_created, picture_path "
+						+ "FROM posts WHERE post_id = ? ";
+				//initialization
+				st = conn.prepareStatement(sql);
+				st.setString(1, e.getKey());
+				st.execute();
+				//get result
+				result = st.getResultSet();
+				while(result.next()){
+					post = new Post(user, result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), result.getString("picture_path"), tags, e.getKey(), e.getValue());
+					commentDAO.getAllComments(post);	
+					album = albums.get(result.getLong("album_id"));
+					album.addPosts(post);
+				}						
+			}
+		}finally{
+	 		conn.close();
+		}
 		return albums;	
 	} 	
 }

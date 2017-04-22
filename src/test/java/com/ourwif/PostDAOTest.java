@@ -153,7 +153,6 @@ public class PostDAOTest {
 	public void testGetAllPosts() {
 		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
 		
-		CachedObjects.getInstance().clearPosts();
 		System.out.println(CachedObjects.getInstance().getAllPosts().size());
 		
 		try {

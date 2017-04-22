@@ -54,6 +54,7 @@ public class UserDAO {
 	private static final String GET_ALL_FOLLOWERS = "SELECT USERS.user_id, first_name, last_name, username, email, password, mobile_number, birthdate, description, gender, profilephoto_path FROM ourwif.users USERS JOIN ourwif.followers FOLLOWERS ON (USERS.user_id = FOLLOWERS.user_id) WHERE followed_id = ?";
 
 	private DataSource dataSource;
+	private ApplicationContext context = null;
 
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
@@ -61,7 +62,7 @@ public class UserDAO {
 	
 	//create new user with default album and insert into cachedObjects
 	public synchronized void addUser(User user){
-		ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
+		context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		Connection connection = null;
 		// get city_id and country_id 
@@ -138,7 +139,7 @@ public class UserDAO {
 	}
 		
 	public List<User> getAllUsers() throws ValidationException{
-		ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
+		context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;

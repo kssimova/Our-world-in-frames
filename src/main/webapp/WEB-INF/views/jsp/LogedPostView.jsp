@@ -6,44 +6,97 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<link rel="stylesheet" type="text/css" href=css/bootstrap.min.css></link>
 	<link rel="stylesheet" type="text/css" href="css/API.css">
+	<link rel="stylesheet" type="text/css" href="css/UserPage.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <title>post</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="portfolio-item" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="PostView">
 </head>
+
+<script type="text/javascript">
+$(function () {	
+	var url = window.location.href;
+	var n = url.indexOf("imgId=");
+	var $postId = url.substring(n+6);
+	var post = {
+		postId: $postId
+	};
+	var $tags = $('#tags');
+	var tagcheta = "";
+	
+	$.ajax({
+		type: "GET",
+		url: 'post/get',
+		data: post,
+		success: function(post){
+			$.each(post, function(index, val){
+  				console.log(index + " : " + val);
+  			});
+  			$('#name').html(post.name + '<span rel = "heart" class="glyphicon glyphicon-heart heart"></span> '+
+  										'<span rel = "emptyHeart" class="glyphicon glyphicon-heart-empty heart active"></span>');
+  			$('#img').html(' <img class="img-fluid" src="'+ post.picturePath +'" alt="">');
+  			$('#desc').html(post.description);
+			$.each(post.tags, function(index, val){
+				tagcheta += val + ", ";
+				$tags.append('<button>' + val + '</button>');
+  			});
+		},
+		error: function(e){
+			alert(e);
+		}
+	});
+	
+	var tagche = {
+		tags: tagcheta
+	};
+	
+	$.ajax({
+		type: "POST",
+		url: 'post/tag',
+		data: tagche,
+		success: function(post){
+			$.each(post, function(index, val){
+  				console.log(index + " : " + val);
+  			});
+		},
+		error: function(e){
+			console.log(tagche);
+		}
+	});
+});
+
+</script>
+
+
 
 <body>
 	<jsp:include page="LogedNav.jsp" />
+	
+	
 
     <!-- Page Content -->
     <div class="container">
 
         <!-- Portfolio Item Heading -->
-        <h1 class="my-4">Page Heading <small>Secondary Text</small></h1>
+        <h1 id= "name" class="my-4"></h1>
 
         <!-- Portfolio Item Row -->
         <div class="row">
 
-            <div class="col-md-9">
-                <img class="img-fluid" src="http://placehold.it/750x500" alt="">
+            <div id = "img" class="col-md-9">
+                <img class="img-fluid" src="#" alt="">
             </div>
 
             <div class="col-md-3">
-                <h3 class="my-3">Project Description</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam viverra euismod odio, gravida pellentesque urna varius vitae. Sed dui lorem, adipiscing in adipiscing et, interdum nec metus. Mauris ultricies, justo eu convallis placerat, felis enim.</p>
-                <h3 class="my-3">Project Details</h3>
-                <ul>
-                    <li>Lorem Ipsum</li>
-                    <li>Dolor Sit Amet</li>
-                    <li>Consectetur</li>
-                    <li>Adipiscing Elit</li>
-                </ul>
+                <h3 class="my-3">Description</h3>
+                <p id = "desc"></p>
             </div>
 
         </div>
         <!-- /.row -->
+        <div id = "tags" class= "row">
+        </div> 
 
         <!-- Related Projects Row -->
         <h3 class="my-4">Related Projects</h3>
