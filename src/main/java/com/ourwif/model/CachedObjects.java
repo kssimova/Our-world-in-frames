@@ -16,6 +16,7 @@ public class CachedObjects {
 	private final TreeMap<Long, TreeMap<String, Post>> allPosts = new TreeMap<>();
 	private final TreeMap<Long, Album> allAlbums = new TreeMap<>();
 	private final TreeMap<String, TreeSet<String>> allTags = new TreeMap<>();
+	private final TreeMap<String, TreeSet<String>> allPost = new TreeMap<>();
 	
 	private CachedObjects() {
 
@@ -110,6 +111,11 @@ public class CachedObjects {
 		if(!allPosts.get(album.getAlbumId()).containsKey(post.getPostId())){
 			allPosts.get(album.getAlbumId()).put(post.getPostId(), post);
 		}
+		
+		if(!allPost.containsKey(post.getName())){
+			allPost.put(post.getName(), new TreeSet<>());
+		}
+		allPost.get(post.getName()).add(post.getPostId());
 	}
 	
 	//add post
@@ -120,6 +126,11 @@ public class CachedObjects {
 		if(!allPosts.get(albumId).containsKey(post.getPostId())){
 			allPosts.get(albumId).put(post.getPostId(), post);
 		}
+		
+		if(!allPost.containsKey(post.getName())){
+			allPost.put(post.getName(), new TreeSet<>());
+		}
+		allPost.get(post.getName()).add(post.getPostId());
 	}
 	
 	//add albums
@@ -188,10 +199,26 @@ public class CachedObjects {
 			for(String tag: t){
 				String tagche = tag.toLowerCase().trim();
 				if(alltag.contains(tagche)){
-					posts.addAll(allTags.get(tagche));
+					posts.addAll(allTags.get(alltag));
 				}
 			}
 		}
+		System.out.println(posts);
+		return posts;
+	}
+	
+	public TreeSet<String> getPhotosWithName(TreeSet <String> t){
+		TreeSet<String> posts = new TreeSet<>();
+		for(String allpost : allPost.keySet()){
+			System.out.println(allPost.values().toString());
+			for(String str: t){
+				String stri =  str.toLowerCase().trim();
+				if(allpost.contains(stri)){
+					posts.addAll(allPost.get(allpost));
+				}
+			}
+		}
+		System.out.println(posts);
 		return posts;
 	}
 	

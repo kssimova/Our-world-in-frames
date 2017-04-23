@@ -30,9 +30,6 @@ $(function () {
 		url: 'post/get',
 		data: post,
 		success: function(post){
-			$.each(post, function(index, val){
-  				console.log(index + " : " + val);
-  			});
   			$('#name').html(post.name + '<span rel = "heart" class="glyphicon glyphicon-heart heart"></span> '+
   										'<span rel = "emptyHeart" class="glyphicon glyphicon-heart-empty heart active"></span>');
   			$('#img').html(' <img class="img-fluid" src="'+ post.picturePath +'" alt="">');
@@ -55,11 +52,12 @@ $(function () {
 			url: 'post/tag',
 			data: taggs,
 			success: function(tags){
+				console.log(tags);
 				$.each(tags, function(index, value){
 					$.each(value, function(i, v){
 	  					console.log(i + " : " + v);
 					});
-	  				$('#red').html(
+	  				$('#red').append(
 	  			 	  	'<div class="col-sm-4 col-md-4">' +
 	  						'<div class="thumbnail">' + 
 	  							'<f:form commandName="goToPostPage" action="postView" method = "GET" align="center" >' + 
@@ -77,10 +75,12 @@ $(function () {
 				});			
 			},
 			error: function(e){
+				console.log("hi");
+				console.log(taggs);
 				console.log(e);
 			}
 		});
-	}, 100);
+	}, 500);
 });
 
 </script>
@@ -88,7 +88,7 @@ $(function () {
 
 
 <body>
-	<jsp:include page="LogedNav.jsp" />
+	<jsp:include page="Nav.jsp" />
 	
 	
 

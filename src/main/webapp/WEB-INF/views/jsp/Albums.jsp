@@ -5,7 +5,6 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<link rel="stylesheet" type="text/css" href=css/bootstrap.min.css></link>
 	<link rel="stylesheet" type="text/css" href="css/API.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
@@ -100,7 +99,7 @@ $(function () {
 
 
 <body>
-	<jsp:include page="LogedNav.jsp" />
+	<jsp:include page="Nav.jsp" />
 	
     <h1 id= "name" class="my-4"></h1>
     <div class="col-md-3">

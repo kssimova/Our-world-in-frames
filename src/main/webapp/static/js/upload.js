@@ -55,14 +55,11 @@ $(function() {
 					data: user,
 					dataType: 'JSON',
 					success: function (res) {
-						alert();
+						alert("Image done");
 						document.getElementById("response").innerHTML = res; 
 					},
 					error: function(res){
 						console.log(res);
-						console.log($name);
-						console.log($description);
-						console.log($album);
 						console.log(base64);
 						alert();
 					} 	
@@ -80,7 +77,6 @@ $(function (){
 		dataType: "json",
 		success: function(user){
 			$.each(user.albums, function(index, val){
-				console.log(val.albumId);
 				$albums.append('<option value="'+ val.name +'">'+ val.name +'</option>');
 			});
 		},

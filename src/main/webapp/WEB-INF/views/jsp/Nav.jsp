@@ -13,14 +13,15 @@
 </head>
 <body>
 	<nav role="navigation" class="navbar navbar-inverse">
-	    <div class="navbar-header">
-	        <f:form commandName="getApi" action="/ourwif/home" method = "POST">
-				<input class="navbar-brand" type="submit" value="OURWIF">
-			</f:form>
-	    </div>
-	
 	    <div id="navbarCollapse" class="collapse navbar-collapse">
 	        <ul class="nav navbar-nav">
+				<li>
+	        	    <div class="navbar-header">
+	       				 <f:form commandName="getApi" action="/ourwif/home" method = "POST">
+							<input class="noMods" type="submit" value="OURWIF">
+						</f:form>
+	   				 </div>
+				</li>
 	            <li>
 	            	<f:form commandName="getApi" action="/ourwif/api" method = "POST">
 						<input class= "noMods" type="submit" value="API">

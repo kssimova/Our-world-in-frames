@@ -68,11 +68,11 @@ public class PostController {
 	
 	@RequestMapping(value="/add",method = RequestMethod.POST)
 	public Basic addPost(HttpServletRequest request, HttpSession session){
-		
+		TreeSet<String> tagsForRec = new TreeSet<>();
 		TreeSet<String> tags = new TreeSet<>();
 		String tagStr = request.getParameter("tags");
 		if(!tagStr.isEmpty() && tagStr != null){
-			tags = addTags(tagStr);
+			tags = addTags(tagStr, tagsForRec);
 		}		
 		String name = request.getParameter("name");
 		String description = request.getParameter("description");		
@@ -285,9 +285,11 @@ public class PostController {
 	@RequestMapping(value="/tag",method = RequestMethod.POST)
 	public TreeSet<Post> getTags(HttpSession session, HttpServletRequest request){
 		TreeSet<Post> posts = new TreeSet<>();
-		System.out.println(request.getParameter("tagg"));
+		TreeSet<String> tagsForRec = new TreeSet<>();
+		String s = request.getParameter("tagche");
+		System.out.println(s);
 		if(request.getParameter("tagche") != null){
-			TreeSet<String> tags = addTags(request.getParameter("tagg"));
+			TreeSet<String> tags = addTags(request.getParameter("tagche"), tagsForRec);
 			TreeSet<String> postIds = new TreeSet<>();
 			if(session.getAttribute("logged")!= null){
 				if(tags.size() > 0){
@@ -295,6 +297,8 @@ public class PostController {
 						try {
 							postDAO.getAllPosts();
 							postIds.addAll(CachedObjects.getInstance().getPhotosWithTag(tags));
+							postIds.addAll(CachedObjects.getInstance().getPhotosWithName(tags));
+							System.out.println(postIds);
 							for(String postId : postIds){
 								posts.add(CachedObjects.getInstance().getOnePost(postId));
 							}
@@ -303,6 +307,8 @@ public class PostController {
 						}
 					}else{
 						postIds.addAll(CachedObjects.getInstance().getPhotosWithTag(tags));
+						postIds.addAll(CachedObjects.getInstance().getPhotosWithName(tags));
+						System.out.println(postIds);
 						for(String postId : postIds){
 							posts.add(CachedObjects.getInstance().getOnePost(postId));
 						}
@@ -310,25 +316,22 @@ public class PostController {
 				}
 			}
 		}
+		System.out.println(posts);
 		return posts;
 	}
 		
- 	public TreeSet<String> addTags(String tag) {
-		TreeSet<String> tags = new TreeSet<>();
+ 	public TreeSet<String> addTags(String tag, TreeSet<String> tags) {
+ 		System.out.println(tags);
   		if (tag.length() == 0) {
+  			tags.add(tag);
   			return tags;
   		}
- 		if (tag.indexOf(',') < 0) {
- 			tags.add(tag.trim());
- 			return tags;
- 		}
  		if(!tag.contains(",")){
  			tags.add(tag);
  			return tags;
  		}
  		tags.add(tag.substring(0, tag.indexOf(',')));
  		tag = tag.substring(tag.indexOf(',') + 1).trim();
- 		addTags(tag);
- 		return tags;
+		return addTags(tag, tags);
  	}
 }

@@ -5,7 +5,7 @@
  <html>
  <head>
  <meta charset="utf-8">
- 	<link rel="stylesheet" type="text/css" href=css/bootstrap.min.css></link>
+ 	<link rel="stylesheet" type="text/css" href=css/bootstrap.css></link>
  	<link rel="stylesheet" type="text/css" href="css/UserPage.css">
  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
  	<script src="js/profile.js"></script>
@@ -125,7 +125,7 @@
   });
  </script>
  <body>
- 	<jsp:include page="LogedNav.jsp" />
+ 	<jsp:include page="Nav.jsp" />
  	
  	<div class="col-lg-12 col-md-12 col-sm-12">
  	    <div class="card hovercard">
