@@ -287,7 +287,7 @@ public class PostController {
 		TreeSet<Post> posts = new TreeSet<>();
 		System.out.println(request.getParameter("tagche"));
 		if(request.getParameter("tagche") != null){
-			TreeSet<String> tags = addTags(request.getParameter("tagcheta"));
+			TreeSet<String> tags = addTags(request.getParameter("tagche"));
 			TreeSet<String> postIds = new TreeSet<>();
 			if(session.getAttribute("logged")!= null){
 				if(tags.size() > 0){
@@ -315,7 +315,7 @@ public class PostController {
 		
  	public TreeSet<String> addTags(String tag) {
 		TreeSet<String> tags = new TreeSet<>();
-  		if (tag.length() <= 0) {
+  		if (tag.length() == 0) {
   			return tags;
   		}
  		if (tag.indexOf(',') < 0) {
@@ -323,8 +323,8 @@ public class PostController {
  			return tags;
  		}
  		tags.add(tag.substring(0, tag.indexOf(',')));
- 		String a = tag.substring(tag.indexOf(',') + 1).trim();
- 		addTags(a);
+ 		tag = tag.substring(tag.indexOf(',') + 1).trim();
+ 		addTags(tag);
  		return tags;
  	}
 }

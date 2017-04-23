@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %> 
+<%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>   
 <html>
 <head>
@@ -46,24 +46,41 @@ $(function () {
 			alert(e);
 		}
 	});
-	
-	var tagche = {
-		tags: tagcheta
-	};
-	
-	$.ajax({
-		type: "POST",
-		url: 'post/tag',
-		data: tagche,
-		success: function(post){
-			$.each(post, function(index, val){
-  				console.log(index + " : " + val);
-  			});
-		},
-		error: function(e){
-			console.log(tagche);
+	setTimeout(function(){
+		var taggs = {
+			tagche: tagcheta
 		}
-	});
+		$.ajax({
+			type: "POST",
+			url: 'post/tag',
+			data: taggs,
+			success: function(tags){
+				$.each(tags, function(index, value){
+					$.each(value, function(i, v){
+	  					console.log(i + " : " + v);
+					});
+	  				$('#red').html(
+	  			 	  	'<div class="col-sm-4 col-md-4">' +
+	  						'<div class="thumbnail">' + 
+	  							'<f:form commandName="goToPostPage" action="postView" method = "GET" align="center" >' + 
+	  								'<input type="image" src="' + value.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
+	  								'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
+	  								'<div class="caption">' + 
+	  									'<p>' + 
+	  										value.name +
+	  									'</p>' + 
+	  								'</div>' + 
+	  							'</f:form>' + 
+	  						'</div>' + 
+	  					'</div>' 				
+					);
+				});			
+			},
+			error: function(e){
+				console.log(e);
+			}
+		});
+	}, 100);
 });
 
 </script>
@@ -101,12 +118,8 @@ $(function () {
         <!-- Related Projects Row -->
         <h3 class="my-4">Related Projects</h3>
 
-        <div class="row">
-            <div class="col-md-3 col-sm-6 mb-4 thumbnail">
-                <a href="#">
-                    <img class="img-fluid" src="http://placehold.it/500x300" style="height:200px;width:auto;max-width:300px;">
-                </a>
-            </div>
+        <div id = "red" class="row">
+
 
             <div class="col-md-3 col-sm-6 mb-4 thumbnail">
                 <a href="#">
