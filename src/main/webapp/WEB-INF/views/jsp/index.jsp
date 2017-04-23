@@ -327,7 +327,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="team-member">
-                        <img src="img/mimi.jpg" class="img-responsive img-circle" alt="">
+                        <img src="img/mariq.jpg" class="img-responsive img-circle" alt="" style = "height: 250px">
                        <h4> <font color=#dab3ff> Mariya Yordanova </font></h4>
                         <p class="text-muted">Java Developer</p>
                         <ul class="list-inline social-buttons">

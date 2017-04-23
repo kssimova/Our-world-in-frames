@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<link rel="stylesheet" type="text/css" href=css/bootstrap.min.css></link>
+	<link rel="stylesheet" type="text/css" href=css/bootstrap.css></link>
 	<link rel="stylesheet" type="text/css" href="css/API.css">
 	<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.0.min.js"></script>
 	<script src="js/profile.js"></script>
@@ -14,14 +14,8 @@
 <body>
 	<nav role="navigation" class="navbar navbar-inverse">
 	    <div class="navbar-header">
-	        <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
-	            <span class="sr-only">Toggle navigation</span>
-	            <span class="icon-bar"></span>
-	            <span class="icon-bar"></span>
-	            <span class="icon-bar"></span>
-	        </button>
 	        <f:form commandName="getApi" action="/ourwif/home" method = "POST">
-				<input class="navbar-brand" type="submit" value="Ourwif">
+				<input class="navbar-brand" type="submit" value="OURWIF">
 			</f:form>
 	    </div>
 	
@@ -34,7 +28,7 @@
 				</li>
 	            <li>
 	            	<f:form commandName="getApi" action="/ourwif/index" method = "POST">
-						<input class= "noMods" type="submit" value="Home">
+						<input class= "noMods" type="submit" value="HOME">
 					</f:form>
 	            </li>
 	        </ul>
@@ -44,17 +38,17 @@
 	        <ul id = "navRightBar" class="nav navbar-nav navbar-right">
 	        	 <li>
 	            	<f:form commandName="goToUpload" action="upload" method = "POST">
-						<input class= "noMods" type="submit" value="Upload">
+						<input class= "noMods" type="submit" value="UPLOAD">
 					</f:form>
 	            </li>
 	          	<li>
 	          		<f:form commandName="profile" action="/ourwif/profile" method = "POST">
-						<input class= "noMods" type="submit" value="Profile">	
+						<input class= "noMods" type="submit" value="PROFILE">	
 					</f:form>
 	            </li>
 	            <li>
 	            	<f:form commandName="goToProfile" action="user/logout" method = "GET">
-						<input class= "noMods" type="submit" value="LogOut">
+						<input class= "noMods" type="submit" value="LOGOUT">
 					</f:form>
 	            </li>
 	        </ul>

@@ -1,0 +1,11 @@
+.noMods{
+	width   : 100px;
+    cursor  : pointer;
+    font-family : "Monospace", Lucida Console, serif;
+   	font-size: 15px;
+   	background: #222222;
+   	color: #dab3ff;
+    border : none;
+    margin : 0px;
+	padding: 15px 0 0 0 ;
+}

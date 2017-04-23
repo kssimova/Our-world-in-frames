@@ -30,7 +30,7 @@ $(function () {
 			url: 'post/tag',
 			data: tags,
 			success: function(tag){
-				console.log(tags);
+				console.log(tag);
 				$.each(tag, function(index, value){
 					$.each(value, function(i, v){
 	  					console.log(i + " : " + v);
