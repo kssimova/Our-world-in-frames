@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<link rel="stylesheet" type="text/css" href=css/bootstrap.css></link>
+	<link rel="stylesheet" type="text/css" href=css/aboutSectionStyle.css></link>
 	<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.0.min.js"></script>
 	<script src=js/tether.js></script>
 	<script src=js/tether.min.js></script>

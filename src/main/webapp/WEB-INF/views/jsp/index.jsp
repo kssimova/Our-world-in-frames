@@ -18,7 +18,6 @@
     
     <!-- CSS -->
         <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
-        <link rel="stylesheet" href="css/log.css">
         <link rel="stylesheet" href="css/font-awesome.css">
 		<link rel="stylesheet" href="css/form-elements.css">
         <link rel="stylesheet" href="css/loginStyle.css">

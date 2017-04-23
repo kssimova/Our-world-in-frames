@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<link rel="stylesheet" type="text/css" href=css/bootstrap.css></link>
+	<link rel="stylesheet" type="text/css" href=css/aboutSectionStyle.css></link>
 	<link rel="stylesheet" type="text/css" href="css/NavPage.css">
 	<script src=js/login.js></script>
 <title>Insert title here</title>
