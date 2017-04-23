@@ -16,28 +16,26 @@
 <script type="text/javascript">
 $(function () {	
 	var url = window.location.href;
-	var n = url.indexOf("imgId=");
-	var $postId = url.substring(n+6);
+	var n = url.indexOf("tags=");
+	var $tags = url.substring(n+5);
 	var count = 0;
-	var post = {
-		postId: $postId
-	};
-	var $tags = $('#tags');
 	
 	setTimeout(function(){
-		var taggs = {
-			tagche: tagcheta
-		}
+		var tags = {
+			tagg : 	$tags
+		};
+
 		$.ajax({
 			type: "POST",
 			url: 'post/tag',
-			data: taggs,
-			success: function(tags){
-				$.each(tags, function(index, value){
+			data: tags,
+			success: function(tag){
+				console.log(tags);
+				$.each(tag, function(index, value){
 					$.each(value, function(i, v){
 	  					console.log(i + " : " + v);
 					});
-	  				$('#red').html(
+	  				$('#photos').html(
 	  			 	  	'<div class="col-sm-4 col-md-4">' +
 	  						'<div class="thumbnail">' + 
 	  							'<f:form commandName="goToPostPage" action="postView" method = "GET" align="center" >' + 
@@ -66,16 +64,9 @@ $(function () {
 <body>
 	<jsp:include page="LogedNav.jsp" />
 	
-    <h1 id= "name" class="my-4"></h1>
-    <div class="col-md-3">
-		<h3 class="my-3">Description</h3>
-		<p id = "desc"></p>
-    </div>
-    <br>    <br>    <br>    <br>    <br>    <br>    <br>    <br>    <br>
 
 <div class="container">
-	<div class="row">
-	<span id = "photos"></span>
+	<div id = "photos" class="row">
   	</div>
 </div>
 

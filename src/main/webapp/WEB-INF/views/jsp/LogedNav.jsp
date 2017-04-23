@@ -38,11 +38,9 @@
 					</f:form>
 	            </li>
 	        </ul>
-	        <form role="search" class="navbar-form navbar-left">
-	            <div class="form-group">
-	                <input type="text" placeholder="Search" class="form-control">
-	            </div>
-	        </form>
+	        <f:form class="navbar-form navbar-left" action="search" method = "GET">
+	            <input type="text" placeholder="Search" class="form-control" name = "tags">
+			</f:form>
 	        <ul id = "navRightBar" class="nav navbar-nav navbar-right">
 	        	 <li>
 	            	<f:form commandName="goToUpload" action="upload" method = "POST">

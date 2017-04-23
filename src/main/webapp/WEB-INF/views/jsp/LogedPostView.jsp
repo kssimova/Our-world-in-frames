@@ -116,7 +116,7 @@ $(function () {
         </div> 
 
         <!-- Related Projects Row -->
-        <h3 class="my-4">Related Projects</h3>
+        <h3 class="my-4">Related Photos</h3>
 
         <div id = "red" class="row">
 

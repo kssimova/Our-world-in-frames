@@ -285,9 +285,9 @@ public class PostController {
 	@RequestMapping(value="/tag",method = RequestMethod.POST)
 	public TreeSet<Post> getTags(HttpSession session, HttpServletRequest request){
 		TreeSet<Post> posts = new TreeSet<>();
-		System.out.println(request.getParameter("tagche"));
+		System.out.println(request.getParameter("tagg"));
 		if(request.getParameter("tagche") != null){
-			TreeSet<String> tags = addTags(request.getParameter("tagche"));
+			TreeSet<String> tags = addTags(request.getParameter("tagg"));
 			TreeSet<String> postIds = new TreeSet<>();
 			if(session.getAttribute("logged")!= null){
 				if(tags.size() > 0){
@@ -320,6 +320,10 @@ public class PostController {
   		}
  		if (tag.indexOf(',') < 0) {
  			tags.add(tag.trim());
+ 			return tags;
+ 		}
+ 		if(!tag.contains(",")){
+ 			tags.add(tag);
  			return tags;
  		}
  		tags.add(tag.substring(0, tag.indexOf(',')));

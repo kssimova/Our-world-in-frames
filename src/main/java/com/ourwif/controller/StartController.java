@@ -99,5 +99,14 @@ public class StartController {
 		}
 		return url;
 	}
+	
+	@RequestMapping(value="/search", method=RequestMethod.GET)
+	public String getSearch(HttpSession session) {
+		String url = "UnlogedIndex";
+		if(session.getAttribute("logged")!= null){
+			url = "SearchResult";
+		}
+		return url;
+	}
 }
 
