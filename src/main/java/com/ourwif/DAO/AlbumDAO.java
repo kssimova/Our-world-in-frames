@@ -217,6 +217,7 @@ public class AlbumDAO {
 			}		
 			//get posts
 			for(Long albumId : allAlbumIDs){
+				posts.clear();
 				sql = "SELECT p.user_id, p.post_id, p.name, p.description, p.delete_hash, p.date_created, p.picture_path "
 						+ "FROM posts p JOIN albums_posts ap ON p.post_id = ap.post_id WHERE ap.album_id = ? ;";
 				st = conn.prepareStatement(sql);
@@ -329,7 +330,7 @@ public class AlbumDAO {
 				result = st.getResultSet();
 				while(result.next()){
 					post = new Post(user, result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), result.getString("picture_path"), tags, e.getKey(), e.getValue());
-					commentDAO.getAllComments(post);	
+					commentDAO.getAllComments(post);
 					album = albums.get(result.getLong("album_id"));
 					album.addPosts(post);
 				}						

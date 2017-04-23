@@ -131,4 +131,12 @@ public class Album implements Comparable<Album>{
 		}
 		return compare;
 	}
+
+	@Override
+	public String toString() {
+		return "Album [albumId=" + albumId + ", name=" + name + ", photos=" + photos.size() + "]";
+	}
+	
+	
+	
 }

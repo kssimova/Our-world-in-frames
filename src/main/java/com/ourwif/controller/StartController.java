@@ -38,17 +38,17 @@ public class StartController {
 		}
 		return url;
 	}
-	@RequestMapping(value="/loginPage", method=RequestMethod.POST)
-	public String getLoginPage() {
-		return "index";
-	}
-	
-	//just for tests
-	//
 	//@RequestMapping(value="/loginPage", method=RequestMethod.POST)
-  	//public String getLoginPage() {
- 	//	return "UnlogedLoginPage";
-  	//}
+	//public String getLoginPage() {
+	//	return "index";
+	//}
+	//
+	//just for tests
+	
+	@RequestMapping(value="/loginPage", method=RequestMethod.POST)
+  	public String getLoginPage() {
+ 		return "UnlogedLoginPage";
+  	}
 	
 	
 	@RequestMapping(value="/registerPage", method=RequestMethod.POST)

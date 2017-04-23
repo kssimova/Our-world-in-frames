@@ -27,37 +27,61 @@ $(function () {
 		type: "GET",
 		url: 'album/get',
 		data: post,
-		success: function(post){
-  			$('#name').html(post.name);
-  			$('#desc').html(post.description);
-			$.each(post.photos, function(index, val){
+		success: function(album){
+  			$('#name').html(album.name);
+  			$('#desc').html(album.description);
+			$.each(album.photos, function(index, val){
 				$.each(val, function(i, v){
 	  				console.log(i + " : " + v);
-				});
+				});	
   	  			if(count == 0){
   	    	  		$('#photos').append(
-  	    	  			'<div class="col-sm-3 col-md-2">' +
-  	    	  				'<p>' +
-								'<img src="'+ val.picturePath +'" style="height:200px;width:auto;max-width:300px;">' +
-							'</p>' + 
+  	    	  			'<div class="col-sm-4 col-md-4">' +
+							'<div class="thumbnail">' + 
+								'<f:form commandName="goToPostPage" action="postView" method = "GET" align="center" >' + 
+									'<input type="image" src="' + val.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
+									'<input type="hidden" name = "imgId" value="' + val.postId + '" >' +  
+									'<div class="caption">' + 
+										'<p>' + 
+											val.name +
+										'</p>' + 
+									'</div>' + 
+								'</f:form>' + 
+							'</div>' + 
 						'</div>' 
   	    	  		);
   	    	  	count ++;
 				}else if(count == 1){
 	  	    	  	$('#photos').append(
-  	  				    '<div class="col-sm-9 col-md-8">' +
-	    	  				'<p>' +
-  	  			    			'<img src="'+ val.picturePath +'" style="height:200px;width:auto;max-width:300px;">' +
-							'</p>' + 
+  	  				    '<div class="col-sm-4 col-md-4">' +
+							'<div class="thumbnail">' + 
+								'<f:form commandName="goToPostPage" action="postView" method = "GET" align="center" >' + 
+									'<input type="image" src="' + val.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
+									'<input type="hidden" name = "imgId" value="' + val.postId + '" >' +  
+									'<div class="caption">' + 
+										'<p>' + 
+											val.name +
+										'</p>' + 
+									'</div>' + 
+								'</f:form>' + 
+							'</div>' + 
   	  			       	'</div>'
 					);
 				count ++;
 				}else if(count == 2){
 	  	    	  	$('#photos').append(
-  	  			        '<div class="col-sm-12 col-md-2">' +
-	    	  				'<p>' +
-								'<img src="'+ val.picturePath +'" style="height:200px;width:auto;max-width:300px;">' +
-							'</p>' + 
+  	  			        '<div class="col-sm-4 col-md-4">' +
+							'<div class="thumbnail">' + 
+								'<f:form commandName="goToPostPage" action="postView" method = "GET" align="center" >' + 
+									'<input type="image" src="' + val.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
+									'<input type="hidden" name = "imgId" value="' + val.postId + '" >' +  
+									'<div class="caption">' + 
+										'<p>' + 
+											val.name +
+										'</p>' + 
+									'</div>' + 
+								'</f:form>' + 
+							'</div>' + 
    	  			        '</div>'
 					);
 				count = 0;
@@ -82,6 +106,7 @@ $(function () {
 		<h3 class="my-3">Description</h3>
 		<p id = "desc"></p>
     </div>
+    <br>    <br>    <br>    <br>    <br>    <br>    <br>    <br>    <br>
 
 <div class="container">
 	<div class="row">
