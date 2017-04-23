@@ -298,7 +298,6 @@ public class PostController {
 							postDAO.getAllPosts();
 							postIds.addAll(CachedObjects.getInstance().getPhotosWithTag(tags));
 							postIds.addAll(CachedObjects.getInstance().getPhotosWithName(tags));
-							System.out.println(postIds);
 							for(String postId : postIds){
 								posts.add(CachedObjects.getInstance().getOnePost(postId));
 							}
@@ -308,7 +307,6 @@ public class PostController {
 					}else{
 						postIds.addAll(CachedObjects.getInstance().getPhotosWithTag(tags));
 						postIds.addAll(CachedObjects.getInstance().getPhotosWithName(tags));
-						System.out.println(postIds);
 						for(String postId : postIds){
 							posts.add(CachedObjects.getInstance().getOnePost(postId));
 						}
@@ -316,14 +314,12 @@ public class PostController {
 				}
 			}
 		}
-		System.out.println(posts);
 		return posts;
 	}
 		
  	public TreeSet<String> addTags(String tag, TreeSet<String> tags) {
  		System.out.println(tags);
   		if (tag.length() == 0) {
-  			tags.add(tag);
   			return tags;
   		}
  		if(!tag.contains(",")){

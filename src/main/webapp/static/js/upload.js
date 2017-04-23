@@ -108,8 +108,7 @@ $(function(){
 			type: "POST",
 			data: albums,
 			success: function (res) {
-				console.log($name.val());
-				console.log($description.val());
+				$albums.append('<option value="'+ $name.val() +'">'+ $name.val() +'</option>');
 				console.log(res);
 			},
 			error: function(res){

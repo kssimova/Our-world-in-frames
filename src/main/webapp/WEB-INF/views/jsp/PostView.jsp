@@ -8,9 +8,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<link rel="stylesheet" type="text/css" href="css/API.css">
 	<link rel="stylesheet" type="text/css" href="css/UserPage.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/PostView.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+     <script src="js/jquery.min.js"></script>
+     <script src="js/bootstrap.min.js"></script>
 <title>post</title>
 </head>
 
@@ -30,8 +31,17 @@ $(function () {
 		url: 'post/get',
 		data: post,
 		success: function(post){
-  			$('#name').html(post.name + '<span rel = "heart" class="glyphicon glyphicon-heart heart"></span> '+
-  										'<span rel = "emptyHeart" class="glyphicon glyphicon-heart-empty heart active"></span>');
+  			$('#name').html(post.name + 
+  								'<span id = "like">' +
+									'<ul style = "list-style: none outside none; margin:0; padding: 0; text-align: cente;">' + 
+										'<li id ="panel1" rel = "panel2" class = "heart">' + 
+											'<span class="glyphicon glyphicon-heart"></span>' +
+										'</li>' +
+										'<li id = "panel2"  rel = "panel1" class = "heart active">' + 
+											'<span class="glyphicon glyphicon-heart-empty display:inline"></span>' +
+										'</li>' +
+									'</ul>' +
+								'</span>');			 							 
   			$('#img').html(' <img class="img-fluid" src="'+ post.picturePath +'" alt="">');
   			$('#desc').html(post.description);
 			$.each(post.tags, function(index, val){
@@ -54,24 +64,24 @@ $(function () {
 			success: function(tags){
 				console.log(tags);
 				$.each(tags, function(index, value){
-					$.each(value, function(i, v){
-	  					console.log(i + " : " + v);
-					});
-	  				$('#red').append(
-	  			 	  	'<div class="col-sm-4 col-md-4">' +
-	  						'<div class="thumbnail">' + 
-	  							'<f:form commandName="goToPostPage" action="postView" method = "GET" align="center" >' + 
-	  								'<input type="image" src="' + value.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
-	  								'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
-	  								'<div class="caption">' + 
-	  									'<p>' + 
-	  										value.name +
-	  									'</p>' + 
-	  								'</div>' + 
-	  							'</f:form>' + 
-	  						'</div>' + 
-	  					'</div>' 				
-					);
+  					console.log(index + " : "+ value);
+					if(tagcheta != ""){
+	  					$('#red').append(
+	  			 		  	'<div class="col-sm-4 col-md-4">' +
+	  							'<div class="thumbnail">' + 
+	  								'<f:form commandName="goToPostPage" action="postView" method = "GET" align="center" >' + 
+	  									'<input type="image" src="' + value.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
+	  									'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
+	  									'<div class="caption">' + 
+	  										'<p>' + 
+	  											value.name +
+	  										'</p>' + 
+	  									'</div>' + 
+	  								'</f:form>' + 
+	  							'</div>' + 
+	  						'</div>' 				
+						);
+					};
 				});			
 			},
 			error: function(e){
@@ -81,7 +91,21 @@ $(function () {
 			}
 		});
 	}, 500);
+
 });
+setTimeout(function(){
+	$(function () {	
+		$('#like .heart').on('click', function(){
+			var panelToShow = $(this).attr('rel');
+			$(this).slideUp(300, function(){
+				$(this).removeClass('active');
+				$('#' + panelToShow).slideDown(300, function(){
+					$(this).addClass('active');
+				});
+			});
+		});	
+	});
+}, 700);
 
 </script>
 
@@ -119,25 +143,6 @@ $(function () {
         <h3 class="my-4">Related Photos</h3>
 
         <div id = "red" class="row">
-
-
-            <div class="col-md-3 col-sm-6 mb-4 thumbnail">
-                <a href="#">
-                    <img class="img-fluid" src="http://placehold.it/500x300" style="height:200px;width:auto;max-width:300px;">
-                </a>
-            </div>
-
-            <div class="col-md-3 col-sm-6 mb-4 thumbnail">
-                <a href="#">
-                   <img class="img-fluid" src="http://placehold.it/500x300" style="height:200px;width:auto;max-width:300px;">
-                </a>
-            </div>
-
-            <div class="col-md-3 col-sm-6 mb-4 thumbnail">
-                <a href="#">
-                    <img class="img-fluid" src="http://placehold.it/500x300" style="height:200px;width:auto;max-width:300px;">
-                </a>
-            </div>
        </div>
     </div>
     

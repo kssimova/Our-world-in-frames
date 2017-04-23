@@ -203,14 +203,12 @@ public class CachedObjects {
 				}
 			}
 		}
-		System.out.println(posts);
 		return posts;
 	}
 	
 	public TreeSet<String> getPhotosWithName(TreeSet <String> t){
 		TreeSet<String> posts = new TreeSet<>();
 		for(String allpost : allPost.keySet()){
-			System.out.println(allPost.values().toString());
 			for(String str: t){
 				String stri =  str.toLowerCase().trim();
 				if(allpost.contains(stri)){
@@ -218,7 +216,6 @@ public class CachedObjects {
 				}
 			}
 		}
-		System.out.println(posts);
 		return posts;
 	}
 	
