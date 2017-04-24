@@ -62,7 +62,12 @@
 	  				'</div>');
 	   			}
 	  			
-	   			$.each(val.photos, function(a, b){	
+	   			$.each(val.photos, function(a, b){
+	   				if(count> 4){
+	   					count = 0;
+	   				};
+					console.log(a + " : " + b);	
+					console.log(count);	
 	  				if(name != val.name){
 	  					$album.append(
 	  							'<div class="col-md-4">' + 
@@ -79,7 +84,7 @@
 	  								'</div>' +
 	  							'</div>');
 	  					name = val.name;				
-	   				}
+	   				};
 	   				if(count < 3){
 	  					$img.append('<div class="col-md-4">' + 
 	  							'<div class="thumbnail">' + 
@@ -95,7 +100,7 @@
 	  								'</div>' + 
 	  							'</div>');			
 	  					count++;
-	   				}else if(count <= 4){
+	   				}else if(count == 4 || count == 3){
 	  					$img.append('<div class="col-md-6">' + 
 	  							'<div class="thumbnail">' + 
 	  								'<f:form commandName="goToPostPage" action="postView" method = "GET" align="center" >' +
@@ -110,8 +115,6 @@
 	  							'</div>' +
 	  						'</div>');					
 	  					count++;				
-	   				}else if(count> 4){
-	   					count = 0;
 	   				};
    				});
    			});
@@ -129,9 +132,6 @@
   		dataType: "json",
   		success: function(post){	
 			$.each(post, function(index, val){	
-				$.each(val, function(ind, va){
-					console.log(ind + " : " +va);	
-				});
 	   			if(count1 < 3){
 	  				$like.append('<div class="col-md-4">' + 
 	  						'<div class="thumbnail">' + 
@@ -147,7 +147,7 @@
 	  							'</div>' + 
 	  						'</div>');			
 	  				count1++;
-	   			}else if(count == 3){
+	   			}else if(count1 == 3){
 	   				count1 = 0;
 	   			};
 			});
