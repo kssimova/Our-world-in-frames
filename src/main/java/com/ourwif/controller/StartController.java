@@ -14,10 +14,9 @@ public class StartController {
 	@RequestMapping(value="/index", method=RequestMethod.GET)
 	public String sayHi(HttpSession session) {
 		String url = "index";
-		//String url = "UnlogedLoginPage";
 		if(session.getAttribute("logged")!= null){
 			System.out.println(session.getAttribute("logged").toString());
-			url = "LogedIndex";
+			url = "Discover";
 		}
 		return url;
 	}
@@ -26,7 +25,7 @@ public class StartController {
 	public String getIndexPage(HttpSession session) {
 		String url = "index";
 		if(session.getAttribute("logged")!= null){
-			url = "LogedIndex";
+			url = "Discover";
 		}
 		return url;
 	}
@@ -35,15 +34,10 @@ public class StartController {
 	public String getApiPage(HttpSession session) {
 		String url = "index";
 		if(session.getAttribute("logged")!= null){
-			url = "LogedApi";
+			url = "API";
 		}
 		return url;
 	}	
-	
-	@RequestMapping(value="/registerPage", method=RequestMethod.POST)
-	public String getRegisterPage() {
-		return "UnlogedRegister";
-	}
 	
 	@RequestMapping(value="/home", method=RequestMethod.POST)
 	public String getHomePage(HttpSession session) {

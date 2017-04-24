@@ -29,7 +29,7 @@
 				</li>
 	            <li>
 	            	<f:form commandName="getApi" action="/ourwif/index" method = "POST">
-						<input class= "noMods" type="submit" value="HOME">
+						<input class= "noMods" type="submit" value="DISCOVER">
 					</f:form>
 	            </li>
 	        </ul>

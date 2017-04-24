@@ -8,7 +8,6 @@
  	<link rel="stylesheet" type="text/css" href=css/aboutSectionStyle.css></link>
  	<link rel="stylesheet" type="text/css" href="css/UserPage.css">
  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
- 	<script src="js/profile.js"></script>
  	<script src="js/userPage.js"></script>
  <title>user</title>
  </head>
