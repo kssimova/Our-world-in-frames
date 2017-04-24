@@ -150,7 +150,7 @@
                         	<div class="form-box">
                         		<div class="form-top">
 	                        		<div class="form-top-left">
-	                        			<h3>Register here!</h3>
+	                        			<h3 >Register here!</h3>
 	                            		<p>If you don't have an account create one:</p>
 	                        		</div>
 	                        		<div class="form-top-right">
@@ -177,12 +177,15 @@
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-password">Password</label>
-				                        	<input type="text" name="form-password" required="required" placeholder="Password..." class="form-password form-control" id="form-password">
+				                        	<input type="password" name="form-password" required="required" placeholder="Password..." class="form-password form-control" id="form-password">
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-confirm-password">Confirm Password</label>
-				                        	<input type="text" name="form-confirm-password" required="required" placeholder="Confirm password..." class="form-confirm-password form-control" id="form-confirm-password" >
+				                        	<input type="password" name="form-confirm-password" required="required" placeholder="Confirm password..." onChange="checkPasswordMatch()" class="form-confirm-password form-control" id="form-confirm-password" >
 				                        </div>
+				                        
+				                        <div class="registrationFormAlert" id="divCheckPasswordMatch">    </div>
+				                        
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-select-gender">Select gender</label>
 				                        		<select required name="form-select-gender" class="form-select-gender form-control" id="form-select-gender" style = "height: 50px; font-size:16px; outline: 0; background: #F5F5F5; border: 3px solid #ddd;">
@@ -224,9 +227,9 @@
                         <h4> <font color=#dab3ff> Kristina Simova </font></h4>
                         <p class="text-muted">Java Developer</p>
                         <ul class="list-inline social-buttons">
-                            <li><a href="#"><i class="fa fa-twitter"></i></a>
+                            <li><a href="https://twitter.com/KristinaSimovaa"><i class="fa fa-twitter"></i></a>
                             </li>
-                            <li><a href="#"><i class="fa fa-facebook"></i></a>
+                            <li><a href="https://www.facebook.com/Sunshin3e"><i class="fa fa-facebook"></i></a>
                             </li>
                             <li><a href="#"><i class="fa fa-linkedin"></i></a>
                             </li>
@@ -254,9 +257,9 @@
                        <h4> <font color=#dab3ff> Mariya Yordanova </font></h4>
                         <p class="text-muted">Java Developer</p>
                         <ul class="list-inline social-buttons">
-                            <li><a href="#"><i class="fa fa-twitter"></i></a>
+                            <li><a href="https://twitter.com/josette_darling"><i class="fa fa-twitter"></i></a>
                             </li>
-                            <li><a href="#"><i class="fa fa-facebook"></i></a>
+                            <li><a href="https://www.facebook.com/werewolf0girl"><i class="fa fa-facebook" color = "blue"></i></a>
                             </li>
                             <li><a href="#"><i class="fa fa-linkedin"></i></a>
                             </li>
@@ -333,7 +336,7 @@
 
     <!-- Contact Form JavaScript -->
     <script src="js/jqBootstrapValidation.js"></script>
-    <script src="js/contact_me.js"></script>
+    
 
     <!-- Theme JavaScript -->
     <script src="js/pageScroll.js"></script>

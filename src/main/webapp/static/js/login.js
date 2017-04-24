@@ -24,4 +24,22 @@ $(function () {
 			}
 		});
 	});
+	
+
+	
+	function checkPasswordMatch() {
+	    var password = $("#form-password").val();
+	    var confirmPassword = $("#form-confirm-password").val();
+
+	    if (password != confirmPassword)
+	        $("#divCheckPasswordMatch").html("Passwords do not match!");
+	    else
+	        $("#divCheckPasswordMatch").html("Passwords match.");
+	}
+
+	$(document).ready(function () {
+	   $("#form-confirm-password").keyup(checkPasswordMatch);
+	});
+
+
 });
