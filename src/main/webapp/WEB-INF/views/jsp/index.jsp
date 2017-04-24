@@ -14,7 +14,7 @@
 
     <title>Our world in frames</title>
     
-    
+      <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <!-- CSS -->
         <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
         <link rel="stylesheet" href="css/font-awesome.css">
@@ -25,7 +25,7 @@
    	    <link href="css/aboutSectionStyle.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-	    <link href="css/mainFont.min.css" rel="stylesheet" type="text/css">
+	    <link href="css/mainFont.css" rel="stylesheet" type="text/css">
 	    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
 	    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
 	    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
@@ -33,6 +33,7 @@
 
     <!-- Theme CSS -->
    	 	<link href="css/page.css" rel="stylesheet">
+   	 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
 
 </head>
 
@@ -203,16 +204,6 @@
             </div>
             
         </div>
-
-        <!-- Javascript -->
-        <script src="js/jquery-1.11.1.min.js"></script>
-        <script src="js/bootstr.js"></script>
-        <script src="js/jquery.backstretch.js"></script>
-        <script src="js/scripts.js"></script>
-        
-        <!--[if lt IE 10]>
-            <script src="assets/js/placeholder.js"></script>
-        <![endif]-->
         
     </section>
     
@@ -348,6 +339,19 @@
     <script src="js/pageScroll.js"></script>
     
     <script src=js/login.js></script>
+    
+    
+            <!-- Javascript -->
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/jquery.backstretch.js"></script>
+        <script src="js/scripts.js"></script>
+        
+        <!--[if lt IE 10]>
+            <script src="assets/js/placeholder.js"></script>
+        <![endif]-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css" />
 
 </body>
 
