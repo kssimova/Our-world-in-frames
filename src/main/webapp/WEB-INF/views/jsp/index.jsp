@@ -95,12 +95,6 @@
     <!-- Login/Register Grid Section -->
     <section id="portfolio" class="bg-light-gray"S>
         
-        
-        
-        
-        
-        
-        
          <!-- Top content -->
         <div class="top-content">
         	
@@ -121,7 +115,7 @@
 	                        		</div>
 	                            </div>
 	                            <div class="form-bottom">
-				                    <form role="form" action="" method="post" class="login-form">
+				                    <form role="form" action="login.js" method="post" class="login-form">
 				                    	<div class="form-group">
 				                    		<label class="sr-only" for="form-username">Username</label>
 				                        	<input type="text" name="form-username" placeholder="Username..." class="form-username form-control" id="form-username">
@@ -130,7 +124,7 @@
 				                        	<label class="sr-only" for="form-password">Password</label>
 				                        	<input type="password" name="form-password" placeholder="Password..." class="form-password form-control" id="form-password">
 				                        </div>
-				                        <button type="submit" class="btn" style = "background-color:#dab3ff"> Sign in!</button>
+				                        <button type="button" onclick="login()" class="btn" style = "background-color:#dab3ff"> Sign in!</button>
 				                    </form>
 			                    </div>
 		                    </div>
@@ -168,20 +162,35 @@
 				                    <form role="form" action="" method="post" class="registration-form">
 				                    	<div class="form-group">
 				                    		<label class="sr-only" for="form-first-name">First name</label>
-				                        	<input type="text" name="form-first-name" placeholder="First name..." class="form-first-name form-control" id="form-first-name">
+				                        	<input type="text" name="form-first-name" required="required"S placeholder="First name..." class="form-first-name form-control" id="form-first-name">
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-last-name">Last name</label>
-				                        	<input type="text" name="form-last-name" placeholder="Last name..." class="form-last-name form-control" id="form-last-name">
+				                        	<input type="text" name="form-last-name" required="required" placeholder="Last name..." class="form-last-name form-control" id="form-last-name">
+				                        </div>
+				                        <div class="form-group">
+				                    		<label class="sr-only" for="form-username">Username</label>
+				                        	<input type="text" name="form-username" required="required" placeholder="Username..." class="form-username form-control" id="form-username">
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-email">Email</label>
-				                        	<input type="text" name="form-email" placeholder="Email..." class="form-email form-control" id="form-email">
+				                        	<input type="text" name="form-email" required="required" placeholder="Email..." class="form-email form-control" id="form-email">
 				                        </div>
 				                        <div class="form-group">
-				                        	<label class="sr-only" for="form-about-yourself">About yourself</label>
-				                        	<textarea name="form-about-yourself" placeholder="About yourself..." 
-				                        				class="form-about-yourself form-control" id="form-about-yourself"></textarea>
+				                        	<label class="sr-only" for="form-password">Password</label>
+				                        	<input type="text" name="form-password" required="required" placeholder="Password..." class="form-password form-control" id="form-password">
+				                        </div>
+				                        <div class="form-group">
+				                        	<label class="sr-only" for="form-confirm-password">Confirm Password</label>
+				                        	<input type="text" name="form-confirm-password" required="required" placeholder="Confirm password..." class="form-confirm-password form-control" id="form-confirm-password" >
+				                        </div>
+				                        <div class="form-group">
+				                        	<label class="sr-only" for="form-select-gender">Select gender</label>
+				                        		<select required name="form-select-gender" class="form-select-gender form-control" id="form-select-gender">
+				                       				 <option value="" selected>Select gender...</option>
+                   									 <option value="male">Male</option>
+                       								 <option value="female">Female</option>
+												</select>
 				                        </div>
 				                        <button type="submit" class="btn" style = "background-color:#dab3ff">Register!</button>
 				                    </form>
@@ -396,7 +405,7 @@
             </div>
         </div>
     </section>
-    
+
 
     <!-- jQuery -->
     <script src="js/jqueryBackground.js"></script>
