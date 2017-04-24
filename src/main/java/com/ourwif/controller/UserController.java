@@ -38,7 +38,7 @@ public class UserController {
 			System.out.println("ops");
 		}
 	}
-    
+	
 	@RequestMapping(value="/login",method = RequestMethod.POST)
 	public Basic login(Model model, HttpSession session, HttpServletRequest request) {
 		String username = request.getParameter("username");
@@ -59,14 +59,13 @@ public class UserController {
 							userDAO.getAllUsers();
 						} catch (ValidationException e) {
 							System.out.println("ops cant log in");
-						}{
+						}
 						u = CachedObjects.getInstance().getOneUser(username);
 						session.setAttribute("username", username);
 						session.setAttribute("user", u);
 						session.setAttribute("logged", true);
 					}
-				}	
-			}
+				}
 			} catch (ValidationException e) {
 				System.out.println(e.getMessage());
 			}

@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+<jsp:include page="Nav.jsp" />
 <h1>USER</h1>
 <div class="col-md-6">
 	<table class="table table-hover">

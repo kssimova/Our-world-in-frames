@@ -20,9 +20,12 @@ h1{
     font-family : "Monospace", Lucida Console, serif;
    	font-size: 15px;
    	background: #222222;
-   	color: #dab3ff;
+   	color: #f9f3ff;
     border : none;
     margin : 0px;
 	padding: 15px 0 0 0 ;
 }
 
+.noMods:hover {
+	color: #dab3ff;
+}

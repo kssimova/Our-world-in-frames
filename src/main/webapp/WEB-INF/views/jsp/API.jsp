@@ -9,6 +9,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<jsp:include page="Nav.jsp" />
 <h1>USER</h1>
 <div class="col-md-6">
 	<h3>To get one user //this is for viewing profiles </h3>
