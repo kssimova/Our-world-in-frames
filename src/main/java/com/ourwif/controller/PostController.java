@@ -251,7 +251,6 @@ public class PostController {
 	public void likePost(HttpServletRequest request, HttpSession session) {
 		User user = (User)session.getAttribute("user");
 		Post post = CachedObjects.getInstance().getOnePost(request.getParameter("postId"));
-		System.out.println(post.toString());
 		try {
 			postDAO.addLike(post, user);
 		} catch (ValidationException e) {
@@ -262,8 +261,9 @@ public class PostController {
 	}
 	
 	
-	@RequestMapping(value="/unlike",method = RequestMethod.DELETE)
+	@RequestMapping(value="/unlike",method = RequestMethod.POST)
 	public void unlikePost(HttpServletRequest request, HttpSession session) {
+		System.out.println(request.getParameter("postId"));
 		User user = (User)session.getAttribute("user");
 		Post post = CachedObjects.getInstance().getOnePost(request.getParameter("postId"));
 		try {
@@ -301,7 +301,6 @@ public class PostController {
 		TreeSet<Post> posts = new TreeSet<>();
 		TreeSet<String> tagsForRec = new TreeSet<>();
 		String s = request.getParameter("tagche");
-		System.out.println(s);
 		if(request.getParameter("tagche") != null){
 			TreeSet<String> tags = addTags(request.getParameter("tagche"), tagsForRec);
 			TreeSet<String> postIds = new TreeSet<>();
@@ -332,7 +331,6 @@ public class PostController {
 	}
 		
  	public TreeSet<String> addTags(String tag, TreeSet<String> tags) {
- 		System.out.println(tags);
   		if (tag.length() == 0) {
   			return tags;
   		}

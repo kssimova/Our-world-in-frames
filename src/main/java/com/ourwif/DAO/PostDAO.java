@@ -358,13 +358,15 @@ public class PostDAO {
  	
 	//remove like	
  	public void removeLike(Post post, User user) throws ValidationException, SQLException{
-		String sql = "DELETE FROM post_likes WHERE user_id = " + user.getUserId() + " and post_id " + post.getPostId();
+		String sql = "DELETE FROM post_likes WHERE user_id = ? and post_id = ? ";
  		PreparedStatement st;
  		Connection conn = null;
 		try {
 			conn = (Connection) dataSource.getConnection();
  			conn.setAutoCommit(false);
 			st = conn.prepareStatement(sql);
+ 			st.setLong(1, user.getUserId());
+ 			st.setString(2, post.getPostId());
 			st.execute();
 			CachedObjects.getInstance().getOnePost(post.getPostId()).removeLike(user);
  	 	}catch (SQLException e1) {
