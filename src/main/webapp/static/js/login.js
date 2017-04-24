@@ -1,11 +1,10 @@
 
 $(function () {
 	
-	var $username = $("#username");
-	var $password = $("#password");
+	var $username = $("#form-username");
+	var $password = $("#form-password");
 	
 	$('#login').on('click', function(){
-		
 		var user = {
 			username: $username.val(),
 			password: $password.val()
@@ -19,7 +18,9 @@ $(function () {
 				window.location = ourUser.url;
 			},
 			error: function(){
-				alert("cant load");
+				$("span").append(" &nbsp; *Wrong username or password! Please try again! <br>");
+				document.getElementById('form-username').value = "";
+				document.getElementById('form-password').value = "";
 			}
 		});
 	});
