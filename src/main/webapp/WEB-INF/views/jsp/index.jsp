@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
 <html lang="en">
 
 <head>
@@ -114,18 +113,16 @@
 	                        			<i class="fa fa-key"></i>
 	                        		</div>
 	                            </div>
-	                            <div class="form-bottom">
-				                    <form role="form" action="login.js" method="post" class="login-form">
-				                    	<div class="form-group">
-				                    		<label class="sr-only" for="form-username">Username</label>
-				                        	<input type="text" name="form-username" placeholder="Username..." class="form-username form-control" id="form-username">
-				                        </div>
-				                        <div class="form-group">
-				                        	<label class="sr-only" for="form-password">Password</label>
-				                        	<input type="password" name="form-password" placeholder="Password..." class="form-password form-control" id="form-password">
-				                        </div>
-				                        <button type="button" onclick="login()" class="btn" style = "background-color:#dab3ff"> Sign in!</button>
-				                    </form>
+	                            <div class="form-bottom login-form">
+				                    <div class="form-group">
+				                    	<label class="sr-only" for="form-username">Username</label>
+				                    	<input id = "username" name="form-username" type="text" placeholder="Username..."  class="form-username form-control" >
+									</div>
+									<div class="form-group">
+				                        <label class="sr-only" for="form-password">Password</label>
+				                       	<input id = "password" name="form-password" type="password" placeholder="Password..." class="form-password form-control" >
+									</div>
+										<input id = "login" type="submit" value="Sign In" class="btn" style = "background-color:#dab3ff"" > 
 			                    </div>
 		                    </div>
 		                
@@ -422,6 +419,8 @@
 
     <!-- Theme JavaScript -->
     <script src="js/pageScroll.js"></script>
+    
+    <script src=js/login.js></script>
 
 </body>
 

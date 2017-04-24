@@ -13,8 +13,8 @@ public class StartController {
 	
 	@RequestMapping(value="/index", method=RequestMethod.GET)
 	public String sayHi(HttpSession session) {
-		//String url = "index";
-		String url = "UnlogedLoginPage";
+		String url = "index";
+		//String url = "UnlogedLoginPage";
 		if(session.getAttribute("logged")!= null){
 			System.out.println(session.getAttribute("logged").toString());
 			url = "LogedIndex";

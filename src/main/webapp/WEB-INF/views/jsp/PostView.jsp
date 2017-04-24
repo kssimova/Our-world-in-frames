@@ -26,6 +26,7 @@ $(function () {
 	var $tags = $('#tags');
 	var tagcheta = "";
 	var liked = false;
+	var count = 0;
 	
 	//check if this image is already liked
 	$.ajax({
