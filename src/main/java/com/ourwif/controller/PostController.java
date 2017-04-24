@@ -248,38 +248,29 @@ public class PostController {
 	
 	
 	@RequestMapping(value="/like",method = RequestMethod.POST)
-	public String likePost(HttpServletRequest request, HttpSession session) {
-		if(session.getAttribute("logged")!= null){
-			User user = CachedObjects.getInstance().getOneUser((long)session.getAttribute("user_id"));
-			Post post = CachedObjects.getInstance().getOnePost(request.getParameter("post_id"));
-			try {
-				postDAO.addLike(post, user);
-			} catch (ValidationException e) {
-				System.out.println("Error in validation");
-			} catch (SQLException e) {
-				System.out.println(e.getMessage());
-			}	
-			return "PageView";
-		}else{
-			return "login";
-		}
+	public void likePost(HttpServletRequest request, HttpSession session) {
+		User user = (User)session.getAttribute("user");
+		Post post = CachedObjects.getInstance().getOnePost(request.getParameter("postId"));
+		System.out.println(post.toString());
+		try {
+			postDAO.addLike(post, user);
+		} catch (ValidationException e) {
+			System.out.println("Error in validation");
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}	
 	}
 	
 	
 	@RequestMapping(value="/unlike",method = RequestMethod.DELETE)
-	public String unlikePost(HttpServletRequest request, HttpSession session) {
-		if(session.getAttribute("logged")!= null){
-			User user = CachedObjects.getInstance().getOneUser((long)session.getAttribute("user_id"));
-			Post post = CachedObjects.getInstance().getOnePost(request.getParameter("post_id"));
-			try {
-				postDAO.removeLike(post, user);
-			} catch (ValidationException | SQLException e) {
-				System.out.println("Error in validation");
-			}	
-			return "PageView";
-		}else{
-			return "login";
-		}
+	public void unlikePost(HttpServletRequest request, HttpSession session) {
+		User user = (User)session.getAttribute("user");
+		Post post = CachedObjects.getInstance().getOnePost(request.getParameter("postId"));
+		try {
+			postDAO.removeLike(post, user);
+		} catch (ValidationException | SQLException e) {
+			System.out.println("Error in validation");
+		}	
 	}	
 	
 	@RequestMapping(value="/getLike",method = RequestMethod.GET)

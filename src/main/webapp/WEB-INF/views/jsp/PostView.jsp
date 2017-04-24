@@ -62,9 +62,7 @@ $(function () {
 			url: 'post/tag',
 			data: taggs,
 			success: function(tags){
-				console.log(tags);
 				$.each(tags, function(index, value){
-  					console.log(index + " : "+ value);
 					if(tagcheta != ""){
 	  					$('#red').append(
 	  			 		  	'<div class="col-sm-4 col-md-4">' +
@@ -85,27 +83,49 @@ $(function () {
 				});			
 			},
 			error: function(e){
-				console.log("hi");
-				console.log(taggs);
 				console.log(e);
 			}
 		});
 	}, 500);
 
 });
-setTimeout(function(){
-	$(function () {	
+$(function () {	
+	var url = window.location.href;
+	var n = url.indexOf("imgId=");
+	var $postId = url.substring(n+6);
+	
+	setTimeout(function(){		
+		var urlLike = "post/like";
+		var typeMethod = "POST";
+		var PostToLike = {
+				postId: $postId,
+		}		
 		$('#like .heart').on('click', function(){
 			var panelToShow = $(this).attr('rel');
-			$(this).slideUp(300, function(){
-				$(this).removeClass('active');
-				$('#' + panelToShow).slideDown(300, function(){
-					$(this).addClass('active');
-				});
+			var $likeHeart = $(this);
+			if(panelToShow == "panel2"){
+				urlLike = "post/unlike";
+				typeMethod = "DELETE";
+			};
+			$.ajax({
+				type: typeMethod,
+				url: urlLike,
+				data: PostToLike,
+				success: function(){
+					$likeHeart.slideUp(300, function(){
+						$(this).removeClass('active');
+						$('#' + panelToShow).slideDown(300, function(){
+							$(this).addClass('active');
+						});
+					});
+				},
+				error: function(e){
+					console.log(e);
+				}
 			});
-		});	
-	});
-}, 700);
+		});
+	}, 700);
+});
 
 </script>
 

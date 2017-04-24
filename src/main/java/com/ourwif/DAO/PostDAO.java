@@ -323,6 +323,8 @@ public class PostDAO {
  	
 	//add Like
  	public void addLike(Post post, User user) throws ValidationException, SQLException{
+ 		System.out.println(post.toString());
+ 		System.out.println(post.getPostId());
 		String sql = "INSERT INTO post_likes (user_id, post_id) VALUES (?, ?)";
  		PreparedStatement st;
  		Connection conn = null;
@@ -331,7 +333,7 @@ public class PostDAO {
  			conn.setAutoCommit(false);
  			st = conn.prepareStatement(sql);
  			st.setLong(1, user.getUserId());
- 			st.setString(1, post.getPostId());
+ 			st.setString(2, post.getPostId());
  			st.execute();
  			CachedObjects.getInstance().getOnePost(post.getPostId()).addLike(user);
  	 	}catch (SQLException e1) {
