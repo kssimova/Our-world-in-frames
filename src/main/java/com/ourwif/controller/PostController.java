@@ -143,12 +143,12 @@ public class PostController {
 					JsonParser parser = new JsonParser();
 					JsonObject jsonObj = parser.parse(responseData).getAsJsonObject();
 					JsonObject obj2 = jsonObj.getAsJsonObject("data");
-					postId = obj2.get("id").toString();
+					postId = obj2.get("id").getAsString();
 					postId.replaceAll("\"", " ").trim();
-					picturePath = obj2.get("link").toString();
+					picturePath = obj2.get("link").getAsString();
 					picturePath.replaceAll("\"", " ").trim();
-					deleteHash = obj2.get("deletehash").toString();
-					deleteHash.replaceAll("\"", " ").trim();					
+					deleteHash = obj2.get("deletehash").getAsString();
+					deleteHash.replaceAll("\"", " ").trim();	
 					try {
 						postDAO.createPost((User)session.getAttribute("user"), name, description, LocalDate.now(), picturePath, tags, album, postId, deleteHash);
 					} catch (ValidationException e) {
@@ -281,6 +281,29 @@ public class PostController {
 			return "login";
 		}
 	}	
+	
+	@RequestMapping(value="/getLike",method = RequestMethod.GET)
+	public  TreeSet<Post> getLikedPosts(HttpSession session){
+		User user = (User)session.getAttribute("user");
+		TreeSet<Post> posts = new TreeSet<>();
+		if(session.getAttribute("logged")!= null){
+			if(CachedObjects.getInstance().getAllPosts().isEmpty()){
+				try {
+					postDAO.getAllPosts();
+					posts = postDAO.getAllLikedPosts(user);
+				} catch (ValidationException | SQLException e) {
+					System.out.println("i cant get all liked posts1");
+				}
+			}else{
+				try {
+					posts = postDAO.getAllLikedPosts(user);
+				} catch (SQLException e) {
+					System.out.println("i cant get all liked posts2");
+				}
+			}
+		}
+		return posts;
+	}
 	
 	@RequestMapping(value="/tag",method = RequestMethod.POST)
 	public TreeSet<Post> getTags(HttpSession session, HttpServletRequest request){

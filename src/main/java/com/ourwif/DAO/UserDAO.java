@@ -62,6 +62,11 @@ public class UserDAO {
 	
 	//create new user with default album and insert into cachedObjects
 	public synchronized void addUser(User user){
+		//TODO when creating new user add 1 album
+		//TODO "default"
+		
+		
+		
 		context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		Connection connection = null;

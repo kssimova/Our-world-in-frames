@@ -16,21 +16,21 @@
 $(function () {	
 	var url = window.location.href;
 	var n = url.indexOf("imgId=");
-	var $postId = url.substring(n+6);
+	var $albumId = url.substring(n+6);
 	var count = 0;
-	var post = {
-		postId: $postId
+	var album = {
+		albumId: $albumId
 	};
 	var $tags = $('#tags');
 	
 	$.ajax({
 		type: "GET",
 		url: 'album/get',
-		data: post,
-		success: function(album){
-  			$('#name').html(album.name);
-  			$('#desc').html(album.description);
-			$.each(album.photos, function(index, val){
+		data: album,
+		success: function(albums){
+  			$('#name').html(albums.name);
+  			$('#desc').html(albums.description);
+			$.each(albums.photos, function(index, val){
 				$.each(val, function(i, v){
 	  				console.log(i + " : " + v);
 				});	

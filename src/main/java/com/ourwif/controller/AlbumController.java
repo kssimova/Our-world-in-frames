@@ -28,7 +28,7 @@ public class AlbumController {
 	
 	@RequestMapping(value="/get",method = RequestMethod.GET)
 	public Album getAlbum(Model model, HttpServletRequest request, HttpSession session) {
-		Long albumId = Long.parseLong(request.getParameter("postId"));		
+		Long albumId = Long.parseLong(request.getParameter("albumId"));		
 		System.out.println(albumId);
 		Album album = null;
 		if(session.getAttribute("logged")!= null){

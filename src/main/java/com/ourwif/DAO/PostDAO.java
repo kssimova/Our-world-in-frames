@@ -78,7 +78,7 @@ public class PostDAO {
 	}
 	
 	// create new Post
-	public synchronized Post createPost(User user, String name, String description, LocalDate dateCreated, String picturePath, TreeSet<String> tags, Album album, String postId, String deleteHash) throws SQLException, ValidationException{
+	public synchronized Post createPost(User user, String name, String description, LocalDate dateCreated, String picturePath, TreeSet<String> tags, Album album, String postId, String deleteHash) throws SQLException, ValidationException{	
 		Post post = null;
 		String sql = null;
 		PreparedStatement st = null;
@@ -384,6 +384,26 @@ public class PostDAO {
  			conn.close();
  		}
  	}
+ 	
+ 	public TreeSet<Post> getAllLikedPosts(User user) throws SQLException{
+		TreeSet<Post> posts = new TreeSet<>();
+		TreeSet<String> postIds = new TreeSet<>();
+		String sql = "SELECT post_id FROM post_likes WHERE user_id = " + user.getUserId();
+ 		PreparedStatement st;
+ 		Connection conn = null;
+ 		ResultSet result = null;
+		conn = (Connection) dataSource.getConnection();
+		st = conn.prepareStatement(sql);
+		result = st.executeQuery();
+		while(result.next()){
+			postIds.add(result.getString("post_id"));
+		}
+		for(String str : postIds){
+			posts.add(CachedObjects.getInstance().getOnePost(str));
+		}
+		return posts;
+ 	}
+ 	
  	
 	//delete post
  	public void deletePost(Post post, User user, Album album) throws ValidationException, SQLException{
