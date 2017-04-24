@@ -65,7 +65,7 @@ public class UserController {
 						session.setAttribute("user", u);
 						session.setAttribute("logged", true);
 					}
-				}	
+				}
 			} catch (ValidationException e) {
 				System.out.println(e.getMessage());
 			}
@@ -74,6 +74,7 @@ public class UserController {
 		return basic;
 	}
 	
+
 	@RequestMapping(value="/logout",method = RequestMethod.GET)
 	public void logout(HttpSession session, HttpServletResponse response) {
 		session.invalidate();

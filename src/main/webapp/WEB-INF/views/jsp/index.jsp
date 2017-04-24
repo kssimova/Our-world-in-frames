@@ -60,9 +60,6 @@
                         <a class="page-scroll" href="#portfolio">Login/Register</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#about">About</a>
-                    </li>
-                    <li>
                         <a class="page-scroll" href="#team">Team</a>
                     </li>
                     <li>
@@ -116,21 +113,25 @@
 	                            <div class="form-bottom login-form">
 				                    <div class="form-group">
 				                    	<label class="sr-only" for="form-username">Username</label>
-				                    	<input id = "username" name="form-username" type="text" placeholder="Username..."  class="form-username form-control" >
+				                    	<input id = "form-username" name="form-username" type="text" placeholder="Username..."  class="form-username form-control" >
 									</div>
 									<div class="form-group">
 				                        <label class="sr-only" for="form-password">Password</label>
-				                       	<input id = "password" name="form-password" type="password" placeholder="Password..." class="form-password form-control" >
+				                       	<input id = "form-password" name="form-password" type="password" placeholder="Password..." class="form-password form-control" >
 									</div>
-										<input id = "login" type="submit" value="Sign In" class="btn" style = "background-color:#dab3ff"" > 
+									<span id = "login_message" style = "color: red; font: 15px arial, sans-serif;" ;></span><br>
+										<button id ="login" type="submit" class="form-button form-control" style = "background-color:#dab3ff; height: 50px; font-size:18px; color: white; border: 3px solid #ddd;"> Sign in! </button>
 			                    </div>
+			                    
+			        
+			                    
 		                    </div>
 		                
 		                	<div class="social-login">
 	                        	<h3>...or login with:</h3>
 	                        	<div class="social-login-buttons">
 		                        	<a class="btn btn-link-1 btn-link-1-facebook" href="#">
-		                        		<i class="fa fa-facebook"></i> Facebook
+		                        		<i class="fa fa-facebook"> </i> Facebook
 		                        	</a>
 		                        	<a class="btn btn-link-1 btn-link-1-google-plus" href="#">
 		                        		<i class="fa fa-google-plus"></i> Google Plus
@@ -183,15 +184,16 @@
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-select-gender">Select gender</label>
-				                        		<select required name="form-select-gender" class="form-select-gender form-control" id="form-select-gender">
-				                       				 <option value="" selected>Select gender...</option>
+				                        		<select required name="form-select-gender" class="form-select-gender form-control" id="form-select-gender" style = "height: 50px; font-size:16px; outline: 0; background: #F5F5F5; border: 3px solid #ddd;">
+				                       				 <option value="" selected>Select gender...</option> 
                    									 <option value="male">Male</option>
                        								 <option value="female">Female</option>
 												</select>
 				                        </div>
-				                        <button type="submit" class="btn" style = "background-color:#dab3ff">Register!</button>
+				                        <button id = "register" type="submit" class="form-button form-control" style = "background-color:#dab3ff; height: 50px; font-size:18px; color: white; border: 3px solid #ddd;">Register!</button>
 				                    </form>
 			                    </div>
+			                 
                         	</div>
                         	
                         </div>
@@ -213,82 +215,7 @@
         <![endif]-->
         
     </section>
-
-    <!-- About Section -->
-    <section id="about">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2 class="section-heading">About</h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <ul class="timeline">
-                        <li>
-                            <div class="timeline-image">
-                                <img class="img-circle img-responsive" src="img/about/1.jpg" alt="">
-                            </div>
-                            <div class="timeline-panel">
-                                <div class="timeline-heading">
-                                    <h4>2009-2011</h4>
-                                    <h4 class="subheading">Our Humble Beginnings</h4>
-                                </div>
-                                <div class="timeline-body">
-                                </div>
-                            </div>
-                        </li>
-                        <li class="timeline-inverted">
-                            <div class="timeline-image">
-                                <img class="img-circle img-responsive" src="img/about/2.jpg" alt="">
-                            </div>
-                            <div class="timeline-panel">
-                                <div class="timeline-heading">
-                                    <h4>March 2011</h4>
-                                    <h4 class="subheading">An Agency is Born</h4>
-                                </div>
-                                <div class="timeline-body">
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="timeline-image">
-                                <img class="img-circle img-responsive" src="img/about/3.jpg" alt="">
-                            </div>
-                            <div class="timeline-panel">
-                                <div class="timeline-heading">
-                                    <h4>December 2012</h4>
-                                    <h4 class="subheading">Transition to Full Service</h4>
-                                </div>
-                                <div class="timeline-body">
-                                </div>
-                            </div>
-                        </li>
-                        <li class="timeline-inverted">
-                            <div class="timeline-image">
-                                <img class="img-circle img-responsive" src="img/about/4.jpg" alt="">
-                            </div>
-                            <div class="timeline-panel">
-                                <div class="timeline-heading">
-                                    <h4>July 2014</h4>
-                                    <h4 class="subheading">Phase Two Expansion</h4>
-                                </div>
-                                <div class="timeline-body">
-                                </div>
-                            </div>
-                        </li>
-                        <li class="timeline-inverted">
-                            <div class="timeline-image">
-                                <h4>Be Part
-                                    <br>Of Our
-                                    <br>Story!</h4>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
+    
 
     <!-- Team Section -->
     <section id="team" class="bg-light-gray">
