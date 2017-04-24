@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.ValidationException;
 
-import org.apache.catalina.webresources.Cache;
-import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ui.Model;
@@ -68,11 +66,11 @@ public class PostController {
 	
 	@RequestMapping(value="/add",method = RequestMethod.POST)
 	public Basic addPost(HttpServletRequest request, HttpSession session){
-		
+		TreeSet<String> tagsForRec = new TreeSet<>();
 		TreeSet<String> tags = new TreeSet<>();
 		String tagStr = request.getParameter("tags");
 		if(!tagStr.isEmpty() && tagStr != null){
-			tags = addTags(tagStr);
+			tags = addTags(tagStr, tagsForRec);
 		}		
 		String name = request.getParameter("name");
 		String description = request.getParameter("description");		
@@ -143,12 +141,12 @@ public class PostController {
 					JsonParser parser = new JsonParser();
 					JsonObject jsonObj = parser.parse(responseData).getAsJsonObject();
 					JsonObject obj2 = jsonObj.getAsJsonObject("data");
-					postId = obj2.get("id").toString();
+					postId = obj2.get("id").getAsString();
 					postId.replaceAll("\"", " ").trim();
-					picturePath = obj2.get("link").toString();
+					picturePath = obj2.get("link").getAsString();
 					picturePath.replaceAll("\"", " ").trim();
-					deleteHash = obj2.get("deletehash").toString();
-					deleteHash.replaceAll("\"", " ").trim();					
+					deleteHash = obj2.get("deletehash").getAsString();
+					deleteHash.replaceAll("\"", " ").trim();	
 					try {
 						postDAO.createPost((User)session.getAttribute("user"), name, description, LocalDate.now(), picturePath, tags, album, postId, deleteHash);
 					} catch (ValidationException e) {
@@ -248,46 +246,60 @@ public class PostController {
 	
 	
 	@RequestMapping(value="/like",method = RequestMethod.POST)
-	public String likePost(HttpServletRequest request, HttpSession session) {
-		if(session.getAttribute("logged")!= null){
-			User user = CachedObjects.getInstance().getOneUser((long)session.getAttribute("user_id"));
-			Post post = CachedObjects.getInstance().getOnePost(request.getParameter("post_id"));
-			try {
-				postDAO.addLike(post, user);
-			} catch (ValidationException e) {
-				System.out.println("Error in validation");
-			} catch (SQLException e) {
-				System.out.println(e.getMessage());
-			}	
-			return "PageView";
-		}else{
-			return "login";
-		}
+	public void likePost(HttpServletRequest request, HttpSession session) {
+		User user = (User)session.getAttribute("user");
+		Post post = CachedObjects.getInstance().getOnePost(request.getParameter("postId"));
+		try {
+			postDAO.addLike(post, user);
+		} catch (ValidationException e) {
+			System.out.println("Error in validation");
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}	
 	}
 	
 	
-	@RequestMapping(value="/unlike",method = RequestMethod.DELETE)
-	public String unlikePost(HttpServletRequest request, HttpSession session) {
-		if(session.getAttribute("logged")!= null){
-			User user = CachedObjects.getInstance().getOneUser((long)session.getAttribute("user_id"));
-			Post post = CachedObjects.getInstance().getOnePost(request.getParameter("post_id"));
-			try {
-				postDAO.removeLike(post, user);
-			} catch (ValidationException | SQLException e) {
-				System.out.println("Error in validation");
-			}	
-			return "PageView";
-		}else{
-			return "login";
-		}
+	@RequestMapping(value="/unlike",method = RequestMethod.POST)
+	public void unlikePost(HttpServletRequest request, HttpSession session) {
+		System.out.println(request.getParameter("postId"));
+		User user = (User)session.getAttribute("user");
+		Post post = CachedObjects.getInstance().getOnePost(request.getParameter("postId"));
+		try {
+			postDAO.removeLike(post, user);
+		} catch (ValidationException | SQLException e) {
+			System.out.println("Error in validation");
+		}	
 	}	
+	
+	@RequestMapping(value="/getLike",method = RequestMethod.GET)
+	public  TreeSet<Post> getLikedPosts(HttpSession session){
+		User user = (User)session.getAttribute("user");
+		TreeSet<Post> posts = new TreeSet<>();
+		if(session.getAttribute("logged")!= null){
+			if(CachedObjects.getInstance().getAllPosts().isEmpty()){
+				try {
+					postDAO.getAllPosts();
+					posts = postDAO.getAllLikedPosts(user);
+				} catch (ValidationException | SQLException e) {
+					System.out.println("i cant get all liked posts1");
+				}
+			}else{
+				try {
+					posts = postDAO.getAllLikedPosts(user);
+				} catch (SQLException e) {
+					System.out.println("i cant get all liked posts2");
+				}
+			}
+		}
+		return posts;
+	}
 	
 	@RequestMapping(value="/tag",method = RequestMethod.POST)
 	public TreeSet<Post> getTags(HttpSession session, HttpServletRequest request){
 		TreeSet<Post> posts = new TreeSet<>();
-		System.out.println(request.getParameter("tagche"));
+		TreeSet<String> tagsForRec = new TreeSet<>();
 		if(request.getParameter("tagche") != null){
-			TreeSet<String> tags = addTags(request.getParameter("tagcheta"));
+			TreeSet<String> tags = addTags(request.getParameter("tagche"), tagsForRec);
 			TreeSet<String> postIds = new TreeSet<>();
 			if(session.getAttribute("logged")!= null){
 				if(tags.size() > 0){
@@ -295,6 +307,7 @@ public class PostController {
 						try {
 							postDAO.getAllPosts();
 							postIds.addAll(CachedObjects.getInstance().getPhotosWithTag(tags));
+							postIds.addAll(CachedObjects.getInstance().getPhotosWithName(tags));
 							for(String postId : postIds){
 								posts.add(CachedObjects.getInstance().getOnePost(postId));
 							}
@@ -303,6 +316,7 @@ public class PostController {
 						}
 					}else{
 						postIds.addAll(CachedObjects.getInstance().getPhotosWithTag(tags));
+						postIds.addAll(CachedObjects.getInstance().getPhotosWithName(tags));
 						for(String postId : postIds){
 							posts.add(CachedObjects.getInstance().getOnePost(postId));
 						}
@@ -313,18 +327,16 @@ public class PostController {
 		return posts;
 	}
 		
- 	public TreeSet<String> addTags(String tag) {
-		TreeSet<String> tags = new TreeSet<>();
-  		if (tag.length() <= 0) {
+ 	public TreeSet<String> addTags(String tag, TreeSet<String> tags) {
+  		if (tag.length() == 0) {
   			return tags;
   		}
- 		if (tag.indexOf(',') < 0) {
- 			tags.add(tag.trim());
+ 		if(!tag.contains(",")){
+ 			tags.add(tag);
  			return tags;
  		}
  		tags.add(tag.substring(0, tag.indexOf(',')));
- 		String a = tag.substring(tag.indexOf(',') + 1).trim();
- 		addTags(a);
- 		return tags;
+ 		tag = tag.substring(tag.indexOf(',') + 1).trim();
+		return addTags(tag, tags);
  	}
 }

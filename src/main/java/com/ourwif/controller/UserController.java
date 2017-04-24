@@ -72,7 +72,6 @@ public class UserController {
 			}
 		basic = new Basic(true, "/ourwif/index");
 		basic.setId(u.getUserId());
-		//this will delete one comment.. request should contain the id of this comment 
 		return basic;
 	}
 	

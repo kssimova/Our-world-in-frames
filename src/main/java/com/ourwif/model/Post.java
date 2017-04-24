@@ -217,7 +217,7 @@ public class Post implements Comparable<Post>{
 	public int compareTo(Post post) {
 		int compare = this.name.compareTo(post.name);
 		if(compare == 0){
-			return this.dateCreated.compareTo(post.dateCreated);
+			return this.postId.compareTo(post.postId);
 		}
 		return compare;
 	}	

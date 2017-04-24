@@ -4,12 +4,12 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<link rel="stylesheet" type="text/css" href=css/bootstrap.min.css></link>
+	<link rel="stylesheet" type="text/css" href=css/aboutSectionStyle.css></link>
 	<link rel="stylesheet" type="text/css" href="css/API.css">
 <title>Insert title here</title>
 </head>
 <body>
-	<jsp:include page="LogedNav.jsp" />
+	<jsp:include page="Nav.jsp" />
 	<jsp:include page="APIResp.jsp" />
 </body>
 </html>

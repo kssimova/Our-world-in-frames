@@ -5,8 +5,7 @@
  <html>
  <head>
  <meta charset="utf-8">
- 	<link rel="stylesheet" type="text/css" href=css/bootstrap.min.css></link>
- 	<link rel="stylesheet" type="text/css" href="css/API.css">
+ 	<link rel="stylesheet" type="text/css" href=css/aboutSectionStyle.css></link>
  	<link rel="stylesheet" type="text/css" href="css/UserPage.css">
  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
  	<script src="js/profile.js"></script>
@@ -21,15 +20,13 @@
   	var count = 0;
   	var name = 'name';
   	var $album = $('#album');
+  	var $like = $('#like');
   	
   	$.ajax({
   		type: "POST",
   		url: 'user/profile',
   		dataType: "json",
   		success: function(user){
-  			$.each(user, function(index, val){
-  				console.log(index + " : " + val);
-  			});
   			$('#name').html(user.firstName + " " + user.lastName);
   			$('.followers').html("Followers: " + user.followers.length);
   			$('.following').html("Following: " + user.following.length);
@@ -46,75 +43,76 @@
   				$('.card-background').finf('img').remove();
   				$('.card-background').append('<img class="card-bkimg" alt="" src= "' + user.profilePhotoPath + '" >');
   			}
-  			
-   			
+  						
    			$.each(user.albums, function(index, val){
-   				if(val.photos.length == 0){
-  					$album.append(
-  					'<div class="col-md-4">' +
-  						'<div class="thumbnail">'+
-  							'<f:form commandName="goToPostPage" action="album" method = "GET" align="center" >' + 
- 							'<input type="image" src="http://i.imgur.com/fK51fmR.jpg" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
- 							'<input class = "inputAlbVal" type="hidden" name = "albumId" value="' + val.albumId + '" >' +  
-  								'<div class="caption">' + 
-  									'<p>' +
-  										val.name + 
-  									'</p>' + 
-  								'</div>'+ 
-  							'</f:form>' + 
-  						'</div> ' +
-  					'</div>');
-   				}
-  				
-   				$.each(val.photos, function(a, b){	
-   					if(name != val.name){
-  						$album.append(
-  								'<div class="col-md-4">' + 
-  									'<div class="thumbnail">' + 
-  										'<f:form commandName="goToPostPage" action="album" method = "GET" align="center" >' + 
-  											'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
-  											'<input type="hidden" name = "imgId" value="' + val.albumId + '" >' +  
-  											'<div class="caption">' + 
-  												'<p>' + 
-  													val.name + 
-  												'</p>' + 
- 											'</div>' + 
-  										'</f:form>' + 
-  									'</div>' +
-  								'</div>');
-  						name = val.name;				
-   					}
-   					if(count < 3){
-  						$img.append('<div class="col-md-4">' + 
-  								'<div class="thumbnail">' + 
-  									'<f:form commandName="goToPostPage" action="postView" method = "GET" align="center" >' + 
-  										'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
-  										'<input type="hidden" name = "imgId" value="' + b.postId + '" >' +  
-  										'<div class="caption">' + 
-  											'<p>' + 
-  												b.name +
-  											'</p>' + 
-  										'</div>' + 
-  									'</f:form>' + 
-  									'</div>' + 
-  								'</div>');			
-   						count++;
-   					}else if(count <= 4){
-  						$img.append('<div class="col-md-6">' + 
-  								'<div class="thumbnail">' + 
-  									'<f:form commandName="goToPostPage" action="postView" method = "GET" align="center" >' +
-  										'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:300px;width:auto;">' +
-  										'<input type="hidden" name = "imgId" value="' + b.postId + '" >' + 
-  										'<div class="caption">' +
-  											'<p>' + 
-  												b.name +
-  											'</p>' + 
-  										'</div>' + 
-  									'</f:form>' + 
-  									'</div>' +
-  								'</div>');					
-  						count++;				
-   					};
+	   			if(val.photos.length == 0){
+	  				$album.append(
+	  				'<div class="col-md-4">' +
+	  					'<div class="thumbnail">'+
+	  						'<f:form commandName="goToPostPage" action="album" method = "GET" align="center" >' + 
+	 						'<input type="image" src="http://i.imgur.com/fK51fmR.jpg" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
+	 						'<input class = "inputAlbVal" type="hidden" name = "albumId" value="' + val.albumId + '" >' +  
+	  							'<div class="caption">' + 
+	  								'<p>' +
+	  									val.name + 
+	  								'</p>' + 
+	 							'</div>'+ 
+	  						'</f:form>' + 
+	  					'</div> ' +
+	  				'</div>');
+	   			}
+	  			
+	   			$.each(val.photos, function(a, b){	
+	  				if(name != val.name){
+	  					$album.append(
+	  							'<div class="col-md-4">' + 
+	  								'<div class="thumbnail">' + 
+	  									'<f:form commandName="goToPostPage" action="album" method = "GET" align="center" >' + 
+	  										'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
+	  										'<input type="hidden" name = "imgId" value="' + val.albumId + '" >' +  
+	  										'<div class="caption">' + 
+	  											'<p>' + 
+	  												val.name + 
+	  											'</p>' + 
+	 										'</div>' + 
+	  									'</f:form>' + 
+	  								'</div>' +
+	  							'</div>');
+	  					name = val.name;				
+	   				}
+	   				if(count < 3){
+	  					$img.append('<div class="col-md-4">' + 
+	  							'<div class="thumbnail">' + 
+	  								'<f:form commandName="goToPostPage" action="postView" method = "GET" align="center" >' + 
+	  									'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
+	  									'<input type="hidden" name = "imgId" value="' + b.postId + '" >' +  
+	  									'<div class="caption">' + 
+	  										'<p>' + 
+	  											b.name +
+	  										'</p>' + 
+	  									'</div>' + 
+	  								'</f:form>' + 
+	  								'</div>' + 
+	  							'</div>');			
+	  					count++;
+	   				}else if(count <= 4){
+	  					$img.append('<div class="col-md-6">' + 
+	  							'<div class="thumbnail">' + 
+	  								'<f:form commandName="goToPostPage" action="postView" method = "GET" align="center" >' +
+	  									'<input type="image" src="' + b.picturePath + '" alt="Submit" style="height:300px;width:auto;">' +
+	  									'<input type="hidden" name = "imgId" value="' + b.postId + '" >' + 
+	  									'<div class="caption">' +
+	  										'<p>' + 
+	  											b.name +
+	  										'</p>' + 
+	  									'</div>' + 
+	  								'</f:form>' + 
+	  							'</div>' +
+	  						'</div>');					
+	  					count++;				
+	   				}else if(count> 4){
+	   					count = 0;
+	   				};
    				});
    			});
   		},
@@ -123,10 +121,46 @@
   			alert();
   		}
   	});
-  });
+  	
+  	var count1 = 0;
+  	$.ajax({
+  		type: "GET",
+  		url: 'post/getLike',
+  		dataType: "json",
+  		success: function(post){	
+			$.each(post, function(index, val){	
+				$.each(val, function(ind, va){
+					console.log(ind + " : " +va);	
+				});
+	   			if(count1 < 3){
+	  				$like.append('<div class="col-md-4">' + 
+	  						'<div class="thumbnail">' + 
+	  							'<f:form commandName="goToPostPage" action="postView" method = "GET" align="center" >' + 
+	  								'<input type="image" src="' + val.picturePath + '" alt="Submit" style="height:200px;width:auto;max-width:300px;">' + 
+	  								'<input type="hidden" name = "imgId" value="' + val.postId + '" >' +  
+	  								'<div class="caption">' + 
+	  									'<p>' + 
+	  										val.name +
+	  									'</p>' + 
+	  								'</div>' + 
+	  							'</f:form>' + 
+	  							'</div>' + 
+	  						'</div>');			
+	  				count1++;
+	   			}else if(count == 3){
+	   				count1 = 0;
+	   			};
+			});
+  		},
+  		error: function(data){
+  			console.log(data);
+  			alert(data);
+  		}
+  	});  	
+});
  </script>
  <body>
- 	<jsp:include page="LogedNav.jsp" />
+ 	<jsp:include page="Nav.jsp" />
  	
  	<div class="col-lg-12 col-md-12 col-sm-12">
  	    <div class="card hovercard">
@@ -146,7 +180,7 @@
  <!--  first row     -->
    <div class="container">
          <div class="row visible-lg-block">
-             <div class="col-lg-2 firstLarge content">
+             <div class="col-lg-2 firstLarge1 content">
                  <span class="followers" >Followers</span>
              </div>
              <div class="col-lg-2 content">
@@ -207,6 +241,9 @@
  				<input rel = "albums" class = "button btn2" type="submit" value="Galleries">
              </div>
              <div class="col-lg-2">
+ 				<input rel = "likes" class = "button btn2" type="submit" value="Liked photos">
+             </div>
+             <div class="col-lg-2">
  				<input rel = "about" class = "button btn3" type="submit" value="About">
         		</div>
       	 </div>
@@ -218,6 +255,9 @@
              </div>
              <div class="col-md-2">
  				<input rel = "albums" class = "button btn2" type="submit" value="Galleries">
+             </div>
+             <div class="col-md-2">
+ 				<input rel = "likes" class = "button btn2" type="submit" value="Liked photos">
              </div>
              <div class="col-md-2">
  				<input rel = "about" class = "button btn3" type="submit" value="About">
@@ -232,6 +272,9 @@
              <div class="col-md-3 second">
  				<input rel = "albums" class = "button btn2" type="submit" value="Galleries">
              </div>
+             <div class="col-md-3 second"">
+ 				<input rel = "likes" class = "button btn2" type="submit" value="Liked photos">
+             </div>
              <div class="col-md-3 second">
  				<input rel = "about" class = "button btn3" type="submit" value="About">
         		</div>
@@ -239,13 +282,16 @@
  	</div>
  	<div class="container">
          <div class="row visible-xs-block tabs">
-             <div class="col-md-2 second">
+             <div class="col-md-3 second">
  				<input rel = "images" class = "button btn1" type="submit" value="Photos">
              </div>
-             <div class="col-md-2 second">
+             <div class="col-md-3 second">
  				<input rel = "albums" class = "button btn2" type="submit" value="Galleries">
              </div>
-             <div class="col-md-2 second">
+             <div class="col-md-3 second"">
+ 				<input rel = "likes" class = "button btn2" type="submit" value="Liked photos">
+             </div>
+             <div class="col-md-3 second">
   				<input rel = "about" class = "button btn3" type="submit" value="About">
          		</div>
        	 </div>	
@@ -260,6 +306,11 @@
  	<!--  album panel     -->
  <div id = "albums" class = "panel">
  	<div id = "album" class="row"></div>
+ </div>
+ 
+  	<!--  like panel     -->
+ <div id = "likes" class = "panel">
+ 	<div id = "like" class="row"></div>
  </div>
  
  

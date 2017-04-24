@@ -13,14 +13,18 @@ public class CachedObjects {
 	
 	private static CachedObjects instance;
 	private final TreeMap<Long, User> allUsers = new TreeMap<>();
+	//user id -> user
 	private final TreeMap<Long, TreeMap<String, Post>> allPosts = new TreeMap<>();
+	//album id -> postId -> post
 	private final TreeMap<Long, Album> allAlbums = new TreeMap<>();
+	// Album id -> album
 	private final TreeMap<String, TreeSet<String>> allTags = new TreeMap<>();
+	// tag -> tree set of post id-s
+	private final TreeMap<String, TreeSet<String>> allPost = new TreeMap<>();
+	// name -> tree set of post id-s
 	
 	private CachedObjects() {
-
-	}
-	
+	}	
 	public static synchronized CachedObjects getInstance() {
 		if (instance == null) {
 			instance = new CachedObjects();
@@ -28,6 +32,8 @@ public class CachedObjects {
 		return instance;
 	}
 	
+	
+	//USER
 	public User getOneUser(long userId) {
 		return allUsers.get(userId);
 	}
@@ -53,8 +59,12 @@ public class CachedObjects {
 		return contains;
 	}
 	
+	//add user
+	public void addUser(User user){
+		allUsers.put(user.getUserId(), user);
+	}
 	
-
+	//POST
 	public Post getOnePost(String postId) {
 		Post p = null;
 		for(Entry <Long, TreeMap<String, Post>> e : allPosts.entrySet()){
@@ -96,11 +106,6 @@ public class CachedObjects {
 			}
 		}
 	}	
-	
-	//add user
-	public void addUser(User user){
-		allUsers.put(user.getUserId(), user);
-	}
 		
 	//add post
 	public void addPost(Post post, Album album){
@@ -110,6 +115,11 @@ public class CachedObjects {
 		if(!allPosts.get(album.getAlbumId()).containsKey(post.getPostId())){
 			allPosts.get(album.getAlbumId()).put(post.getPostId(), post);
 		}
+		
+		if(!allPost.containsKey(post.getName())){
+			allPost.put(post.getName(), new TreeSet<>());
+		}
+		allPost.get(post.getName()).add(post.getPostId());
 	}
 	
 	//add post
@@ -120,8 +130,19 @@ public class CachedObjects {
 		if(!allPosts.get(albumId).containsKey(post.getPostId())){
 			allPosts.get(albumId).put(post.getPostId(), post);
 		}
+		
+		if(!allPost.containsKey(post.getName())){
+			allPost.put(post.getName(), new TreeSet<>());
+		}
+		allPost.get(post.getName()).add(post.getPostId());
 	}
 	
+	public boolean containsPost(String postId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	//ALBUM
 	//add albums
 	public void addAlbums(Album album){
 		if(!allAlbums.containsKey(album.getAlbumId())){
@@ -129,20 +150,6 @@ public class CachedObjects {
 		}
 	}
 	
-	//just for tests
-	public Map <Long, TreeMap<String, Post>> getAllPosts() {
-		return  Collections.unmodifiableSortedMap(allPosts);
-	}
-	
-	public Map <Long, Album> getAllAlbums(){
-		return  Collections.unmodifiableSortedMap(allAlbums);
-	}
-
-	public boolean containsPost(String postId) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 	public Album getOneAlbum(long albumId) {
 		return allAlbums.get(albumId);
 	}
@@ -156,20 +163,17 @@ public class CachedObjects {
 		}
 		return album;
 	}
-
+	
 	public boolean containsAlbum(Integer albumId) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	public Map<Long, User> getAllUsers() {
-		return  Collections.unmodifiableSortedMap(allUsers);
-	}
-
-	public Map<String, TreeSet<String>> getAllTags() {
-		return  Collections.unmodifiableSortedMap(allTags);
-	}
 	
+	
+	//COMMENTS
+	
+	
+	//TAGS
 	public void addTags(TreeSet <String> t, Post post){
 		for(String tag: t){
 			String tagche = tag.toLowerCase().trim();
@@ -182,17 +186,48 @@ public class CachedObjects {
 		}
 	}
 	
+	//SEARCH
 	public TreeSet<String> getPhotosWithTag(TreeSet <String> t){
 		TreeSet<String> posts = new TreeSet<>();
 		for(String alltag : allTags.keySet()){
 			for(String tag: t){
 				String tagche = tag.toLowerCase().trim();
 				if(alltag.contains(tagche)){
-					posts.addAll(allTags.get(tagche));
+					posts.addAll(allTags.get(alltag));
 				}
 			}
 		}
 		return posts;
 	}
 	
+	public TreeSet<String> getPhotosWithName(TreeSet <String> t){
+		TreeSet<String> posts = new TreeSet<>();
+		for(String allpost : allPost.keySet()){
+			for(String str: t){
+				String stri =  str.toLowerCase().trim();
+				if(allpost.contains(stri)){
+					posts.addAll(allPost.get(allpost));
+				}
+			}
+		}
+		return posts;
+	}
+	
+	
+	//just for tests
+	public Map <Long, TreeMap<String, Post>> getAllPosts() {
+		return  Collections.unmodifiableSortedMap(allPosts);
+	}
+	
+	public Map <Long, Album> getAllAlbums(){
+		return  Collections.unmodifiableSortedMap(allAlbums);
+	}
+	
+	public Map<Long, User> getAllUsers() {
+		return  Collections.unmodifiableSortedMap(allUsers);
+	}
+	
+	public Map<String, TreeSet<String>> getAllTags() {
+		return  Collections.unmodifiableSortedMap(allTags);
+	}
 }
