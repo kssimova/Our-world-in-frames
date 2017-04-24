@@ -41,39 +41,5 @@
 <br>
 <br>
 
-
-<input id ="getImgButton" type="submit" value="getImg">
-Response from ajax : <ul id="ajaxGetImg"></ul>
-
-<br>
-<br>
-
-
-<br>
-<br>
-<p><b>Your comment: </b></p>
-<p>comment: <input type="text" id="comment-content"></p>
-<input id = "addCommentButton" type="submit" value="submit">
-this is just one demo button for comments : 
-<br>
-<ul id="comments"></ul>
-
-<br>
-<br>
-
-
-<FORM enctype="multipart/form-data" action="/post/add" method="post">
-	<b><h1> Choose your image:</h1></b>
-		  <INPUT NAME="file" TYPE="file">
-		 </br>
-		 <input type="submit" value="Submit">
-	</div>
-</FORM>
-<br>
-<br>
-
-<f:form commandName="getApi" action="/ourwif/api" method = "POST">
-	<button class= "removeStyle" type="submit" value="Go to API"></button>
-</f:form>
 </body>
 </html>

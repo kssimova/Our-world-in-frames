@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.ValidationException;
 
-import org.apache.catalina.webresources.Cache;
-import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ui.Model;
@@ -300,7 +298,6 @@ public class PostController {
 	public TreeSet<Post> getTags(HttpSession session, HttpServletRequest request){
 		TreeSet<Post> posts = new TreeSet<>();
 		TreeSet<String> tagsForRec = new TreeSet<>();
-		String s = request.getParameter("tagche");
 		if(request.getParameter("tagche") != null){
 			TreeSet<String> tags = addTags(request.getParameter("tagche"), tagsForRec);
 			TreeSet<String> postIds = new TreeSet<>();

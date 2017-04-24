@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ourwif.DAO.AlbumDAO;
 import com.ourwif.model.Album;
 import com.ourwif.model.CachedObjects;
-import com.ourwif.model.Post;
 import com.ourwif.model.User;
 
 @RestController
