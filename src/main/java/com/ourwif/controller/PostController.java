@@ -37,6 +37,7 @@ import com.ourwif.model.User;
 public class PostController {
 	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 	PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
+	private static final String ACCESS_TOKEN = "bc232b87907ff074efdffbbdaaaaa53aada282a2";
 
 	
 	@RequestMapping(value="/get",method = RequestMethod.GET)
@@ -49,15 +50,12 @@ public class PostController {
 				if(CachedObjects.getInstance().getAllPosts().isEmpty()){
 					try {
 						postDAO.getAllPosts();
-						post = CachedObjects.getInstance().getOnePost(postId);
-						System.out.println(post.toString());
+
 					} catch (ValidationException | SQLException e) {
 						System.out.println("i cant get all posts");
 					}
-				}else{
-					post = CachedObjects.getInstance().getOnePost(postId);
-					System.out.println(post.toString());
 				}
+				post = CachedObjects.getInstance().getOnePost(postId);
 			}
 		}
 		return post;
@@ -101,7 +99,7 @@ public class PostController {
 				System.out.println(e2.getMessage());
 			}				
 			//set request
-			String access_token = "bc232b87907ff074efdffbbdaaaaa53aada282a2";
+
 			// String expires_in="2419200";
 			// String token_type = "bearer";
 			// String refresh_token = "412b9ea1f4dfefb804e5746e8f6590311b2e0e26"; 
@@ -109,7 +107,7 @@ public class PostController {
 			// String account_id = "335056";
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
-			connection.setRequestProperty("authorization", "Bearer " + access_token);
+			connection.setRequestProperty("authorization", "Bearer " + ACCESS_TOKEN);
 			try {
 				connection.setRequestMethod("POST");
 				connection.connect();
@@ -279,16 +277,14 @@ public class PostController {
 			if(CachedObjects.getInstance().getAllPosts().isEmpty()){
 				try {
 					postDAO.getAllPosts();
-					posts = postDAO.getAllLikedPosts(user);
 				} catch (ValidationException | SQLException e) {
 					System.out.println("i cant get all liked posts1");
 				}
-			}else{
-				try {
-					posts = postDAO.getAllLikedPosts(user);
-				} catch (SQLException e) {
-					System.out.println("i cant get all liked posts2");
-				}
+			}
+			try {
+				posts = postDAO.getAllLikedPosts(user);
+			} catch (SQLException e) {
+				System.out.println("i cant get all liked posts2");
 			}
 		}
 		return posts;
@@ -306,20 +302,15 @@ public class PostController {
 					if(CachedObjects.getInstance().getAllTags().isEmpty()){
 						try {
 							postDAO.getAllPosts();
-							postIds.addAll(CachedObjects.getInstance().getPhotosWithTag(tags));
-							postIds.addAll(CachedObjects.getInstance().getPhotosWithName(tags));
-							for(String postId : postIds){
-								posts.add(CachedObjects.getInstance().getOnePost(postId));
-							}
+
 						} catch (ValidationException | SQLException e) {
 							System.out.println("i cant get all posts");
 						}
-					}else{
-						postIds.addAll(CachedObjects.getInstance().getPhotosWithTag(tags));
-						postIds.addAll(CachedObjects.getInstance().getPhotosWithName(tags));
-						for(String postId : postIds){
-							posts.add(CachedObjects.getInstance().getOnePost(postId));
-						}
+					}
+					postIds.addAll(CachedObjects.getInstance().getPhotosWithTag(tags));
+					postIds.addAll(CachedObjects.getInstance().getPhotosWithName(tags));
+					for(String postId : postIds){
+						posts.add(CachedObjects.getInstance().getOnePost(postId));
 					}
 				}
 			}

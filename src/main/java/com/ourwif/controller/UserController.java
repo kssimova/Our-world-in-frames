@@ -49,22 +49,18 @@ public class UserController {
 		User u = null;
 			try {
 				if(userDAO.validLogin(username, password)){
-					if(CachedObjects.getInstance().containsUser(username)){
-						u = CachedObjects.getInstance().getOneUser(username);
-						session.setAttribute("username", username);
-						session.setAttribute("user", u);
-						session.setAttribute("logged", true);
-					}else{
+					if(!CachedObjects.getInstance().containsUser(username)){
 						try {
 							userDAO.getAllUsers();
 						} catch (ValidationException e) {
 							System.out.println("ops cant log in");
 						}
-						u = CachedObjects.getInstance().getOneUser(username);
-						session.setAttribute("username", username);
-						session.setAttribute("user", u);
-						session.setAttribute("logged", true);
 					}
+					u = CachedObjects.getInstance().getOneUser(username);
+					session.setAttribute("username", username);
+					session.setAttribute("user", u);
+					session.setAttribute("logged", true);
+					
 				}
 			} catch (ValidationException e) {
 				System.out.println(e.getMessage());

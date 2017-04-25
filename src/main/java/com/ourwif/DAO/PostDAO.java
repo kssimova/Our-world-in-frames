@@ -85,6 +85,7 @@ public class PostDAO {
 		ResultSet result = null;
 	 	ArrayList<Long> lonelyTags = new ArrayList<>();
 		Connection conn = null;
+		CachedObjects cachedObj = CachedObjects.getInstance();
  		try {
  			conn = (Connection) dataSource.getConnection();
 			conn.setAutoCommit(false);
@@ -166,8 +167,8 @@ public class PostDAO {
 	 		}
  			conn.close();
 	 	}				
- 		CachedObjects.getInstance().addPost(post, album);
-		CachedObjects.getInstance().addTags(tags, post);
+ 		cachedObj.addPost(post, album);
+ 		cachedObj.addTags(tags, post);
  		return post;
 	}
 		
@@ -323,8 +324,6 @@ public class PostDAO {
  	
 	//add Like
  	public void addLike(Post post, User user) throws ValidationException, SQLException{
- 		System.out.println(post.toString());
- 		System.out.println(post.getPostId());
 		String sql = "INSERT INTO post_likes (user_id, post_id) VALUES (?, ?)";
  		PreparedStatement st;
  		Connection conn = null;
@@ -493,6 +492,7 @@ public class PostDAO {
 	    	context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 			CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
 			Connection conn = null;
+			CachedObjects cachedObj = CachedObjects.getInstance();
 			try{
 				conn = (Connection) dataSource.getConnection();
 				conn.setAutoCommit(false);
@@ -535,8 +535,8 @@ public class PostDAO {
 							Post post = new Post(user, result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), result.getString("picture_path"), tags, str, result.getString("delete_hash"));
 							commentDAO.getAllComments(post);
 							//add all post in right albums
-							CachedObjects.getInstance().addPost(post, albumId);
-							CachedObjects.getInstance().addTags(tags, post);
+							cachedObj.addPost(post, albumId);
+							cachedObj.addTags(tags, post);
 						}
 						tags.clear();
 			 		}
