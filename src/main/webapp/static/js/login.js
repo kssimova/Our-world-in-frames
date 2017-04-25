@@ -18,7 +18,8 @@ $(function () {
 				window.location = ourUser.url;
 			},
 			error: function(){
-				$("span").append(" &nbsp; *Wrong username or password! Please try again! <br>");
+				$("span").html("");
+				$("span").html(" &nbsp; *Wrong username or password! Please try again! <br>");
 				document.getElementById('form-username').value = "";
 				document.getElementById('form-password').value = "";
 			}

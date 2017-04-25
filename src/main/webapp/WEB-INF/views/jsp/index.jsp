@@ -58,10 +58,10 @@
                     </li>
                     
                     <li>
-                        <a class="page-scroll" href="#portfolio">Login/Register</a>
+                        <a class="page-scroll" href="#pointer">Login/Register</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#team">Team</a>
+                        <a class="page-scroll" href="#team-pointer">Team</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="#contact">Contact</a>
@@ -80,9 +80,10 @@
     <header>
         <div class="container">
             <div class="intro-text">
-                <div class="intro-lead-in">This is our world in frames!</div>
-                <div class="intro-heading">Find your inspiration</div>
-                <a href="#services" class="page-scroll btn btn-xl">Get Started!</a>
+                <div class="intro-lead-in"  style = "font-family: Kaushan Script, Helvetica Neue, Helvetica, Arial, cursive; font-size: 50px">This is our world in frames!</div>
+                <div class="intro-heading" style = "font-family: Kaushan Script, Helvetica Neue, Helvetica, Arial, cursive; font-size: 80px">Find your inspiration</div>
+                <a href="#pointer" class="page-scroll btn btn-xl" style = "font-family: Kaushan Script, Helvetica Neue, Helvetica, Arial, cursive; font-size: 25px; background-color: #A386BF">Get Started!</a>
+               <br><br><br><br>
             </div>
         </div>
     </header>
@@ -90,16 +91,15 @@
     
 
     <!-- Login/Register Grid Section -->
-    <section id="portfolio" class="bg-light-gray"S>
-        
+    <section id="portfolio" class="bg-light-gray">      
          <!-- Top content -->
         <div class="top-content">
         	
             <div class="inner-bg">
-                <div class="container">
+                <div class="container" id = "pointer">
                     
                     <div class="row">
-                        <div class="col-sm-5">
+                        <div class="col-sm-5" >
                         	
                         	<div class="form-box">
 	                        	<div class="form-top">
@@ -150,7 +150,7 @@
                         	<div class="form-box">
                         		<div class="form-top">
 	                        		<div class="form-top-left">
-	                        			<h3 >Register here!</h3>
+	                        			<h3 style = "height: 50px; font-size:24px; font-family: Arial, Helvetica, sanf-serif; font-style: italic">Register here!</h3>
 	                            		<p>If you don't have an account create one:</p>
 	                        		</div>
 	                        		<div class="form-top-right">
@@ -194,6 +194,14 @@
                        								 <option value="female">Female</option>
 												</select>
 				                        </div>
+				                        <div class="form-group">
+				                        	<label class="sr-only" for="form-select-city-country">Select country and city</label>
+				                        		<select required name="form-select-city-country" class="form-select-city-country form-control" id="form-select-city-country" style = "height: 50px; font-size:16px; outline: 0; background: #F5F5F5; border: 3px solid #ddd;">
+				                       				 <option value="" selected>Select city and country...</option> 
+                   									 <option value="male">Male</option>
+                       								 <option value="female">Female</option>
+												</select>
+				                        </div>
 				                        <button id = "register" type="submit" class="form-button form-control" style = "background-color:#dab3ff; height: 50px; font-size:18px; color: white; border: 3px solid #ddd;">Register!</button>
 				                    </form>
 			                    </div>
@@ -211,11 +219,15 @@
     </section>
     
 
+
     <!-- Team Section -->
-    <section id="team" class="bg-light-gray">
+    
+    <section id="team" class="bg-light-gray"> <br><br>
+             <span id = "team-pointer"> </span>
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
+            <div class="row" >
+                <div class="col-lg-12 text-center" >
+               
                     <h2 class="section-heading"><font color=#dab3ff> Our Amazing Team </font></h2>
                     <h3 class="section-subheading text-muted">This is our amazing team!</h3>
                 </div>

@@ -82,10 +82,10 @@ h1,h2,h3,h4,h5,h6 {
   font-size: 18px;
   padding: 20px 40px;
 }
-.btn-xl:hover,.btn-xl:focus,.btn-xl:active,.btn-xl.active,.open .dropdown-toggle.btn-xl {
+.intro-headingl:hover,.intro-heading:focus,.intro-heading:active,.intro-heading.active,.open .dropdown-toggle.intro-heading {
   color: white;
   background-color: #dab3ff;
-  border-color: #f6bf01;
+  border-color: #dab3ff;
 }
 .btn-xl:active,.btn-xl.active,.open .dropdown-toggle.btn-xl {
   background-image: none;
@@ -176,7 +176,7 @@ h1,h2,h3,h4,h5,h6 {
   }
 }
 header {
-  background-image: url('../img/universe1.jpg');
+  background-image: url('../img/space1.jpg');
   background-repeat: no-repeat;
   background-attachment: scroll;
   background-position: center center;
