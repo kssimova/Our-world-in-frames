@@ -2,6 +2,7 @@ package com.ourwif.controller;
 
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ourwif.DAO.PostDAO;
 import com.ourwif.DAO.UserDAO;
 import com.ourwif.model.Basic;
 import com.ourwif.model.CachedObjects;
@@ -25,9 +27,9 @@ import com.ourwif.model.User;
 @RestController
 @RequestMapping(value= "/user")
 public class UserController {
-	ApplicationContext context =
-    		new ClassPathXmlApplicationContext("Spring-Module.xml");
+	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 	UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
+	PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
 	
 	
 	@RequestMapping(value="/api", method=RequestMethod.GET)
@@ -82,17 +84,27 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/register",method = RequestMethod.POST)
-	public String register(Model model, HttpSession session, HttpServletRequest request) {
+	public String register(HttpSession session, HttpServletRequest request) {
 
 		//this will delete one comment.. request should contain the id of this comment 
 		return "UnlogedLogin";
 	}
 	
-
-	@RequestMapping(value="/{user_id}",method = RequestMethod.GET)
-	public User getUser(Model model, @PathVariable("user_id") String productId) {
-		// for viewing one profile
-		return null;
+	//get user from post id
+	@RequestMapping(value="/{post_id}",method = RequestMethod.GET)
+	public User getUser(Model model, @PathVariable("post_id") String postId) {
+		System.out.println(postId);
+		CachedObjects cachedObj = CachedObjects.getInstance();
+		User user = null;
+		if(cachedObj.getAllPosts().isEmpty()){
+			try {
+				postDAO.getAllPosts();
+			} catch (ValidationException | SQLException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		user = cachedObj.getOnePost(postId).getUser();		
+		return user;
 	}
 	
 	@RequestMapping(value="/change",method = RequestMethod.PUT)
@@ -102,13 +114,26 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/follow",method = RequestMethod.POST)
-	public String follow(Model model, HttpServletRequest request) {
-
-		//this will delete one comment.. request should contain the id of this comment 
-		return "user";
+	public void follow(HttpSession session,  HttpServletRequest request) {
+		String postId = request.getParameter("postId");
+		CachedObjects cachedObj = CachedObjects.getInstance();
+		User follower = (User) session.getAttribute("user");
+		if(cachedObj.getAllPosts().isEmpty()){
+			try {
+				postDAO.getAllPosts();
+			} catch (ValidationException | SQLException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		User user = cachedObj.getOnePost(postId).getUser();
+		try {
+			userDAO.followUser(follower, user);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 	
-	@RequestMapping(value="/follow",method = RequestMethod.DELETE)
+	@RequestMapping(value="/unfollow",method = RequestMethod.POST)
 	public String unfollow(Model model, HttpServletRequest request) {
 		//this will delete one comment.. request should contain the id of this comment 
 		return "user";

@@ -65,7 +65,7 @@ $(function () {
 											'</li>' +
 										'</ul>' +
 									'</span>');			 							 
-	  			$('#img').html(' <img class="img-fluid" src="'+ post.picturePath +'" alt="">');
+	  			$('#img').html(' <img class="img-fluid" src="'+ post.picturePath +'" alt="" style = "max-width: 100%;" >');
 	  			$('#desc').html(post.description);
 				$.each(post.tags, function(index, val){
 					tagcheta += val + ", ";
@@ -163,6 +163,7 @@ $(function () {
 		});
 	}, 1000);
 	
+	//get all coments
 	setTimeout(function(){	
 		$comments = $('#comments');	
 		$.ajax({
@@ -210,6 +211,8 @@ $(function () {
 		});	
 		}, 300);
 	});	
+	
+	//create new comment 
 	$(function () {	
 		var url = window.location.href;
 		var n = url.indexOf("imgId=");
@@ -277,13 +280,50 @@ $(function () {
 					},
 					error: function(e){
 						alert(e);
-						console.log(commentche.postId);
-						console.log($comment);
 					}
 				});
 			});
 		}, 1100);
-	});
+		
+		//dispay post creator
+		var numOfPhotos = 0;
+		$.ajax({
+			type: 'GET',
+			url: 'user/' + $postId,
+			success: function(user){
+				$.each(user.albums, function (i, v){
+					numOfPhotos += v.photos.length;
+				});
+				$('#username').html("Creator: " + user.username);
+		  		$('#followers').html("Followers: " + user.followers.length);
+		  		$('#photos').html("Photos: " + numOfPhotos);
+			},			
+			error: function(e){
+				alert(e);
+				console.log($postId);
+			}
+		});
+		
+	// follow user 
+	$('#follow').on('click', function(){
+		var postche = {
+				postId : $postId
+			};
+		$.ajax({
+			type: 'POST',
+			url: 'user/follow',
+			data: postche,
+			success: function(){	 
+				console.log("hi");
+			},
+			error: function(e){
+				alert(e);
+				console.log($postId);
+			}
+
+		});	
+	});	
+});
 
 
 </script>
@@ -309,8 +349,12 @@ $(function () {
             </div>
 
             <div class="col-md-3">
-                <h3 class="my-3">Description</h3>
+                <h3 class="my-3">Description:</h3>
                 <p id = "desc"></p>
+                <h3 id = "username" class="my-3"></h3>
+                <h3 id = "followers" class="my-3"></h3>
+                <h3 id = "photos" class="my-3"></h3>
+                  <button class="btn btn-success btn-circle text-uppercase" type="submit" id="follow"><span class="glyphicon glyphicon-send"></span> Follow</button>
             </div>
 
         </div>

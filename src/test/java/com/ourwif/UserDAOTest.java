@@ -2,6 +2,7 @@ package com.ourwif;
 
 import static org.junit.Assert.*;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -162,7 +163,7 @@ public class UserDAOTest {
 	}
 
 	@Test
-	public void testFollowUser() {
+	public void testFollowUser() throws SQLException {
 		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		this.user();
 		userDAO.followUser(krisi, mimi);	
