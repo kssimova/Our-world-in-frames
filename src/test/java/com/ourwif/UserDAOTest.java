@@ -32,7 +32,7 @@ public class UserDAOTest {
 	public void testGetAllUsers() {	
 		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		try {
-			List<User> allUsers = userDAO.getAllUsers();
+			List<User> allUsers = (List<User>) userDAO.getAllUsers();
 		} catch (ValidationException e) {
 			System.out.println(e.getMessage());
 		}

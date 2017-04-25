@@ -81,7 +81,7 @@ h1,h2,h3,h4,h5,h6 {
 .btn-xl:hover,.btn-xl:focus,.btn-xl:active,.btn-xl.active,.open .dropdown-toggle.btn-xl {
   color: white;
   background-color: #dab3ff;
-  border-color: #f6bf01;
+  border-color: #ccc;
 }
 .btn-xl:active,.btn-xl.active,.open .dropdown-toggle.btn-xl {
   background-image: none;
@@ -168,7 +168,7 @@ h1,h2,h3,h4,h5,h6 {
   }
 }
 header {
-  background-image: url('../img/universe1.jpg');
+  background-image: url('../img/space1.jpg');
   background-repeat: no-repeat;
   background-attachment: scroll;
   background-position: center center;

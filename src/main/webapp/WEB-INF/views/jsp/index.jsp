@@ -55,12 +55,11 @@
                     <li class="hidden">
                         <a href="#page-top"></a>
                     </li>
-                    
                     <li>
-                        <a class="page-scroll" href="#portfolio">Login/Register</a>
+                        <a class="page-scroll" href="#pointer">Login/Register</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#team">Team</a>
+                        <a class="page-scroll" href="#team-pointer">Team</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="#contact">Contact</a>
@@ -79,9 +78,10 @@
     <header>
         <div class="container">
             <div class="intro-text">
-                <div class="intro-lead-in">This is our world in frames!</div>
-                <div class="intro-heading">Find your inspiration</div>
-                <a href="#services" class="page-scroll btn btn-xl">Get Started!</a>
+                <div class="intro-lead-in"  style = "font-family: Kaushan Script, Helvetica Neue, Helvetica, Arial, cursive; font-size: 50px">This is our world in frames!</div>
+                <div class="intro-heading" style = "font-family: Kaushan Script, Helvetica Neue, Helvetica, Arial, cursive; font-size: 80px">Find your inspiration</div>
+                <a href="#pointer" class="page-scroll btn btn-xl" style = "font-family: Kaushan Script, Helvetica Neue, Helvetica, Arial, cursive; font-size: 25px; background-color: #A386BF">Get Started!</a>
+               <br><br><br><br>
             </div>
         </div>
     </header>
@@ -89,22 +89,21 @@
     
 
     <!-- Login/Register Grid Section -->
-    <section id="portfolio" class="bg-light-gray"S>
-        
+    <section id="portfolio" class="bg-light-gray">      
          <!-- Top content -->
         <div class="top-content">
         	
             <div class="inner-bg">
-                <div class="container">
+                <div class="container" id = "pointer">
                     
                     <div class="row">
-                        <div class="col-sm-5">
+                        <div class="col-sm-5" >
                         	
                         	<div class="form-box">
 	                        	<div class="form-top">
 	                        		<div class="form-top-left">
-	                        			<h3>Login to our site</h3>
-	                            		<p>Enter username and password to log in:</p>
+	                        			<h3 style = "font-family: Alegreya Sans; font-size: 28px">Login to our site!</h3>
+	                            		<p style = "font-family: Alegreya Sans; font-size: 18px">Enter username and password to log in:</p>
 	                        		</div>
 	                        		<div class="form-top-right">
 	                        			<i class="fa fa-key"></i>
@@ -149,8 +148,8 @@
                         	<div class="form-box">
                         		<div class="form-top">
 	                        		<div class="form-top-left">
-	                        			<h3 >Register here!</h3>
-	                            		<p>If you don't have an account create one:</p>
+	                        			<h3 style = "font-family: Alegreya Sans; font-size: 28px">Register here!</h3>
+	                            		<p style = "font-family: Alegreya Sans; font-size: 18px">If you don't have an account create one:</p>
 	                        		</div>
 	                        		<div class="form-top-right">
 	                        			<i class="fa fa-pencil"></i>
@@ -158,37 +157,37 @@
 	                            </div>
 	                            <div class="form-bottom">
 				                    <form role="form" action="" method="post" class="registration-form">
-				                    	<div class="form-group">
-				                    		<label class="sr-only" for="form-first-name">First name</label>
-				                        	<input type="text" name="form-first-name" required="required"S placeholder="First name..." class="form-first-name form-control" id="form-first-name">
-				                        </div>
-				                        <div class="form-group">
-				                        	<label class="sr-only" for="form-last-name">Last name</label>
-				                        	<input type="text" name="form-last-name" required="required" placeholder="Last name..." class="form-last-name form-control" id="form-last-name">
-				                        </div>
 				                        <div class="form-group">
 				                    		<label class="sr-only" for="form-username">Username</label>
-				                        	<input type="text" name="form-username" required="required" placeholder="Username..." class="form-username form-control" id="form-username">
+				                        	<input type="text" id = "register-username" name="form-username" required="required" placeholder="Username..." class="form-username form-control">
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-email">Email</label>
-				                        	<input type="text" name="form-email" required="required" placeholder="Email..." class="form-email form-control" id="form-email">
+				                        	<input type="text" id = "register-email" name="form-email" required="required" placeholder="Email..." class="form-email form-control">
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-password">Password</label>
-				                        	<input type="password" name="form-password" required="required" placeholder="Password..." class="form-password form-control" id="form-password">
+				                        	<input type="password" id = "register-password" name="form-password" required="required" placeholder="Password..." class="form-password form-control">
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-confirm-password">Confirm Password</label>
-				                        	<input type="password" name="form-confirm-password" required="required" placeholder="Confirm password..." onChange="checkPasswordMatch()" class="form-confirm-password form-control" id="form-confirm-password" >
+				                        	<input type="password" id = "register-confirm-password" name="form-confirm-password" required="required" placeholder="Confirm password..." onChange="checkPasswordMatch()" class="form-confirm-password form-control">
 				                        </div>
 				                        
-				                        <div class="registrationFormAlert" id="divCheckPasswordMatch">    </div>
+				                        <span class="registrationFormAlert" id="divCheckPasswordMatch" style = "font: 15px arial, sans-serif;">   </span><br>
 				                        
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-select-gender">Select gender</label>
-				                        		<select required name="form-select-gender" class="form-select-gender form-control" id="form-select-gender" style = "height: 50px; font-size:16px; outline: 0; background: #F5F5F5; border: 3px solid #ddd;">
+				                        		<select required name="form-select-gender"  id="form-select-gender" class="form-select-gender form-control"style = "height: 50px; font-size:16px; outline: 0; background: #F5F5F5; border: 3px solid #ddd;">
 				                       				 <option value="" selected>Select gender...</option> 
+                   									 <option value="male">Male</option>
+                       								 <option value="female">Female</option>
+												</select>
+				                        </div>
+				                        <div class="form-group">
+				                        	<label class="sr-only" for="form-select-city-country">Select country and city</label>
+				                        		<select required name="form-select-city-country" class="form-select-city-country form-control" id="form-select-city-country" style = "height: 50px; font-size:16px; outline: 0; background: #F5F5F5; border: 3px solid #ddd;">
+				                       				 <option value="" selected>Select city and country...</option> 
                    									 <option value="male">Male</option>
                        								 <option value="female">Female</option>
 												</select>
@@ -210,11 +209,15 @@
     </section>
     
 
+
     <!-- Team Section -->
-    <section id="team" class="bg-light-gray">
+    
+    <section id="team" class="bg-light-gray"> <br><br>
+             <span id = "team-pointer"> </span>
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
+            <div class="row" >
+                <div class="col-lg-12 text-center" >
+               
                     <h2 class="section-heading"><font color=#dab3ff> Our Amazing Team </font></h2>
                     <h3 class="section-subheading text-muted">This is our amazing team!</h3>
                 </div>
@@ -322,6 +325,17 @@
             </div>
         </div>
     </section>
+    
+    
+     <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="copyright" style = "color: black">Copyright &copy; Our world in frames 2017. Designed by Mariya & Kristina</span>
+                </div>
+            </div>
+        </div>
+    </footer>
 
 
    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
