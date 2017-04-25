@@ -8,11 +8,14 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Collections;
 
 import javax.sql.DataSource;
 import javax.xml.bind.ValidationException;
 
+import org.apache.catalina.webresources.Cache;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -143,12 +146,12 @@ public class UserDAO {
 		
 	}
 		
-	public List<User> getAllUsers() throws ValidationException{
+	public Map<Long, User> getAllUsers() throws ValidationException{
 		context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
-		ArrayList<User> allUsers = new ArrayList<>();
+		TreeMap<Long, User> allUsers = new TreeMap<>();
 		Connection connection = null;
 		try {
 			connection = (Connection) dataSource.getConnection();
@@ -168,7 +171,7 @@ public class UserDAO {
 				}
 				user.changeCity(result.getString("city_name"));
 				user.changeCountry(result.getString("country_name"));
-				allUsers.add(user);
+				allUsers.put(user.getUserId(), user);
 				CachedObjects.getInstance().addUser(user);
 				user.addAllAlbums(albumDAO.getUserAlbums(user));
 			}
@@ -191,13 +194,8 @@ public class UserDAO {
 				}
 			}
 		}
-		return Collections.unmodifiableList(allUsers);
+		return Collections.unmodifiableMap(allUsers);
 	}
-	
-	//select user from database with all his albums, photos and other connections
-//	public User getUser(){
-//		
-//	}
 	
 	//change first name
 	public void changeFirstName(User user, String first_name) throws ValidationException{
@@ -560,44 +558,16 @@ public class UserDAO {
 	}
 
 	public boolean validLogin(String username, String password) throws ValidationException {
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		Connection connection = null;
-		try {
-			connection = (Connection) dataSource.getConnection();
-			preparedStatement = connection.prepareStatement(CHECK_IF_VALID_LOGIN);
-			preparedStatement.setString(1, username);
-			preparedStatement.setString(2, password);
-			resultSet = preparedStatement.executeQuery();
-			int size= 0;
-			if (resultSet != null)   {  
-				resultSet.beforeFirst();  
-				resultSet.last();  
-			    size = resultSet.getRow();  
-			    if(size == 1){
-			    	return true;
-			    }
-			} 
-		} catch (SQLException e1) {
-			System.out.println("Error in 1st catch block in UserDAO method validLogin() - " + e1.getMessage());
+		CachedObjects cachedObj = CachedObjects.getInstance();
+		boolean valid = false;
+		if(cachedObj.getAllUsers().isEmpty()){
+			getAllUsers();
 		}
-		finally{
-			if(preparedStatement != null){
-				try {
-					preparedStatement.close();
-				} catch (SQLException e2) {
-					System.out.println("Error when closing statement in 1st catch block in UserDAO method validLogin() - " + e2.getMessage());
-				}
-			}
-			if(resultSet != null){
-				try {
-					resultSet.close();
-				} catch (SQLException e3) {
-					System.out.println("Error when closing resultSet in 1st catch block in UserDAO method validLogin() - " + e3.getMessage());
-				}
-			}
+		User user = cachedObj.getOneUser(username);
+		if(user == null){
+			return false;
 		}
-		return false;
+		return user.getPassword().equals(password);	
 	}
 	
 }

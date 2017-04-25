@@ -54,6 +54,7 @@ public class CachedObjects {
 		for(User users : allUsers.values()){
 			if(users.getUsername().equals(username)){
 				contains = true;
+				break;
 			}
 		}
 		return contains;

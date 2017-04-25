@@ -1,10 +1,11 @@
 
 $(function () {
 	
-	var $username = $("#form-username");
-	var $password = $("#form-password");
 	
 	$('#login').on('click', function(){
+		var $username = $("#form-username");
+		var $password = $("#form-password");
+		
 		var user = {
 			username: $username.val(),
 			password: $password.val()
@@ -26,21 +27,26 @@ $(function () {
 		});
 	});
 	
-
 	
-	function checkPasswordMatch() {
-	    var password = $("#form-password").val();
-	    var confirmPassword = $("#form-confirm-password").val();
-
-	    if (password != confirmPassword)
-	        $("#divCheckPasswordMatch").html("Passwords do not match!");
-	    else
-	        $("#divCheckPasswordMatch").html("Passwords match.");
-	}
-
-	$(document).ready(function () {
-	   $("#form-confirm-password").keyup(checkPasswordMatch);
+	$("#register-password, #register-confirm-password").on('keyup', function () {
+		 $("#divCheckPasswordMatch").html("");
+		var $password = $('#register-password').val();
+		var $confirmPassword = $('#register-confirm-password').val();
+		if($password != "" && $confirmPassword != ""){
+			if ($password == $confirmPassword) {
+			   $("#divCheckPasswordMatch").html(" &nbsp; * Passwords match! <br>").css("color", "green");
+			} else{
+			   $("#divCheckPasswordMatch").html(" &nbsp; * Passwords do not match! <br>").css("color", "red");
+			}
+		}
 	});
-
-
+	
+	
+	
+	
 });
+
+
+
+
+
