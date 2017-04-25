@@ -162,54 +162,129 @@ $(function () {
 			});
 		});
 	}, 1000);
-	setTimeout(function(){	
-	$comments = $('#comments');	
-	$.ajax({
-		type: 'GET',
-		url: 'comment/'+ $postId,
-		success: function(data){
-			$.each(data, function(index, val){
-				$comments.append(
-						'<li class="media">' + 
-							'<a class="pull-left" href="#">' 
-				);    
-               	if(val.user.profilePhotoPath != null){
-    				$comments.append(
-								'<img class="media-object img-circle" src="'+ val.user.profilePhotoPath +'" alt="profile" style ="height:100px;width:auto;max-width:100px;">'
-    				); 
-               	}else{
-    				$comments.append(
-								'<img class="media-object img-circle" src="http://i.imgur.com/d7jOt4k.jpg" alt="profile" style = "height:100px;width:auto;max-width:100px;">'
-    				); 
-               	}
-				$comments.append(
-							'</a>' +
-							'<div class="media-body">' +
-								'<div class="well well-lg">' +
-									'<h4 id = class="media-heading text-uppercase reviews">'+ val.user.username +'</h4>' + 
-									'<ul class="media-date text-uppercase reviews list-inline">' +
-										'<li> Posted on: </li>' +
-										'<li class="dd">' + val.dateCreated.dayOfMonth + '</li>' +
-										'<li class="mm">' + val.dateCreated.dayOfMonth + '</li>' + 
-										'<li class="aaaa">' + val.dateCreated.year + '</li>' + 
-									'</ul>' +
-									'<p></p>' +
-									'<p class="media-comment">' +
-										val.content +
-									'</p>' +
-								'</div>' +              
-							'</div> ' +
-						'</li> '  
-				); 
-			});
-		},
-		error: function(e){
-			console.log(e);
-		}
-	});	
-	}, 300);
 	
-});
+	setTimeout(function(){	
+		$comments = $('#comments');	
+		$.ajax({
+			type: 'GET',
+			url: 'comment/'+ $postId,
+			success: function(data){
+				$.each(data, function(index, val){
+					$comments.append(
+							'<li class="media">' + 
+								'<a class="pull-left"  id = "'+ val.commentId +'">' 
+					);    
+	               	if(val.creatorUrl != null){
+	    				$comments.append(
+									'<img class="media-object img-circle" src="'+ val.creatorUrl +'" alt="profile" style ="height:100px;width:auto;max-width:100px;">'
+	    				); 
+	               	}else{
+	    				$comments.append(
+									'<img class="media-object img-circle" src="http://i.imgur.com/d7jOt4k.jpg" alt="profile" style = "height:100px;width:auto;max-width:100px;">'
+	    				); 
+	               	}
+					$comments.append(
+								'</a>' +
+								'<div class="media-body">' +
+									'<div class="well well-lg">' +
+										'<h4 id = class="media-heading text-uppercase reviews">'+ val.creator +'</h4>' + 
+										'<ul class="media-date text-uppercase reviews list-inline">' +
+											'<li> Posted on: </li>' +
+											'<li class="dd">' + val.dateCreated.dayOfMonth + '</li>' +
+											'<li class="mm">' + val.dateCreated.dayOfMonth + '</li>' + 
+											'<li class="aaaa">' + val.dateCreated.year + '</li>' + 
+										'</ul>' +
+										'<p></p>' +
+										'<p class="media-comment">' +
+											val.content +
+										'</p>' +
+									'</div>' +              
+								'</div> ' +
+							'</li> '  
+					); 
+				});
+			},
+			error: function(e){
+				console.log(e);
+			}
+		});	
+		}, 300);
+	});	
+	$(function () {	
+		var url = window.location.href;
+		var n = url.indexOf("imgId=");
+		var $postId = url.substring(n+6);
+
+		setTimeout(function(){				
+			$('#submitComment').on('click', function(){
+				var $comment = document.getElementById('addComment').value;
+				var commentche = {
+						comment : $comment,
+						postId: $postId
+					};
+				$.ajax({
+					type: 'POST',
+					url: 'comment/add',
+					data: commentche,
+					success: function(val){	               	
+						if(val.creatorUrl != null){
+							 $('#comments').append(
+								'<li class="media">' + 
+									'<a class="pull-left" id = "'+ val.commentId +'">' +
+										'<img class="media-object img-circle" src="'+ val.creatorURL +'" alt="profile" style ="height:100px;width:auto;max-width:100px;">' + 
+									'</a>' +
+									'<div class="media-body">' +
+										'<div class="well well-lg">' +
+											'<h4 id = class="media-heading text-uppercase reviews">'+ val.creator +'</h4>' + 
+											'<ul class="media-date text-uppercase reviews list-inline">' +
+												'<li> Posted on: </li>' +
+												'<li class="dd">' + val.dateCreated.dayOfMonth + '</li>' +
+												'<li class="mm">' + val.dateCreated.dayOfMonth + '</li>' + 
+												'<li class="aaaa">' + val.dateCreated.year + '</li>' + 
+											'</ul>' +
+											'<p></p>' +
+											'<p class="media-comment">' +
+												val.content +
+											'</p>' +
+										'</div>' +              
+									'</div> ' +
+								'</li> '  
+								); 
+						}else{
+							 $('#comments').append(
+								'<li class="media">' + 
+									'<a class="pull-left" id = "'+ val.commentId +'">' +
+										'<img class="media-object img-circle" src="http://i.imgur.com/d7jOt4k.jpg" alt="profile" style = "height:100px;width:auto;max-width:100px;">' +
+									'</a>' +
+									'<div class="media-body">' +
+										'<div class="well well-lg">' +
+											'<h4 id = class="media-heading text-uppercase reviews">'+ val.creator +'</h4>' + 
+											'<ul class="media-date text-uppercase reviews list-inline">' +
+												'<li> Posted on: </li>' +
+												'<li class="dd">' + val.dateCreated.dayOfMonth + '</li>' +
+												'<li class="mm">' + val.dateCreated.dayOfMonth + '</li>' + 
+												'<li class="aaaa">' + val.dateCreated.year + '</li>' + 
+											'</ul>' +
+											'<p></p>' +
+											'<p class="media-comment">' +
+												val.content +
+											'</p>' +
+										'</div>' +              
+									'</div> ' +
+								'</li> '  
+							); 
+		               	};
+					},
+					error: function(e){
+						alert(e);
+						console.log(commentche.postId);
+						console.log($comment);
+					}
+				});
+			});
+		}, 1100);
+	});
+
 
 </script>
 
@@ -257,20 +332,22 @@ $(function () {
             <ul class="nav nav-tabs" role="tablist">
                 <li class="active"><a href="#comments-logout" role="tab" data-toggle="tab"><h4 class="reviews text-capitalize">Comments</h4></a></li>
                 <li><a href="#add-comment" role="tab" data-toggle="tab"><h4 class="reviews text-capitalize">Add comment</h4></a></li>
+         
             </ul>   
                      
             <div class="tab-content">
                 <div class="tab-pane active" id="comments-logout">                
                     <ul class="media-list">
                        <span id = "comments" ></span>
+                   
                     </ul> 
                 </div>
                 <div class="tab-pane" id="add-comment">
-                    <form action="#" method="post" class="form-horizontal" id="commentForm" role="form"> 
+                    <div class="form-horizontal" id="commentForm" > 
                         <div class="form-group">
                             <label for="email" class="col-sm-2 control-label">Comment</label>
                             <div class="col-sm-10">
-                              <textarea class="form-control" name="addComment" id="addComment" rows="5"></textarea>
+                            <input id = "addComment" type="text" placeholder="..." class="form-control" > 
                             </div>
                         </div>
                         <div class="form-group">
@@ -278,7 +355,7 @@ $(function () {
                                 <button class="btn btn-success btn-circle text-uppercase" type="submit" id="submitComment"><span class="glyphicon glyphicon-send"></span> Summit comment</button>
                             </div>
                         </div>            
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

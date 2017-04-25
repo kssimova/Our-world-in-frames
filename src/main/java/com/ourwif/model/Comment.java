@@ -5,14 +5,20 @@ import java.time.LocalDate;
 
 import javax.xml.bind.ValidationException;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 public class Comment implements Comparable<Comment>{
 	
 	private long commentId;
+	@JsonIgnore
 	private Post picture;
+	@JsonIgnore
 	private User user;
-	protected String content;
+	private String content;
 	private LocalDate dateCreated;
+	private String creator;
+	private String creatorUrl;
 	
 	
 	public Comment(Post picture, User user, String content, LocalDate localDate, long commentId) throws ValidationException {
@@ -37,6 +43,8 @@ public class Comment implements Comparable<Comment>{
 			throw new ValidationException("Comment date not valid");
 		}
 		setCommentId(commentId);
+		this.creator = user.getUsername();
+		this.creatorUrl = user.getProfilePhotoPath();
 	}
 
 	//getters
@@ -64,10 +72,17 @@ public class Comment implements Comparable<Comment>{
 	public long getCommentId() {
 		return commentId;
 	}
+	
+	public String getCreator() {
+		return creator;
+	}
 
+	public String getCreatorUrl() {
+		return creatorUrl;
+	}
 
 	//setters
-	
+
 	public void changeContent(String content) {
 		this.content = content;
 	}

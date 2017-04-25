@@ -283,7 +283,7 @@ public class PostController {
 			}
 			try {
 				posts = postDAO.getAllLikedPosts(user);
-			} catch (SQLException e) {
+			} catch (SQLException | ValidationException e) {
 				System.out.println("i cant get all liked posts2");
 			}
 		}

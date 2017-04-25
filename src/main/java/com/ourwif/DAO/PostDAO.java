@@ -40,7 +40,7 @@ public class PostDAO {
   		Post post = null;
   		String sql = "";
  		ResultSet result = null;
- 		context = new ClassPathXmlApplicationContext("Spring-Module.xml");
+    	context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 		CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
 		Connection conn = null;
 		try{
@@ -85,7 +85,6 @@ public class PostDAO {
 		ResultSet result = null;
 	 	ArrayList<Long> lonelyTags = new ArrayList<>();
 		Connection conn = null;
-		CachedObjects cachedObj = CachedObjects.getInstance();
  		try {
  			conn = (Connection) dataSource.getConnection();
 			conn.setAutoCommit(false);
@@ -167,8 +166,8 @@ public class PostDAO {
 	 		}
  			conn.close();
 	 	}				
- 		cachedObj.addPost(post, album);
- 		cachedObj.addTags(tags, post);
+ 		CachedObjects.getInstance().addPost(post, album);
+ 		CachedObjects.getInstance().addTags(tags, post);
  		return post;
 	}
 		
@@ -388,7 +387,7 @@ public class PostDAO {
  		}
  	}
  	
- 	public TreeSet<Post> getAllLikedPosts(User user) throws SQLException{
+ 	public TreeSet<Post> getAllLikedPosts(User user) throws SQLException, ValidationException{
 		TreeSet<Post> posts = new TreeSet<>();
 		TreeSet<String> postIds = new TreeSet<>();
 		String sql = "SELECT post_id FROM post_likes WHERE user_id = " + user.getUserId();
@@ -409,7 +408,7 @@ public class PostDAO {
  	
  	
 	//delete post
- 	public void deletePost(Post post, User user, Album album) throws ValidationException, SQLException{
+ 	public synchronized void deletePost(Post post, User user, Album album) throws ValidationException, SQLException{
  		Connection conn = null;
 			try {
 			conn = (Connection) dataSource.getConnection();
@@ -482,7 +481,7 @@ public class PostDAO {
  	}
  	
  	//getAllPost
-	public void getAllPosts() throws ValidationException, SQLException {
+	public synchronized void getAllPosts() throws ValidationException, SQLException {
 		if(CachedObjects.getInstance().getAllPosts().isEmpty()){
 			TreeSet<String> tags = new TreeSet<>();
 			TreeMap<Long, TreeSet<String>> postIds = new TreeMap<>();
@@ -492,7 +491,6 @@ public class PostDAO {
 	    	context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 			CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
 			Connection conn = null;
-			CachedObjects cachedObj = CachedObjects.getInstance();
 			try{
 				conn = (Connection) dataSource.getConnection();
 				conn.setAutoCommit(false);
@@ -535,8 +533,8 @@ public class PostDAO {
 							Post post = new Post(user, result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), result.getString("picture_path"), tags, str, result.getString("delete_hash"));
 							commentDAO.getAllComments(post);
 							//add all post in right albums
-							cachedObj.addPost(post, albumId);
-							cachedObj.addTags(tags, post);
+							CachedObjects.getInstance().addPost(post, albumId);
+							CachedObjects.getInstance().addTags(tags, post);
 						}
 						tags.clear();
 			 		}
