@@ -162,6 +162,53 @@ $(function () {
 			});
 		});
 	}, 1000);
+	setTimeout(function(){	
+	$comments = $('#comments');	
+	$.ajax({
+		type: 'GET',
+		url: 'comment/'+ $postId,
+		success: function(data){
+			$.each(data, function(index, val){
+				$comments.append(
+						'<li class="media">' + 
+							'<a class="pull-left" href="#">' 
+				);    
+               	if(val.user.profilePhotoPath != null){
+    				$comments.append(
+								'<img class="media-object img-circle" src="'+ val.user.profilePhotoPath +'" alt="profile" style ="height:100px;width:auto;max-width:100px;">'
+    				); 
+               	}else{
+    				$comments.append(
+								'<img class="media-object img-circle" src="http://i.imgur.com/d7jOt4k.jpg" alt="profile" style = "height:100px;width:auto;max-width:100px;">'
+    				); 
+               	}
+				$comments.append(
+							'</a>' +
+							'<div class="media-body">' +
+								'<div class="well well-lg">' +
+									'<h4 id = class="media-heading text-uppercase reviews">'+ val.user.username +'</h4>' + 
+									'<ul class="media-date text-uppercase reviews list-inline">' +
+										'<li> Posted on: </li>' +
+										'<li class="dd">' + val.dateCreated.dayOfMonth + '</li>' +
+										'<li class="mm">' + val.dateCreated.dayOfMonth + '</li>' + 
+										'<li class="aaaa">' + val.dateCreated.year + '</li>' + 
+									'</ul>' +
+									'<p></p>' +
+									'<p class="media-comment">' +
+										val.content +
+									'</p>' +
+								'</div>' +              
+							'</div> ' +
+						'</li> '  
+				); 
+			});
+		},
+		error: function(e){
+			console.log(e);
+		}
+	});	
+	}, 300);
+	
 });
 
 </script>
@@ -210,46 +257,12 @@ $(function () {
             <ul class="nav nav-tabs" role="tablist">
                 <li class="active"><a href="#comments-logout" role="tab" data-toggle="tab"><h4 class="reviews text-capitalize">Comments</h4></a></li>
                 <li><a href="#add-comment" role="tab" data-toggle="tab"><h4 class="reviews text-capitalize">Add comment</h4></a></li>
-            </ul>            
+            </ul>   
+                     
             <div class="tab-content">
                 <div class="tab-pane active" id="comments-logout">                
                     <ul class="media-list">
-                      <li class="media">
-                        <a class="pull-left" href="#">
-                          <img class="media-object img-circle" src="https://s3.amazonaws.com/uifaces/faces/twitter/dancounsell/128.jpg" alt="profile">
-                        </a>
-                        <div class="media-body">
-                          <div class="well well-lg">
-                              <h4 class="media-heading text-uppercase reviews">Marco </h4>
-                              <ul class="media-date text-uppercase reviews list-inline">
-                                <li class="dd">22</li>
-                                <li class="mm">09</li>
-                                <li class="aaaa">2014</li>
-                              </ul>
-                              <p class="media-comment">
-                                Great snippet! Thanks for sharing.
-                              </p>
-                            </div>              
-                        </div>
-                      </li>      
-                      <li class="media">
-                        <a class="pull-left" href="#">
-                          <img class="media-object img-circle" src="https://s3.amazonaws.com/uifaces/faces/twitter/lady_katherine/128.jpg" alt="profile">
-                        </a>
-                        <div class="media-body">
-                          <div class="well well-lg">
-                              <h4 class="media-heading text-uppercase reviews">Kriztine</h4>
-                              <ul class="media-date text-uppercase reviews list-inline">
-                                <li class="dd">22</li>
-                                <li class="mm">09</li>
-                                <li class="aaaa">2014</li>
-                              </ul>
-                              <p class="media-comment">
-                                Yehhhh... Thanks for sharing.
-                              </p>
-                          </div>              
-                        </div>
-                      </li>
+                       <span id = "comments" ></span>
                     </ul> 
                 </div>
                 <div class="tab-pane" id="add-comment">
