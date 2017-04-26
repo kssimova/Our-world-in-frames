@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<link rel="stylesheet" type="text/css" href=css/aboutSectionStyle.css></link>
-	<link rel="stylesheet" type="text/css" href="css/API.css">
+	<link rel="stylesheet" type="text/css" href="css/allPages.css">
 	<link rel="stylesheet" type="text/css" href="css/HomePage.css">
 	<link rel="stylesheet" type="text/css" href="css/Discover.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>

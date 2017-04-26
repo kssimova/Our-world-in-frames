@@ -6,8 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Collections;
@@ -15,7 +13,6 @@ import java.util.Collections;
 import javax.sql.DataSource;
 import javax.xml.bind.ValidationException;
 
-import org.apache.catalina.webresources.Cache;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -51,12 +48,10 @@ public class UserDAO {
 	// works
 	private static final String FOLLOW_USER = "INSERT INTO ourwif.followers (user_id, followed_id) VALUES (?, ?);";
 	
-	private static final String CHECK_IF_VALID_LOGIN = "SELECT first_name, last_name FROM ourwif.users WHERE username = ? AND password = ?";
-	
 	// WITHOUT CITY AND COUNTRY
 	private static final String GET_ALL_FOLLOWERS = "SELECT USERS.user_id, first_name, last_name, username, email, password, mobile_number, birthdate, description, gender, profilephoto_path FROM ourwif.users USERS JOIN ourwif.followers FOLLOWERS ON (USERS.user_id = FOLLOWERS.user_id) WHERE followed_id = ?";
 	
-	private static final String GET_ALL_FOLLOWING = "SELECT USERS.followed_id, first_name, last_name, username, email, password, mobile_number, birthdate, description, gender, profilephoto_path FROM ourwif.users USERS JOIN ourwif.followers FOLLOWERS ON (USERS.user_id = FOLLOWERS.user_id) WHERE user_id = ?";
+	private static final String GET_ALL_FOLLOWING = "SELECT u.user_id, u.first_name, u.last_name, u.username, u.email, u.password, u.mobile_number, u.birthdate, u.description, u.gender, u.profilephoto_path FROM users u JOIN followers f ON (u.user_id = f.followed_id) WHERE f.user_id = ?";
 
 	private DataSource dataSource;
 	private ApplicationContext context = null;
@@ -177,8 +172,8 @@ public class UserDAO {
 				CachedObjects.getInstance().addUser(user);
 				user.addAllAlbums(albumDAO.getUserAlbums(user));
 				//add followers and following
-				getFollowers(user);
-				getFollowing(user);
+				getFollows(user, GET_ALL_FOLLOWERS);
+				getFollows(user, GET_ALL_FOLLOWING);
 			}
 		} catch (SQLException e1) {
 			System.out.println("Error in 1st catch block in UserDAO method getAllUsers() - " + e1.getMessage());
@@ -517,97 +512,58 @@ public class UserDAO {
 		}
 	}
 	
-	// get user's followers
-	public void getFollowers(User user) throws ValidationException{
+	// get user's followers and following
+	public void getFollows(User user, String query) throws ValidationException, SQLException{
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
+		boolean isFollowers = false;
+		if(query.equals(GET_ALL_FOLLOWERS)){
+			isFollowers = true;
+		}
 		try {
 			connection = (Connection) dataSource.getConnection();
-			preparedStatement = connection.prepareStatement(GET_ALL_FOLLOWERS);
+			preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setLong(1, user.getUserId());
 			resultSet = preparedStatement.executeQuery();
-			if (!resultSet.next() ) {
-			    return;
-			} 
 			while(resultSet.next()){
 				User follower = new User(resultSet.getString("username"), resultSet.getString("email"),resultSet.getString("password"), resultSet.getLong("user_id"));
-				follower.changeFirstName(resultSet.getString("first_name"));
-				follower.changeLastName(resultSet.getString("last_name"));
-				follower.changeDescription(resultSet.getString("description"));
+				String results = resultSet.getString("first_name");
+				if(!resultSet.wasNull()){
+					follower.changeFirstName(results);
+				}
+				results = resultSet.getString("last_name");
+				if(!resultSet.wasNull()){
+					follower.changeLastName(results);
+				}
+				results = resultSet.getString("description");
+				if(!resultSet.wasNull()){
+					follower.changeDescription(results);
+				}
 				follower.changeGender(Enum.valueOf(User.Gender.class, resultSet.getString("gender").toUpperCase()));
-				follower.changeBirthDate(resultSet.getDate("birthdate").toLocalDate());
-				follower.changeMobileNumber(resultSet.getString("mobile_number"));
-				follower.changeProfilePhoto(resultSet.getString("profilephoto_path"));
-				System.out.println(follower.toString());
-				user.addFollower(follower);
-			}
-		} catch (SQLException e1) {
-			System.out.println("Error in 1st catch block in UserDAO method getFollowers() - " + e1.getMessage());
-		}
-		finally{
-			if(preparedStatement != null){
-				try {
-					preparedStatement.close();
-				} catch (SQLException e2) {
-					System.out.println("Error when closing statement in 1st catch block in UserDAO method getFollowers() - " + e2.getMessage());
+				Date res = resultSet.getDate("birthdate");
+				if(!resultSet.wasNull()){
+					follower.changeBirthDate(res.toLocalDate());
 				}
-			}
-			if(resultSet != null){
-				try {
-					resultSet.close();
-				} catch (SQLException e3) {
-					System.out.println("Error when closing resultSet in 1st catch block in UserDAO method getFollowers() - " + e3.getMessage());
+				results = resultSet.getString("mobile_number");
+				if(!resultSet.wasNull()){
+					follower.changeMobileNumber(results);
 				}
-			}
-		}
-	}
-	
-	// get user's followers
-		public void getFollowing(User user) throws ValidationException{
-			PreparedStatement preparedStatement = null;
-			ResultSet resultSet = null;
-			Connection connection = null;
-			try {
-				connection = (Connection) dataSource.getConnection();
-				preparedStatement = connection.prepareStatement(GET_ALL_FOLLOWING);
-				preparedStatement.setLong(1, user.getUserId());
-				resultSet = preparedStatement.executeQuery();
-				if (!resultSet.next() ) {
-					return;
-				} 
-				while(resultSet.next()){
-					User follower = new User(resultSet.getString("username"), resultSet.getString("email"),resultSet.getString("password"), resultSet.getLong("user_id"));
-					follower.changeFirstName(resultSet.getString("first_name"));
-					follower.changeLastName(resultSet.getString("last_name"));
-					follower.changeDescription(resultSet.getString("description"));
-					follower.changeGender(Enum.valueOf(User.Gender.class, resultSet.getString("gender").toUpperCase()));
-					follower.changeBirthDate(resultSet.getDate("birthdate").toLocalDate());
-					follower.changeMobileNumber(resultSet.getString("mobile_number"));
-					follower.changeProfilePhoto(resultSet.getString("profilephoto_path"));
-					System.out.println(follower.toString());
+				results = resultSet.getString("profilephoto_path");
+				if(!resultSet.wasNull()){
+					follower.changeProfilePhoto(results);
+				}
+				if(isFollowers){
+					user.addFollower(follower);
+				}else{
 					user.addFollowing(follower);
 				}
-			} catch (SQLException e1) {
-				System.out.println("Error in 1st catch block in UserDAO method getFollowers() - " + e1.getMessage());
 			}
-			finally{
-				if(preparedStatement != null){
-					try {
-						preparedStatement.close();
-					} catch (SQLException e2) {
-						System.out.println("Error when closing statement in 1st catch block in UserDAO method getFollowers() - " + e2.getMessage());
-					}
-				}
-				if(resultSet != null){
-					try {
-						resultSet.close();
-					} catch (SQLException e3) {
-						System.out.println("Error when closing resultSet in 1st catch block in UserDAO method getFollowers() - " + e3.getMessage());
-					}
-				}
-			}
+		}finally{
+			preparedStatement.close();
+			resultSet.close();
 		}
+	}
 
 	public boolean validLogin(String username, String password) throws ValidationException {
 		CachedObjects cachedObj = CachedObjects.getInstance();
