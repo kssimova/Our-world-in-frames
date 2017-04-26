@@ -6,7 +6,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<link rel="stylesheet" type="text/css" href=css/aboutSectionStyle.css></link>
-	<link rel="stylesheet" type="text/css" href="css/API.css">
+	<link rel="stylesheet" type="text/css" href="css/allPages.css">
 	<link rel="stylesheet" type="text/css" href="css/searchPage.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>

@@ -40,7 +40,7 @@ public class PostDAO {
   		Post post = null;
   		String sql = "";
  		ResultSet result = null;
- 		context = new ClassPathXmlApplicationContext("Spring-Module.xml");
+    	context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 		CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
 		Connection conn = null;
 		try{
@@ -167,7 +167,7 @@ public class PostDAO {
  			conn.close();
 	 	}				
  		CachedObjects.getInstance().addPost(post, album);
-		CachedObjects.getInstance().addTags(tags, post);
+ 		CachedObjects.getInstance().addTags(tags, post);
  		return post;
 	}
 		
@@ -323,8 +323,6 @@ public class PostDAO {
  	
 	//add Like
  	public void addLike(Post post, User user) throws ValidationException, SQLException{
- 		System.out.println(post.toString());
- 		System.out.println(post.getPostId());
 		String sql = "INSERT INTO post_likes (user_id, post_id) VALUES (?, ?)";
  		PreparedStatement st;
  		Connection conn = null;
@@ -389,7 +387,7 @@ public class PostDAO {
  		}
  	}
  	
- 	public TreeSet<Post> getAllLikedPosts(User user) throws SQLException{
+ 	public TreeSet<Post> getAllLikedPosts(User user) throws SQLException, ValidationException{
 		TreeSet<Post> posts = new TreeSet<>();
 		TreeSet<String> postIds = new TreeSet<>();
 		String sql = "SELECT post_id FROM post_likes WHERE user_id = " + user.getUserId();
@@ -410,7 +408,7 @@ public class PostDAO {
  	
  	
 	//delete post
- 	public void deletePost(Post post, User user, Album album) throws ValidationException, SQLException{
+ 	public synchronized void deletePost(Post post, User user, Album album) throws ValidationException, SQLException{
  		Connection conn = null;
 			try {
 			conn = (Connection) dataSource.getConnection();
@@ -483,7 +481,7 @@ public class PostDAO {
  	}
  	
  	//getAllPost
-	public void getAllPosts() throws ValidationException, SQLException {
+	public synchronized void getAllPosts() throws ValidationException, SQLException {
 		if(CachedObjects.getInstance().getAllPosts().isEmpty()){
 			TreeSet<String> tags = new TreeSet<>();
 			TreeMap<Long, TreeSet<String>> postIds = new TreeMap<>();

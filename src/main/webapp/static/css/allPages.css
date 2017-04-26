@@ -29,3 +29,7 @@ h1{
 .noMods:hover {
 	color: #dab3ff;
 }
+
+body{
+	backgraund-color: #eeeeee;
+}

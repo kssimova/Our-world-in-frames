@@ -158,7 +158,7 @@
   	});  	
 });
  </script>
- <body>
+ <body style = "backgraund-color: #eeeeee;">
  	<jsp:include page="Nav.jsp" />
  	
  	<div class="col-lg-12 col-md-12 col-sm-12">

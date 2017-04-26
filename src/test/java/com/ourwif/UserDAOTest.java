@@ -2,6 +2,7 @@ package com.ourwif;
 
 import static org.junit.Assert.*;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class UserDAOTest {
 	public void testGetAllUsers() {	
 		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		try {
-			List<User> allUsers = userDAO.getAllUsers();
+			List<User> allUsers = (List<User>) userDAO.getAllUsers();
 		} catch (ValidationException e) {
 			System.out.println(e.getMessage());
 		}
@@ -162,7 +163,7 @@ public class UserDAOTest {
 	}
 
 	@Test
-	public void testFollowUser() {
+	public void testFollowUser() throws SQLException {
 		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		this.user();
 		userDAO.followUser(krisi, mimi);	

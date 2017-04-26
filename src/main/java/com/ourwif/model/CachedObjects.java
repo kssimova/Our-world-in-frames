@@ -1,13 +1,12 @@
-package com.ourwif.model;
-
-
-import java.util.Map.Entry;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
+ package com.ourwif.model;
+ 
+ 
+ import java.util.Map.Entry;
+ import java.util.Collections;
+ import java.util.Iterator;
+ import java.util.Map;
+ import java.util.TreeMap;
+ import java.util.TreeSet;
 
 public class CachedObjects {
 	
@@ -212,8 +211,7 @@ public class CachedObjects {
 			}
 		}
 		return posts;
-	}
-	
+	}	
 	
 	//just for tests
 	public Map <Long, TreeMap<String, Post>> getAllPosts() {

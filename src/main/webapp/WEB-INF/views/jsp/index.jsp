@@ -33,7 +33,6 @@
 
     <!-- Theme CSS -->
    	 	<link href="css/page.css" rel="stylesheet">
-   	 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> <!-- or use local jquery -->
 
 </head>
 
@@ -241,7 +240,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="team-member">
-                        <img src="img/kitty.jpg" class="img-responsive img-circle" alt="">
+                        <img src="img/Miki.jpg" class="img-responsive img-circle" alt="">
                         <h4> <font color=#dab3ff> Lead Kitten </font></h4>
                         <p class="text-muted">Lead Kitten</p>
                         <ul class="list-inline social-buttons">
@@ -339,6 +338,7 @@
     </footer>
 
 
+   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <!-- jQuery -->
     <script src="js/jqueryBackground.js"></script>
 
@@ -350,7 +350,6 @@
 
     <!-- Contact Form JavaScript -->
     <script src="js/jqBootstrapValidation.js"></script>
-    
 
     <!-- Theme JavaScript -->
     <script src="js/pageScroll.js"></script>
@@ -364,9 +363,6 @@
         <script src="js/jquery.backstretch.js"></script>
         <script src="js/scripts.js"></script>
         
-        <!--[if lt IE 10]>
-            <script src="assets/js/placeholder.js"></script>
-        <![endif]-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css" />
 

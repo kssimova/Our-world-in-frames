@@ -28,22 +28,19 @@ public class AlbumController {
 	@RequestMapping(value="/get",method = RequestMethod.GET)
 	public Album getAlbum(Model model, HttpServletRequest request, HttpSession session) {
 		Long albumId = Long.parseLong(request.getParameter("albumId"));		
-		System.out.println(albumId);
 		Album album = null;
 		if(session.getAttribute("logged")!= null){
 			if(albumId != null){
 				if(CachedObjects.getInstance().getAllAlbums().isEmpty()){
 					try {
 						albumDAO.getAllAlbums();
-						album = CachedObjects.getInstance().getOneAlbum(albumId);
-						System.out.println(album.toString());
+
 					} catch (ValidationException | SQLException e) {
 						System.out.println("i cant get all posts");
 					}
-				}else{
-					album = CachedObjects.getInstance().getOneAlbum(albumId);
-					System.out.println(album.toString());
 				}
+				album = CachedObjects.getInstance().getOneAlbum(albumId);
+				System.out.println(album.toString());
 			}
 		}
 		return album;
@@ -53,11 +50,8 @@ public class AlbumController {
 	@RequestMapping(value="/add",method = RequestMethod.POST)
 	public void addAlbum(HttpServletRequest request, HttpSession session) {
 		String name = request.getParameter("name");
-		System.out.println(name);
 		String description = request.getParameter("description");
-		System.out.println(description);
 		User user = (User)session.getAttribute("user");
-		System.out.println(user.toString());
 		try {
 			albumDAO.createAlbum(user, name, description);
 		} catch (ValidationException e) {

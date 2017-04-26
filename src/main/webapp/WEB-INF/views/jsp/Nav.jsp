@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<link rel="stylesheet" type="text/css" href=css/aboutSectionStyle.css></link>
-	<link rel="stylesheet" type="text/css" href="css/API.css">
+	<link rel="stylesheet" type="text/css" href="css/allPages.css">
 	<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.0.min.js"></script>
 	<script src="js/profile.js"></script>
 <title>Insert title here</title>
@@ -21,11 +21,6 @@
 							<input class="noMods" type="submit" value="OURWIF">
 						</f:form>
 	   				 </div>
-				</li>
-	            <li>
-	            	<f:form commandName="getApi" action="/ourwif/api" method = "POST">
-						<input class= "noMods" type="submit" value="API">
-					</f:form>
 				</li>
 	            <li>
 	            	<f:form commandName="getApi" action="/ourwif/index" method = "POST">

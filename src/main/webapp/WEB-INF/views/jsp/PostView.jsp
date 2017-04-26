@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<link rel="stylesheet" type="text/css" href="css/API.css">
+	<link rel="stylesheet" type="text/css" href="css/allPages.css">
 	<link rel="stylesheet" type="text/css" href="css/UserPage.css">
 	<link rel="stylesheet" type="text/css" href="css/PostView.css">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -65,7 +65,7 @@ $(function () {
 											'</li>' +
 										'</ul>' +
 									'</span>');			 							 
-	  			$('#img').html(' <img class="img-fluid" src="'+ post.picturePath +'" alt="">');
+	  			$('#img').html(' <img class="img-fluid" src="'+ post.picturePath +'" alt="" style = "max-width: 100%;" >');
 	  			$('#desc').html(post.description);
 				$.each(post.tags, function(index, val){
 					tagcheta += val + ", ";
@@ -162,7 +162,169 @@ $(function () {
 			});
 		});
 	}, 1000);
+	
+	//get all coments
+	setTimeout(function(){	
+		$comments = $('#comments');	
+		$.ajax({
+			type: 'GET',
+			url: 'comment/'+ $postId,
+			success: function(data){
+				$.each(data, function(index, val){
+					$comments.append(
+							'<li class="media">' + 
+								'<a class="pull-left"  id = "'+ val.commentId +'">' 
+					);    
+	               	if(val.creatorUrl != null){
+	    				$comments.append(
+									'<img class="media-object img-circle" src="'+ val.creatorUrl +'" alt="profile" style ="height:100px;width:auto;max-width:100px;">'
+	    				); 
+	               	}else{
+	    				$comments.append(
+									'<img class="media-object img-circle" src="http://i.imgur.com/d7jOt4k.jpg" alt="profile" style = "height:100px;width:auto;max-width:100px;">'
+	    				); 
+	               	}
+					$comments.append(
+								'</a>' +
+								'<div class="media-body">' +
+									'<div class="well well-lg">' +
+										'<h4 id = class="media-heading text-uppercase reviews">'+ val.creator +'</h4>' + 
+										'<ul class="media-date text-uppercase reviews list-inline">' +
+											'<li> Posted on: </li>' +
+											'<li class="dd">' + val.dateCreated.dayOfMonth + '</li>' +
+											'<li class="mm">' + val.dateCreated.dayOfMonth + '</li>' + 
+											'<li class="aaaa">' + val.dateCreated.year + '</li>' + 
+										'</ul>' +
+										'<p></p>' +
+										'<p class="media-comment">' +
+											val.content +
+										'</p>' +
+									'</div>' +              
+								'</div> ' +
+							'</li> '  
+					); 
+				});
+			},
+			error: function(e){
+				console.log(e);
+			}
+		});	
+		}, 300);
+	});	
+	
+	//create new comment 
+	$(function () {	
+		var url = window.location.href;
+		var n = url.indexOf("imgId=");
+		var $postId = url.substring(n+6);
+
+		setTimeout(function(){				
+			$('#submitComment').on('click', function(){
+				var $comment = document.getElementById('addComment').value;
+				var commentche = {
+						comment : $comment,
+						postId: $postId
+					};
+				$.ajax({
+					type: 'POST',
+					url: 'comment/add',
+					data: commentche,
+					success: function(val){	               	
+						if(val.creatorUrl != null){
+							 $('#comments').append(
+								'<li class="media">' + 
+									'<a class="pull-left" id = "'+ val.commentId +'">' +
+										'<img class="media-object img-circle" src="'+ val.creatorURL +'" alt="profile" style ="height:100px;width:auto;max-width:100px;">' + 
+									'</a>' +
+									'<div class="media-body">' +
+										'<div class="well well-lg">' +
+											'<h4 id = class="media-heading text-uppercase reviews">'+ val.creator +'</h4>' + 
+											'<ul class="media-date text-uppercase reviews list-inline">' +
+												'<li> Posted on: </li>' +
+												'<li class="dd">' + val.dateCreated.dayOfMonth + '</li>' +
+												'<li class="mm">' + val.dateCreated.dayOfMonth + '</li>' + 
+												'<li class="aaaa">' + val.dateCreated.year + '</li>' + 
+											'</ul>' +
+											'<p></p>' +
+											'<p class="media-comment">' +
+												val.content +
+											'</p>' +
+										'</div>' +              
+									'</div> ' +
+								'</li> '  
+								); 
+						}else{
+							 $('#comments').append(
+								'<li class="media">' + 
+									'<a class="pull-left" id = "'+ val.commentId +'">' +
+										'<img class="media-object img-circle" src="http://i.imgur.com/d7jOt4k.jpg" alt="profile" style = "height:100px;width:auto;max-width:100px;">' +
+									'</a>' +
+									'<div class="media-body">' +
+										'<div class="well well-lg">' +
+											'<h4 id = class="media-heading text-uppercase reviews">'+ val.creator +'</h4>' + 
+											'<ul class="media-date text-uppercase reviews list-inline">' +
+												'<li> Posted on: </li>' +
+												'<li class="dd">' + val.dateCreated.dayOfMonth + '</li>' +
+												'<li class="mm">' + val.dateCreated.dayOfMonth + '</li>' + 
+												'<li class="aaaa">' + val.dateCreated.year + '</li>' + 
+											'</ul>' +
+											'<p></p>' +
+											'<p class="media-comment">' +
+												val.content +
+											'</p>' +
+										'</div>' +              
+									'</div> ' +
+								'</li> '  
+							); 
+		               	};
+					},
+					error: function(e){
+						alert(e);
+					}
+				});
+			});
+		}, 1100);
+		
+		//dispay post creator
+		var numOfPhotos = 0;
+		$.ajax({
+			type: 'GET',
+			url: 'user/' + $postId,
+			success: function(user){
+				$.each(user.albums, function (i, v){
+					numOfPhotos += v.photos.length;
+				});
+				$('#username').html("Creator: " + user.username);
+		  		$('#followers').html("Followers: " + user.followers.length);
+		  		$('#photos').html("Photos: " + numOfPhotos);
+			},			
+			error: function(e){
+				alert(e);
+				console.log($postId);
+			}
+		});
+		
+	// follow user 
+	$('#follow').on('click', function(){
+		var postche = {
+				postId : $postId
+			};
+		$.ajax({
+			type: 'POST',
+			url: 'user/follow',
+			data: postche,
+			success: function(){	 
+				console.log("hi");
+			},
+			error: function(e){
+				alert(e);
+				console.log($postId);
+			}
+
+		});	
+	});	
 });
+
 
 </script>
 
@@ -187,8 +349,12 @@ $(function () {
             </div>
 
             <div class="col-md-3">
-                <h3 class="my-3">Description</h3>
+                <h3 class="my-3">Description:</h3>
                 <p id = "desc"></p>
+                <h3 id = "username" class="my-3"></h3>
+                <h3 id = "followers" class="my-3"></h3>
+                <h3 id = "photos" class="my-3"></h3>
+                  <button class="btn btn-success btn-circle text-uppercase" type="submit" id="follow"><span class="glyphicon glyphicon-send"></span> Follow</button>
             </div>
 
         </div>
@@ -210,54 +376,22 @@ $(function () {
             <ul class="nav nav-tabs" role="tablist">
                 <li class="active"><a href="#comments-logout" role="tab" data-toggle="tab"><h4 class="reviews text-capitalize">Comments</h4></a></li>
                 <li><a href="#add-comment" role="tab" data-toggle="tab"><h4 class="reviews text-capitalize">Add comment</h4></a></li>
-            </ul>            
+         
+            </ul>   
+                     
             <div class="tab-content">
                 <div class="tab-pane active" id="comments-logout">                
                     <ul class="media-list">
-                      <li class="media">
-                        <a class="pull-left" href="#">
-                          <img class="media-object img-circle" src="https://s3.amazonaws.com/uifaces/faces/twitter/dancounsell/128.jpg" alt="profile">
-                        </a>
-                        <div class="media-body">
-                          <div class="well well-lg">
-                              <h4 class="media-heading text-uppercase reviews">Marco </h4>
-                              <ul class="media-date text-uppercase reviews list-inline">
-                                <li class="dd">22</li>
-                                <li class="mm">09</li>
-                                <li class="aaaa">2014</li>
-                              </ul>
-                              <p class="media-comment">
-                                Great snippet! Thanks for sharing.
-                              </p>
-                            </div>              
-                        </div>
-                      </li>      
-                      <li class="media">
-                        <a class="pull-left" href="#">
-                          <img class="media-object img-circle" src="https://s3.amazonaws.com/uifaces/faces/twitter/lady_katherine/128.jpg" alt="profile">
-                        </a>
-                        <div class="media-body">
-                          <div class="well well-lg">
-                              <h4 class="media-heading text-uppercase reviews">Kriztine</h4>
-                              <ul class="media-date text-uppercase reviews list-inline">
-                                <li class="dd">22</li>
-                                <li class="mm">09</li>
-                                <li class="aaaa">2014</li>
-                              </ul>
-                              <p class="media-comment">
-                                Yehhhh... Thanks for sharing.
-                              </p>
-                          </div>              
-                        </div>
-                      </li>
+                       <span id = "comments" ></span>
+                   
                     </ul> 
                 </div>
                 <div class="tab-pane" id="add-comment">
-                    <form action="#" method="post" class="form-horizontal" id="commentForm" role="form"> 
+                    <div class="form-horizontal" id="commentForm" > 
                         <div class="form-group">
                             <label for="email" class="col-sm-2 control-label">Comment</label>
                             <div class="col-sm-10">
-                              <textarea class="form-control" name="addComment" id="addComment" rows="5"></textarea>
+                            <input id = "addComment" type="text" placeholder="..." class="form-control" > 
                             </div>
                         </div>
                         <div class="form-group">
@@ -265,7 +399,7 @@ $(function () {
                                 <button class="btn btn-success btn-circle text-uppercase" type="submit" id="submitComment"><span class="glyphicon glyphicon-send"></span> Summit comment</button>
                             </div>
                         </div>            
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
