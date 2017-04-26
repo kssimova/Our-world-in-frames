@@ -285,6 +285,37 @@ $(function () {
 			});
 		}, 1100);
 		
+	//get loged user
+	var thisId;
+	$.ajax({
+  		type: "POST",
+  		url: 'user/profile',
+  		dataType: "json",
+  		success: function(user){
+  			thisId = user.userId;
+  		 	$.ajax({
+  		 		type: 'GET',
+  				url: 'user/get/' + thisId,
+  				success: function(resp){
+  					if(resp.status){
+  						following = true;
+  					}
+  				},
+  				error: function(e){
+  					alert(e);
+  				}
+  		  	});
+  		},
+  		error: function(data){
+  			console.log(data);
+  			alert();
+  		}
+  	});
+	
+		
+	var following = false;	
+	var numOfFollowers = 0;
+	setTimeout(function(){			
 		//dispay post creator
 		var numOfPhotos = 0;
 		$.ajax({
@@ -295,34 +326,56 @@ $(function () {
 					numOfPhotos += v.photos.length;
 				});
 				$('#username').html("Creator: " + user.username);
-		  		$('#followers').html("Followers: " + user.followers.length);
-		  		$('#photos').html("Photos: " + numOfPhotos);
+			 	$('#followers').html("Followers: " + user.followers.length);
+			 	numOfFollowers = user.followers.length;
+			  	$('#photos').html("Photos: " + numOfPhotos);
+			  	if(following){
+			  		console.log(following);
+			  		$('#follow').html('<span class="glyphicon glyphicon-send"></span> Unfollow');
+			  	}else{
+			  		console.log(following);
+			  		$('#follow').html('<span class="glyphicon glyphicon-send"></span> Follow');
+			 	}
 			},			
 			error: function(e){
 				alert(e);
-				console.log($postId);
 			}
 		});
-		
+	}, 100);
+	
 	// follow user 
-	$('#follow').on('click', function(){
-		var postche = {
-				postId : $postId
-			};
-		$.ajax({
-			type: 'POST',
-			url: 'user/follow',
-			data: postche,
-			success: function(){	 
-				console.log("hi");
-			},
-			error: function(e){
-				alert(e);
-				console.log($postId);
-			}
-
+	setTimeout(function(){	
+		$('#follow').on('click', function(){
+			var url = 'user/follow';
+	  		if(following){
+	  			url = 'user/unfollow';
+	  		};
+			var postche = {
+					postId : $postId
+				};
+			$.ajax({
+				type: 'POST',
+				url: url,
+				data: postche,
+				success: function(){	 
+			  		console.log(url);
+				  	if(url == 'user/follow'){
+				  		$('#follow').html('<span class="glyphicon glyphicon-send"></span> Unfollow');
+					 	$('#followers').html("Followers: " + ++numOfFollowers);
+					 	following = true;
+				  	}else{
+				  		$('#follow').html('<span class="glyphicon glyphicon-send"></span> Follow');
+					 	$('#followers').html("Followers: " + --numOfFollowers);
+					 	following = false;
+				 	}
+				},
+				error: function(e){
+					alert(e);
+				}
+	
+			});	
 		});	
-	});	
+	}, 500);
 });
 
 
@@ -354,7 +407,7 @@ $(function () {
                 <h3 id = "username" class="my-3"></h3>
                 <h3 id = "followers" class="my-3"></h3>
                 <h3 id = "photos" class="my-3"></h3>
-                  <button class="btn btn-success btn-circle text-uppercase" type="submit" id="follow"><span class="glyphicon glyphicon-send"></span> Follow</button>
+                  <button class="btn btn-success btn-circle text-uppercase" type="submit" id="follow"></button>
             </div>
 
         </div>

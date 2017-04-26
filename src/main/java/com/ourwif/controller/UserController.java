@@ -3,6 +3,7 @@ package com.ourwif.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -75,7 +76,8 @@ public class UserController {
 	
 
 	@RequestMapping(value="/register",method = RequestMethod.POST)
-	public Basic register(Model model, HttpSession session, HttpServletRequest request) {
+	public Basic register(HttpSession session, HttpServletRequest request) {
+		System.out.println("hi");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");	
 		String email = request.getParameter("email");	
@@ -146,21 +148,16 @@ public class UserController {
 				System.out.println(e.getMessage());
 			}
 		}
-		user = cachedObj.getOnePost(postId).getUser();		
+		user = cachedObj.getOnePost(postId).getUser();	
 		return user;
 	}
 	
-	@RequestMapping(value="/change",method = RequestMethod.PUT)
-	public String changeUser(Model model, HttpServletRequest request) {
-		//this will change the content of the post this request should contain the comment id and the new values
-		return "user";
-	}
-	
 	@RequestMapping(value="/follow",method = RequestMethod.POST)
-	public void follow(HttpSession session,  HttpServletRequest request) {
+	public User follow(HttpSession session,  HttpServletRequest request) {
 		String postId = request.getParameter("postId");
 		CachedObjects cachedObj = CachedObjects.getInstance();
 		User follower = (User) session.getAttribute("user");
+		User user = null;
 		if(cachedObj.getAllPosts().isEmpty()){
 			try {
 				postDAO.getAllPosts();
@@ -168,26 +165,73 @@ public class UserController {
 				System.out.println(e.getMessage());
 			}
 		}
-		User user = cachedObj.getOnePost(postId).getUser();
+		user = cachedObj.getOnePost(postId).getUser();
 		try {
 			userDAO.followUser(follower, user);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
+		return user;
 	}
 	
 	@RequestMapping(value="/unfollow",method = RequestMethod.POST)
-	public String unfollow(Model model, HttpServletRequest request) {
-		//this will delete one comment.. request should contain the id of this comment 
-		return "user";
+	public User unfollow(HttpSession session,  HttpServletRequest request) {
+		String postId = request.getParameter("postId");
+		CachedObjects cachedObj = CachedObjects.getInstance();
+		User follower = (User) session.getAttribute("user");
+		User user = null;
+		if(cachedObj.getAllPosts().isEmpty()){
+			try {
+				postDAO.getAllPosts();
+			} catch (ValidationException | SQLException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		user = cachedObj.getOnePost(postId).getUser();
+		try {
+			userDAO.unfollowUser(follower, user);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return user;
+	}
+	
+	//check if this user is the same
+	@RequestMapping(value="/get/{user_id}", method=RequestMethod.GET)
+	public Basic getSameUser(HttpSession session,  @PathVariable("user_id") Long userId) {
+		Basic basic = new Basic(false, "url");
+		User user = (User) session.getAttribute("user");
+		CachedObjects cachedObj = CachedObjects.getInstance();
+		if(cachedObj.getAllUsers().isEmpty()){
+			try {
+				userDAO.getAllUsers();
+			} catch (ValidationException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		Set<Long> userToCheck = cachedObj.getOneUser(userId).getFollowers();
+		for(Long users : userToCheck){
+			if(user.getUserId() == users){
+				basic.setStatus(true);
+			}	
+		}
+		return basic;
 	}
 
 	@RequestMapping(value="/profile", method=RequestMethod.POST)
-	public User getProfilePage(HttpSession session, Model m) {
+	public User getProfilePage(HttpSession session){
 		User user = null;
 		if(session.getAttribute("logged")!= null){
 			user = (User)session.getAttribute("user");
 		}
 		return user;
+	}
+	
+	//not ready
+	
+	@RequestMapping(value="/change",method = RequestMethod.PUT)
+	public String changeUser(Model model, HttpServletRequest request) {
+		//this will change the content of the post this request should contain the comment id and the new values
+		return "user";
 	}
 }

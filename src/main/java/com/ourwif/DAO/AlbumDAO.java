@@ -147,52 +147,7 @@ public class AlbumDAO {
 		}
 		return album;
  	}
- 		
-	//create album from database
- 	public Album getAlbum(User user, long albumId) throws ValidationException, SQLException {
-  		TreeSet<Post> posts = new TreeSet<>();
-  		Album album = null;
- 		PreparedStatement st = null;
-  		String sql = "";
- 		ResultSet result = null;
-    	context = new ClassPathXmlApplicationContext("Spring-Module.xml");
-		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
-		Connection conn = null;
-		try{
-			conn = (Connection) dataSource.getConnection();
-			conn.setAutoCommit(false);
-			//get posts
-			sql = "SELECT p.user_id, p.post_id, p.name, p.description, p.delete_hash, p.date_created, p.picture_path "
-					+ "FROM posts p JOIN albums_posts ap ON p.post_id = ap.post_id WHERE ap.album_id = ? ;";
- 			st = conn.prepareStatement(sql);
- 			st.setLong(1, albumId);
- 			st.execute();
- 			result = st.getResultSet();
- 			while(result.next()){
- 				Post p = postDAO.getPost(result.getString("post_id"), result.getString("delete_hash"));
- 				posts.add(p);
- 			}
- 			sql = "SELECT a.name, a.description, a.date_created, a.user_id FROM albums a wHERE a.album_id = ? ;";
- 			//create the album
- 			st = conn.prepareStatement(sql);
- 			st.setLong(1, albumId);
- 			st.execute();
- 			//get result
- 			result = st.getResultSet();
- 			while(result.next()){
- 				album = new Album(result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), user);
- 			}
- 			//fill this album
- 			for(Post p : posts){
- 				album.addPosts(p);
- 			}	
- 			album.setAlbumId(albumId);
- 			CachedObjects.getInstance().addAlbums(album);
- 		}finally{
- 	 		conn.close();
- 		}
- 		return album;
-	}
+ 	
  	
  	//get all albums From DB
  	public void getAllAlbums() throws ValidationException, SQLException {

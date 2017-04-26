@@ -47,6 +47,7 @@ public class UserDAO {
 	// user_id follows follower_id? user_id sledva foll_id ||| follower - posledovatel
 	// works
 	private static final String FOLLOW_USER = "INSERT INTO ourwif.followers (user_id, followed_id) VALUES (?, ?);";
+	private static final String UNFOLLOW_USER = "DELETE FROM ourwif.followers WHERE user_id = ? AND followed_id = ? ;";
 	
 	// WITHOUT CITY AND COUNTRY
 	private static final String GET_ALL_FOLLOWERS = "SELECT USERS.user_id, first_name, last_name, username, email, password, mobile_number, birthdate, description, gender, profilephoto_path FROM ourwif.users USERS JOIN ourwif.followers FOLLOWERS ON (USERS.user_id = FOLLOWERS.user_id) WHERE followed_id = ?";
@@ -488,29 +489,52 @@ public class UserDAO {
 	public void followUser(User user, User followedUser) throws SQLException{
 		PreparedStatement preparedStatement = null;
 		Connection connection = null;
+		System.out.println("1");
 		try {
 			connection = (Connection) dataSource.getConnection();
+			System.out.println("2");
+ 			connection.setAutoCommit(false);
+ 			System.out.println("3");
 			preparedStatement = connection.prepareStatement(FOLLOW_USER);
+			System.out.println(FOLLOW_USER);
 			preparedStatement.setLong(1, user.getUserId());
+			System.out.println("5");
 			preparedStatement.setLong(2, followedUser.getUserId());
+			System.out.println("6");
 			preparedStatement.executeUpdate();
-		} catch (SQLException e1) {
-			System.out.println("Error in 1st catch block in UserDAO method followUser() - " + e1.getMessage());
-			throw e1;
+			System.out.println("7");
+ 		} catch (SQLException e) {
+			System.out.println("roll");
+ 			connection.rollback();
+		}finally{
+			preparedStatement.close();
+			connection.setAutoCommit(true);
 		}
-		finally{
-			if(preparedStatement != null){
-				try {
-					preparedStatement.close();
-				} catch (SQLException e2) {
-					System.out.println("Error when closing statement in 1st catch block in UserDAO method followUser() - " + e2.getMessage());
-					throw e2;
-				}
-			}
-			followedUser.addFollower(user);
-			user.addFollowing(followedUser);
-		}
+		System.out.println("8");
+		followedUser.addFollower(user);
+		user.addFollowing(followedUser);
 	}
+	
+	// unfollow user
+		public void unfollowUser(User user, User followedUser) throws SQLException{
+			PreparedStatement preparedStatement = null;
+			Connection connection = null;
+			try {
+				connection = (Connection) dataSource.getConnection();
+	 			connection.setAutoCommit(false);
+				preparedStatement = connection.prepareStatement(UNFOLLOW_USER);
+				preparedStatement.setLong(1, user.getUserId());
+				preparedStatement.setLong(2, followedUser.getUserId());
+				preparedStatement.executeUpdate();
+	 		} catch (SQLException e) {
+	 			connection.rollback();
+			}finally{
+				preparedStatement.close();
+				connection.setAutoCommit(true);
+			}
+			followedUser.removeFollower(user);
+			user.removeFollowing(followedUser);
+		}
 	
 	// get user's followers and following
 	public void getFollows(User user, String query) throws ValidationException, SQLException{

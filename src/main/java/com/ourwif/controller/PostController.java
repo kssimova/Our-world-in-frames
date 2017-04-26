@@ -6,13 +6,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.ValidationException;
 
+import org.apache.catalina.webresources.Cache;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ui.Model;
@@ -163,85 +166,7 @@ public class PostController {
 			basic.setStrId(postId);
 		}
 		return basic;
-	}	
-	
-	
-	@RequestMapping(value="/change",method = RequestMethod.PUT)
-	public String changePost(Model model, HttpServletRequest request, HttpSession session) {
-		//if we get a put request with JSON with name/ description and id of one post we will change what's in the database accordingly
-		if(session.getAttribute("logged")!= null){
-			Post post = CachedObjects.getInstance().getOnePost(request.getParameter("post_id"));
-			User user = CachedObjects.getInstance().getOneUser( request.getParameter("user_id"));			
-			String title = request.getParameter("tittle");
-			String description = request.getParameter("description");
-			if(!title.isEmpty() && title != null){
-				try {
-					postDAO.editPostName(post, user, title);
-				} catch (ValidationException e) {
-					System.out.println("Validation fail");
-				} catch (SQLException e) {
-					System.out.println(e.getMessage());
-				}
-			}
-			if(!description.isEmpty() && description != null){
-				try {
-					postDAO.editPostInfo(post, user, description);
-				} catch (ValidationException e) {
-					System.out.println("Validation fail");
-				} catch (SQLException e) {
-					System.out.println(e.getMessage());
-				}
-			}
-			return "PostView";
-			
-		}else{
-			return "login";
-		}
-	}
-	
-	
-	
-	@RequestMapping(value="/delete/{post_id}",method = RequestMethod.DELETE)
-	public String deletePost(Model model, @PathVariable("post_id") String postId,
-										@PathVariable("album_id") Integer albumId,
-										HttpSession session){
-		if(session.getAttribute("logged")!= null){
-			Post post = CachedObjects.getInstance().getOnePost(postId);
-			Album album = CachedObjects.getInstance().getOneAlbum(albumId);
-			User user = CachedObjects.getInstance().getOneUser((long)session.getAttribute("user_id"));
-			String deletehash = post.getDeleteHash();
-			
-			CachedObjects.getInstance().removePost(post, album);
-			try {
-				postDAO.deletePost(post, user, album);
-			} catch (ValidationException | SQLException e) {
-				System.out.println("something went wrong");
-			}
-			//this will delete one album the request should contain album id					
-			URL url = null;
-			HttpURLConnection connection = null;
-			try {
-				url = new URL("https://api.imgur.com/3/image/" + deletehash);
-				connection = (HttpURLConnection) url.openConnection();
-			} catch (IOException e) {
-				System.out.println("something went wrong");
-			}
-			connection.setDoOutput(true);
-			connection.setDoInput(true);
-			connection.setRequestProperty("authorization", "Bearer ef5590f1e88e136817e6a544f174c567fec38215");
-			try {
-				connection.setRequestMethod("DELETE");
-				connection.connect();
-				System.out.println(connection.getResponseMessage());
-			} catch (IOException e) {
-				System.out.println("something went wrong");
-			}
-			return "album/get/" + album.getAlbumId() ;
-		}else{	
-			return "login";
-		}
-	}	
-	
+	}		
 	
 	@RequestMapping(value="/like",method = RequestMethod.POST)
 	public void likePost(HttpServletRequest request, HttpSession session) {
@@ -330,4 +255,109 @@ public class PostController {
  		tag = tag.substring(tag.indexOf(',') + 1).trim();
 		return addTags(tag, tags);
  	}
+ 	
+	@RequestMapping(value="/getPhotos",method = RequestMethod.POST)
+	public  TreeSet<Post> getPosts(HttpSession session, HttpServletRequest request){
+		TreeSet<Post> posts = new TreeSet<>();
+		boolean followers = (request.getParameter("followers").equals("true"));
+		User user = (User) session.getAttribute("user");
+		//get all posts
+		if(followers){
+			for(User followe: user.getAllFollowers()){
+				for(Album album : followe.getAlbums().values()){
+					posts.addAll(album.getPhotos());
+				}
+			}
+		}else{
+			for(Entry<Long, TreeMap<String, Post>>  e : CachedObjects.getInstance().getAllPosts().entrySet()){
+				for (Entry<String, Post> e2 : e.getValue().entrySet()){
+					posts.add(e2.getValue());
+				}
+			}	
+		}	
+		//order them
+		if(request.getParameter("orderBy") == "time"){	
+			TreeSet<Post> dateCreated = new TreeSet<Post>(CachedObjects.dateCreatedComparator);
+			dateCreated.addAll(posts);
+		}else{
+			TreeSet<Post> mostLikes = new TreeSet<Post>(CachedObjects.mostLikesComparator);
+			mostLikes.addAll(posts);
+		}
+		return posts;
+	}
+ 	
+ 	//not used
+	@RequestMapping(value="/change",method = RequestMethod.PUT)
+	public String changePost(HttpServletRequest request, HttpSession session) {
+		//if we get a put request with JSON with name/ description and id of one post we will change what's in the database accordingly
+		if(session.getAttribute("logged")!= null){
+			Post post = CachedObjects.getInstance().getOnePost(request.getParameter("post_id"));
+			User user = CachedObjects.getInstance().getOneUser( request.getParameter("user_id"));			
+			String title = request.getParameter("tittle");
+			String description = request.getParameter("description");
+			if(!title.isEmpty() && title != null){
+				try {
+					postDAO.editPostName(post, user, title);
+				} catch (ValidationException e) {
+					System.out.println("Validation fail");
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+			if(!description.isEmpty() && description != null){
+				try {
+					postDAO.editPostInfo(post, user, description);
+				} catch (ValidationException e) {
+					System.out.println("Validation fail");
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+			return "PostView";
+			
+		}else{
+			return "login";
+		}
+	}
+	
+	@RequestMapping(value="/deletePost/{post_id}/album/{album_id}",method = RequestMethod.DELETE)
+	public String deletePost(@PathVariable("post_id") String postId,
+							 @PathVariable("album_id") Integer albumId,
+							 HttpSession session){
+		if(session.getAttribute("logged")!= null){
+			Post post = CachedObjects.getInstance().getOnePost(postId);
+			Album album = CachedObjects.getInstance().getOneAlbum(albumId);
+			User user = CachedObjects.getInstance().getOneUser((long)session.getAttribute("user_id"));
+			String deletehash = post.getDeleteHash();
+			
+			CachedObjects.getInstance().removePost(post, album);
+			try {
+				postDAO.deletePost(post, user, album);
+			} catch (ValidationException | SQLException e) {
+				System.out.println("something went wrong");
+			}
+			//this will delete one album the request should contain album id					
+			URL url = null;
+			HttpURLConnection connection = null;
+			try {
+				url = new URL("https://api.imgur.com/3/image/" + deletehash);
+				connection = (HttpURLConnection) url.openConnection();
+			} catch (IOException e) {
+				System.out.println("something went wrong");
+			}
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setRequestProperty("authorization", "Bearer ef5590f1e88e136817e6a544f174c567fec38215");
+			try {
+				connection.setRequestMethod("DELETE");
+				connection.connect();
+				System.out.println(connection.getResponseMessage());
+			} catch (IOException e) {
+				System.out.println("something went wrong");
+			}
+			return "album/get/" + album.getAlbumId() ;
+		}else{	
+			return "login";
+		}
+	}	
 }
