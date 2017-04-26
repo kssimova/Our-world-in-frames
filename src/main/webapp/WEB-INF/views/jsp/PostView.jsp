@@ -293,18 +293,31 @@ $(function () {
   		dataType: "json",
   		success: function(user){
   			thisId = user.userId;
+  		 	$.ajax({
+  		 		type: 'GET',
+  				url: 'user/get/' + thisId,
+  				success: function(resp){
+  					if(resp.status){
+  						following = true;
+  					}
+  				},
+  				error: function(e){
+  					alert(e);
+  				}
+  		  	});
   		},
   		error: function(data){
   			console.log(data);
   			alert();
   		}
   	});
+	
 		
-		
+	var following = false;	
+	var numOfFollowers = 0;
 	setTimeout(function(){			
 		//dispay post creator
 		var numOfPhotos = 0;
-		var following = false;
 		$.ajax({
 			type: 'GET',
 			url: 'user/' + $postId,
@@ -314,31 +327,13 @@ $(function () {
 				});
 				$('#username').html("Creator: " + user.username);
 			 	$('#followers').html("Followers: " + user.followers.length);
-			 	$.ajax({
-			 		type: 'GET',
-					url: 'user/' + thisId,
-					success: function(resp){
-						if(resp.status){
-							following = true;
-						}
-					},
-					error: function(e){
-						alert(e);
-					}
-			 	});
-			 	
-			 	$.each(user.followers, function(index, val){
-					$.each(val, function(ind, va){
-						console.log(ind + ": " + va);
-					});
-			  		if(val.userId == thisId){
-			  			following = true;
-			  		}
-			  	});
+			 	numOfFollowers = user.followers.length;
 			  	$('#photos').html("Photos: " + numOfPhotos);
 			  	if(following){
+			  		console.log(following);
 			  		$('#follow').html('<span class="glyphicon glyphicon-send"></span> Unfollow');
 			  	}else{
+			  		console.log(following);
 			  		$('#follow').html('<span class="glyphicon glyphicon-send"></span> Follow');
 			 	}
 			},			
@@ -349,27 +344,38 @@ $(function () {
 	}, 100);
 	
 	// follow user 
-	$('#follow').on('click', function(){
-		var url = 'user/follow';
-  		if(following){
-  			url = 'user/unfollow';
-  		};
-		var postche = {
-				postId : $postId
-			};
-		$.ajax({
-			type: 'POST',
-			url: url,
-			data: postche,
-			success: function(){	 
-				console.log(following);
-			},
-			error: function(e){
-				alert(e);
-			}
-
+	setTimeout(function(){	
+		$('#follow').on('click', function(){
+			var url = 'user/follow';
+	  		if(following){
+	  			url = 'user/unfollow';
+	  		};
+			var postche = {
+					postId : $postId
+				};
+			$.ajax({
+				type: 'POST',
+				url: url,
+				data: postche,
+				success: function(){	 
+			  		console.log(url);
+				  	if(url == 'user/follow'){
+				  		$('#follow').html('<span class="glyphicon glyphicon-send"></span> Unfollow');
+					 	$('#followers').html("Followers: " + ++numOfFollowers);
+					 	following = true;
+				  	}else{
+				  		$('#follow').html('<span class="glyphicon glyphicon-send"></span> Follow');
+					 	$('#followers').html("Followers: " + --numOfFollowers);
+					 	following = false;
+				 	}
+				},
+				error: function(e){
+					alert(e);
+				}
+	
+			});	
 		});	
-	});	
+	}, 500);
 });
 
 

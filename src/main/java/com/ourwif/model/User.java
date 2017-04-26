@@ -263,7 +263,7 @@ public class User implements Comparable<User>{
 	
 	public void removeFollower(User user){
 		if(validUser(user)){
-			this.followers.add(user);
+			this.followers.remove(user);
 		}
 	}
 	

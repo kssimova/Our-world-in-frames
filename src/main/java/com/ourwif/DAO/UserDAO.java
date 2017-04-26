@@ -489,18 +489,28 @@ public class UserDAO {
 	public void followUser(User user, User followedUser) throws SQLException{
 		PreparedStatement preparedStatement = null;
 		Connection connection = null;
+		System.out.println("1");
 		try {
 			connection = (Connection) dataSource.getConnection();
+			System.out.println("2");
  			connection.setAutoCommit(false);
+ 			System.out.println("3");
 			preparedStatement = connection.prepareStatement(FOLLOW_USER);
+			System.out.println(FOLLOW_USER);
 			preparedStatement.setLong(1, user.getUserId());
+			System.out.println("5");
 			preparedStatement.setLong(2, followedUser.getUserId());
+			System.out.println("6");
 			preparedStatement.executeUpdate();
+			System.out.println("7");
  		} catch (SQLException e) {
+			System.out.println("roll");
  			connection.rollback();
 		}finally{
 			preparedStatement.close();
+			connection.setAutoCommit(true);
 		}
+		System.out.println("8");
 		followedUser.addFollower(user);
 		user.addFollowing(followedUser);
 	}
@@ -520,6 +530,7 @@ public class UserDAO {
 	 			connection.rollback();
 			}finally{
 				preparedStatement.close();
+				connection.setAutoCommit(true);
 			}
 			followedUser.removeFollower(user);
 			user.removeFollowing(followedUser);

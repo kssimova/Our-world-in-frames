@@ -253,6 +253,10 @@ public class PostController {
 		return addTags(tag, tags);
  	}
  	
+ 	
+ 	
+ 	
+ 	
  	//not used
 	@RequestMapping(value="/change",method = RequestMethod.PUT)
 	public String changePost(HttpServletRequest request, HttpSession session) {

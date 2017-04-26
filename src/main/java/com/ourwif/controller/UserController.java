@@ -3,6 +3,7 @@ package com.ourwif.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -75,7 +76,8 @@ public class UserController {
 	
 
 	@RequestMapping(value="/register",method = RequestMethod.POST)
-	public Basic register(Model model, HttpSession session, HttpServletRequest request) {
+	public Basic register(HttpSession session, HttpServletRequest request) {
+		System.out.println("hi");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");	
 		String email = request.getParameter("email");	
@@ -146,7 +148,7 @@ public class UserController {
 				System.out.println(e.getMessage());
 			}
 		}
-		user = cachedObj.getOnePost(postId).getUser();		
+		user = cachedObj.getOnePost(postId).getUser();	
 		return user;
 	}
 	
@@ -195,7 +197,7 @@ public class UserController {
 	}
 	
 	//check if this user is the same
-	@RequestMapping(value="/{user_id}", method=RequestMethod.POST)
+	@RequestMapping(value="/get/{user_id}", method=RequestMethod.GET)
 	public Basic getSameUser(HttpSession session,  @PathVariable("user_id") Long userId) {
 		Basic basic = new Basic(false, "url");
 		User user = (User) session.getAttribute("user");
@@ -207,10 +209,12 @@ public class UserController {
 				System.out.println(e.getMessage());
 			}
 		}
-		User userToCheck = cachedObj.getOneUser(userId);
-		if(user.equals(userToCheck)){
-			basic.setStatus(true);
-		}	
+		Set<Long> userToCheck = cachedObj.getOneUser(userId).getFollowers();
+		for(Long users : userToCheck){
+			if(user.getUserId() == users){
+				basic.setStatus(true);
+			}	
+		}
 		return basic;
 	}
 
