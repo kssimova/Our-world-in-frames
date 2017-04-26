@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.Collections;
 
@@ -43,10 +44,9 @@ public class UserDAO {
 	private static final String CHANGE_BIRTHDATE = "UPDATE ourwif.users SET birthdate = ? WHERE user_id = ?";
 	// works
 	private static final String CHANGE_PROFILEPHOTO = "UPDATE ourwif.users SET profilephoto_path = ? WHERE user_id = ?";
-	
-	// user_id follows follower_id? user_id sledva foll_id ||| follower - posledovatel
 	// works
 	private static final String FOLLOW_USER = "INSERT INTO ourwif.followers (user_id, followed_id) VALUES (?, ?);";
+	
 	private static final String UNFOLLOW_USER = "DELETE FROM ourwif.followers WHERE user_id = ? AND followed_id = ? ;";
 	
 	// WITHOUT CITY AND COUNTRY
@@ -582,10 +582,10 @@ public class UserDAO {
 		Map<Long, User> allUsers = cachedObj.getAllUsers();
 		boolean containsEmail = false;
 		if(allUsers.isEmpty()){
-			allUsers = getAllUsers();
+			getAllUsers();
 		}
-		for(User users : allUsers.values()){
-			if(users.getEmail().equals(email)){
+		for(Entry<Long, User> users : allUsers.entrySet()){
+			if(users.getValue().getEmail().equals(email)){
 				containsEmail = true;
 				break;
 			}

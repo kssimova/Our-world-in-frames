@@ -3,6 +3,7 @@ package com.ourwif.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -77,7 +78,6 @@ public class UserController {
 
 	@RequestMapping(value="/register",method = RequestMethod.POST)
 	public Basic register(HttpSession session, HttpServletRequest request) {
-		System.out.println("hi");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");	
 		String confirmPassword = request.getParameter("confirmPassword");
@@ -111,17 +111,11 @@ public class UserController {
 				basic.addError("#emailError", " * Email is already taken! Try another one! :) ");
 				validRegistration = false;
 			}
-		} catch (ValidationException e) {
-			validRegistration = false;
-			basic.addError("#emailError", e.getMessage());
-			return basic;
-		}
-		
-		try {
 			user.changeEmail(email);
 		} catch (ValidationException e) {
 			validRegistration = false;
 			basic.addError("#emailError", e.getMessage());
+			return basic;
 		}
 		
 		if(!password.equals(confirmPassword)){
@@ -137,12 +131,21 @@ public class UserController {
 			basic.addError("#passwordError", e.getMessage());
 		}
 		
-		user.changeGender(Enum.valueOf(User.Gender.class, (gender.toUpperCase())));
+		if(gender.equals("0")){
+			validRegistration = false;
+			basic.addError("#selectGender", " * Please select gender! ");
+		}
+		else{
+			user.changeGender(Enum.valueOf(User.Gender.class, (gender.toUpperCase())));
+		}
 		
-		System.out.println("************");
+		System.out.println("Gender is " + gender);
+		
+		System.out.println("***********");
 		System.out.println(username);
 		System.out.println(email);
-		System.out.println(user.getGender().toString());
+		System.out.println(gender);
+		//System.out.println(user.getGender().toString());
 		System.out.println(password);
 		System.out.println("***********");
 		
@@ -150,6 +153,10 @@ public class UserController {
 		if(validRegistration){
 			basic.addError("#registration", "  * Registration successful! Log in!");
 			userDAO.addUser(user);
+		}
+		
+		for(Entry<String, String> entry : basic.getErrors().entrySet()){
+			System.out.println("Greshkata e " + entry.getKey() + " message e " + entry.getValue());
 		}
 		
 		return basic;

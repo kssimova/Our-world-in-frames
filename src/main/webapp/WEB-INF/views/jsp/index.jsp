@@ -159,25 +159,25 @@
 				            
 				                        <div class="form-group">
 				                    		<label class="sr-only" for="form-username">Username</label>
-				                        	<input type="text" id = "register-username" name="form-username" required="required" placeholder="Username..." class="form-username form-control">
-				                        	<span id = "usernameError" style = "font: 15px arial, sans-serif; color: red"> </span><br>
+				                        	<input type="text" id = "register-username" name="form-username" required="required" placeholder="Username..." class="form-username form-control"><br>
+				                        	<span id = "usernameError" style = "font: 16px arial, sans-serif; color: red"> </span>
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-email">Email</label>
 				                        	<input type="text" id = "register-email" name="form-email" required="required" placeholder="Email..." class="form-email form-control"><br>
-				                        	<span id = "emailError" style = "font: 15px arial, sans-serif; color: red"> </span>
+				                        	<span id = "emailError" style = "font: 16px arial, sans-serif; color: red"> </span>
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-password">Password</label>
 				                        	<input type="password" id = "register-password" name="form-password" required="required" placeholder="Password..." class="form-password form-control">
-				                       		<span id = "passwordError" style = "font: 15px arial, sans-serif; color: red"> </span><br>
+				                       		<span id = "passwordError" style = "font: 16px arial, sans-serif; color: red"> </span><br>
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-confirm-password">Confirm Password</label>
 				                        	<input type="password" id = "register-confirm-password" name="form-confirm-password" required="required" placeholder="Confirm password..." onChange="checkPasswordMatch()" class="form-confirm-password form-control">
 				                        </div>
 				                        
-				                        <span class="registrationFormAlert" id="checkPasswordMatch" style = "font: 15px arial, sans-serif;"></span><br>
+				                        <span class="registrationFormAlert" id="checkPasswordMatch" style = "font: 16px arial, sans-serif;"></span><br>
 				                        
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-select-gender">Select gender</label>
@@ -186,17 +186,9 @@
                    									 <option value="male" id = "gender-male">Male</option>
                        								 <option value="female"  id = "gender-female">Female</option>
 												</select>
-												<span  style = "font: 15px arial, sans-serif;"> </span><br>
 				                        </div>
-				                        <div class="form-group">
-				                        	<label class="sr-only" for="form-select-city-country">Select country and city</label>
-				                        		<select name="form-select-city-country" class="form-select-city-country form-control" id="form-select-city-country" style = "height: 50px; font-size:16px; outline: 0; background: #F5F5F5; border: 3px solid #ddd;">
-				                       				 <option value="" selected>Select city and country...</option> 
-                   									 <option value="male">Male</option>
-                       								 <option value="female">Female</option>
-												</select>
-				                        </div>
-				                        <span id = "registration" style = "font: 15px arial, sans-serif; color: green"> </span><br>
+				                        <span id = "selectGender" style = "font: 16px arial, sans-serif; color: red"> </span>
+				                        <span id = "registration" style = "font: 16px arial, sans-serif; color: green"> </span><br><br>
 				                        <button id = "signup" type="submit" class="form-button form-control" style = "background-color:#dab3ff; height: 50px; font-size:18px; color: white; border: 3px solid #ddd;">Sign up!</button>
 				                    
 			                    </div>

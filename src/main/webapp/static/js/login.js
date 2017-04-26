@@ -48,6 +48,7 @@ $(function () {
 		document.getElementById('emailError').innerHTML = "";
 		document.getElementById('passwordError').innerHTML = "";
 		document.getElementById('registration').innerHTML = "";
+		document.getElementById('selectGender').innerHTML = "";
 		
 		var user = {
 			username: $username.val(),
