@@ -144,7 +144,8 @@
 	  							'</div>' + 
 	  						'</div>');			
 	  				count1++;
-	   			}else if(count1 == 3){
+	   			};
+	   			if(count1 == 3){
 	   				count1 = 0;
 	   			};
 			});
