@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.Collections;
 
@@ -24,7 +25,7 @@ public class UserDAO {
 	// works
 	private static final String SELECT_ALL_USERS = "SELECT user_id, first_name, last_name, username, email, password, mobile_number, birthdate, description, gender, profilephoto_path, CITY.name AS city_name, COUNTRY.name AS country_name FROM ourwif.users JOIN ourwif.cities CITY ON (users.city_id = CITY.city_id) JOIN ourwif.countries COUNTRY ON (CITY.country_id = COUNTRY.country_id)";
 	// works
-	private static final String INSERT_USER = "INSERT INTO ourwif.users (first_name, last_name, username, email, password, mobile_number, birthdate, description, gender, profilephoto_path, city_id, country_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	private static final String INSERT_USER = "INSERT INTO ourwif.users (first_name, last_name, username, email, password, mobile_number, birthdate, description, gender, profilephoto_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	// works
 	private static final String CHANGE_FIRST_NAME = "UPDATE ourwif.users SET first_name = ? WHERE user_id = ?";
 	// works
@@ -43,10 +44,9 @@ public class UserDAO {
 	private static final String CHANGE_BIRTHDATE = "UPDATE ourwif.users SET birthdate = ? WHERE user_id = ?";
 	// works
 	private static final String CHANGE_PROFILEPHOTO = "UPDATE ourwif.users SET profilephoto_path = ? WHERE user_id = ?";
-	
-	// user_id follows follower_id? user_id sledva foll_id ||| follower - posledovatel
 	// works
 	private static final String FOLLOW_USER = "INSERT INTO ourwif.followers (user_id, followed_id) VALUES (?, ?);";
+	
 	private static final String UNFOLLOW_USER = "DELETE FROM ourwif.followers WHERE user_id = ? AND followed_id = ? ;";
 	
 	// WITHOUT CITY AND COUNTRY
@@ -72,47 +72,12 @@ public class UserDAO {
 		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		Connection connection = null;
 		// get city_id and country_id 
-		String sql = "SELECT city_id, country_id FROM ourwif.cities WHERE name = '" + user.getCity() + "'";
-		PreparedStatement preparedStatement = null;
-		ResultSet result = null;
-		long city_id = 0, country_id = 0;
-		try {
-			connection = (Connection) dataSource.getConnection();
-			preparedStatement = connection.prepareStatement(sql);
-			result = preparedStatement.executeQuery();
-			if(result.next()){
-				city_id = result.getLong("city_id");
-				country_id = result.getLong("country_id");
-			}
-			try {
-				user.addAllAlbums(albumDAO.getUserAlbums(user));
-			} catch (ValidationException e) {
-				System.out.println("cant add all albums to user");
-			}
-			
-		} catch (SQLException e1) {
-			System.out.println("Error in 1st catch block in UserDAO method addUser() - " + e1.getMessage());
-		}
-		finally{
-			if(preparedStatement != null){
-				try {
-					preparedStatement.close();
-				} catch (SQLException e2) {
-					System.out.println("Error when closing statement in 1st catch block in UserDAO method addUser() - " + e2.getMessage());
-				}
-			}
-			if(result != null){
-				try {
-					result.close();
-				} catch (SQLException e3) {
-					System.out.println("Error when closing resultSet in 1st catch block in UserDAO method addUser() - " + e3.getMessage());
-				}
-			}
-		}
+		
 		
 		// add new user to database
 		PreparedStatement prepStatement = null;
 		try {
+			connection = (Connection) dataSource.getConnection();
 			prepStatement = connection.prepareStatement(INSERT_USER);
 			prepStatement.setString(1, user.getFirstName());
 			prepStatement.setString(2, user.getLastName());
@@ -120,12 +85,12 @@ public class UserDAO {
 			prepStatement.setString(4, user.getEmail());
 			prepStatement.setString(5, user.getPassword());
 			prepStatement.setString(6, user.getMobileNumber());
-			prepStatement.setDate(7, Date.valueOf(user.getBirthdate()));
+			prepStatement.setDate(7, null);
 			prepStatement.setString(8, user.getDescription());
 			prepStatement.setString(9, (user.getGender().toString()));
 			prepStatement.setString(10, user.getProfilePhotoPath());
-			prepStatement.setLong(11, city_id);
-			prepStatement.setLong(12, country_id);
+			//prepStatement.setLong(11, city_id);
+			//prepStatement.setLong(12, country_id);
 			prepStatement.executeUpdate();
 		} catch (SQLException e3) {
 			System.out.println("Error in 2nd catch block in UserDAO method addUser() - " + e3.getMessage());
@@ -638,10 +603,10 @@ public class UserDAO {
 		Map<Long, User> allUsers = cachedObj.getAllUsers();
 		boolean containsEmail = false;
 		if(allUsers.isEmpty()){
-			allUsers = getAllUsers();
+			getAllUsers();
 		}
-		for(User users : allUsers.values()){
-			if(users.getEmail().equals(email)){
+		for(Entry<Long, User> users : allUsers.entrySet()){
+			if(users.getValue().getEmail().equals(email)){
 				containsEmail = true;
 				break;
 			}

@@ -19,6 +19,7 @@ $(function () {
 				window.location = ourUser.url;
 			},
 			error: function(){
+			
 				$("#login_message").html("");
 				$("#login_message").html(" &nbsp; * Wrong username or password! Please try again! <br>");
 				document.getElementById('form-username').value = "";
@@ -41,9 +42,13 @@ $(function () {
 		var $email = $('#register-email');
 		var $password = $('#register-password');
 		var $confirmPassword = $('#register-confirm-password');
-		var $gender = $('#form-select-gender');
+		var $gender = $("select[name='form-select-gender'] option:selected");
 		
-		$("#registration").html("");
+		document.getElementById('usernameError').innerHTML = "";
+		document.getElementById('emailError').innerHTML = "";
+		document.getElementById('passwordError').innerHTML = "";
+		document.getElementById('registration').innerHTML = "";
+		document.getElementById('selectGender').innerHTML = "";
 		
 		var user = {
 			username: $username.val(),
@@ -73,7 +78,6 @@ $(function () {
 	
 	
 	$("#register-password, #register-confirm-password").on('keyup', function () {
-		 $("#divCheckPasswordMatch").html("");
 		var $password = $('#register-password').val();
 		var $confirmPassword = $('#register-confirm-password').val();
 		if($password != "" && $confirmPassword != ""){

@@ -3,6 +3,7 @@ package com.ourwif.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -81,15 +82,19 @@ public class UserController {
 		String password = request.getParameter("password");	
 		String confirmPassword = request.getParameter("confirmPassword");
 		String email = request.getParameter("email");	
+		String gender = request.getParameter("gender");
 		Basic basic = new Basic();
 		User user = null;
 		boolean validRegistration = true;
 		
 		try {
-			userDAO.isUsernameTaken(username);
+			if(userDAO.isUsernameTaken(username)){
+				validRegistration = false;
+				basic.addError("#usernameError", " * Username is already taken! Try another one! :) ");
+			}
 		} catch (ValidationException e) {
 			validRegistration = false;
-			basic.addError("#usernameError", " * Username is already taken! Try another one! :) ");
+			basic.addError("#usernameError", e.getMessage());
 			return basic;
 		}
 		
@@ -102,18 +107,15 @@ public class UserController {
 		}
 		
 		try {
-			userDAO.isEmailTaken(email);
-		} catch (ValidationException e) {
-			validRegistration = false;
-			basic.addError("#emailError", " * Email is already taken! Try another one! :) ");
-			return basic;
-		}
-		
-		try {
+			if(userDAO.isEmailTaken(email)){
+				basic.addError("#emailError", " * Email is already taken! Try another one! :) ");
+				validRegistration = false;
+			}
 			user.changeEmail(email);
 		} catch (ValidationException e) {
 			validRegistration = false;
 			basic.addError("#emailError", e.getMessage());
+			return basic;
 		}
 		
 		if(!password.equals(confirmPassword)){
@@ -129,16 +131,32 @@ public class UserController {
 			basic.addError("#passwordError", e.getMessage());
 		}
 		
-		System.out.println("************");
+		if(gender.equals("0")){
+			validRegistration = false;
+			basic.addError("#selectGender", " * Please select gender! ");
+		}
+		else{
+			user.changeGender(Enum.valueOf(User.Gender.class, (gender.toUpperCase())));
+		}
+		
+		System.out.println("Gender is " + gender);
+		
+		System.out.println("***********");
 		System.out.println(username);
 		System.out.println(email);
-		System.out.println(email);
+		System.out.println(gender);
+		//System.out.println(user.getGender().toString());
 		System.out.println(password);
 		System.out.println("***********");
 		
 		System.out.println(validRegistration);
 		if(validRegistration){
 			basic.addError("#registration", "  * Registration successful! Log in!");
+			userDAO.addUser(user);
+		}
+		
+		for(Entry<String, String> entry : basic.getErrors().entrySet()){
+			System.out.println("Greshkata e " + entry.getKey() + " message e " + entry.getValue());
 		}
 		
 		return basic;
