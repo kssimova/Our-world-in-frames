@@ -24,16 +24,13 @@ $(function () {
 	var $tags = $('#tags');
 	
 	$.ajax({
-		type: "GET",
+		type: "POST",
 		url: 'album/get',
 		data: album,
 		success: function(albums){
   			$('#name').html(albums.name);
   			$('#desc').html(albums.description);
 			$.each(albums.photos, function(index, val){
-				$.each(val, function(i, v){
-	  				console.log(i + " : " + v);
-				});	
   	  			if(count == 0){
   	    	  		$('#photos').append(
   	    	  			'<div class="col-sm-4 col-md-4">' +

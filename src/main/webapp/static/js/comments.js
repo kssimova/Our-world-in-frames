@@ -9,7 +9,7 @@ $(function () {
 	var tagcheta = "";
 	var liked = false;
 	var count = 0;
-//get all coments
+//get all comments
 	setTimeout(function(){	
 		$comments = $('#comments');	
 		$.ajax({

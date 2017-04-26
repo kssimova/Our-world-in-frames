@@ -138,6 +138,9 @@ public class CachedObjects {
 			allPost.put(post.getName(), new TreeSet<>());
 		}
 		allPost.get(post.getName()).add(post.getPostId());
+		if(!allAlbums.isEmpty()){
+			allAlbums.get(albumId).addPosts(post);
+		}
 	}
 	
 	public boolean containsPost(String postId) {
@@ -239,9 +242,9 @@ public class CachedObjects {
 	public static Comparator<Post> mostLikesComparator = new Comparator<Post>(){
 		@Override
 		public int compare(Post post1, Post post2) {
-			int result = post1.getLikes().size() - post2.getLikes().size();
+			int result = post2.getLikes().size() - post1.getLikes().size();
 			if(result == 0){
-				return post1.getPostId().compareTo(post2.getPostId());
+				return post2.getPostId().compareTo(post1.getPostId());
 			}
 			return result;
 		}
@@ -249,9 +252,9 @@ public class CachedObjects {
 	public static Comparator<Post> dateCreatedComparator = new Comparator<Post>(){
 		@Override
 		public int compare(Post post1, Post post2) {
-			int result = post1.getDateCreated().compareTo(post2.getDateCreated());
+			int result = post2.getDateCreated().compareTo(post1.getDateCreated());
 			if(result == 0){
-				return post1.getPostId().compareTo(post2.getPostId());
+				return post2.getPostId().compareTo(post1.getPostId());
 			}
 			return result;
 		}

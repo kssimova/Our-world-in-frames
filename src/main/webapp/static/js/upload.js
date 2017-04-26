@@ -15,6 +15,20 @@ $(function() {
 		formdata = new FormData();
 	}
 	$("#btn").click(function (evt) {
+		$("#progressbar").progressbar();
+		    var tick_interval = 1;
+		    var tick_increment = 10;
+		    var tick_function = function() {
+		        var value = $("#progressbar").progressbar("option", "value");
+		        value += tick_increment;
+		        $("#progressbar").progressbar("option", "value", value);
+		        if (value < 100) {
+		            window.setTimeout(tick_function, tick_interval * 1000);
+		        } else {
+		            alert("Done");
+		        };
+		    };
+
 		evt.preventDefault();
 		var i = 0, len = input.files.length, img, reader, file;
 	
@@ -65,10 +79,12 @@ $(function() {
 					} 	
 				});
 			}
-		}, 5000);
+		}, 10000);
 	});
 }); 
 	
+
+//show all albums of this user
 $(function (){	
 	$albums = $('#albums');
 	$.ajax({
@@ -87,12 +103,16 @@ $(function (){
 	});
 });
 	
+
+//show album bar
 $(function() {
 	$('.inputs div').on('click', function() {
 		$('.panel').toggle(300);
 	});
 });
 		
+
+//add album
 $(function(){
 	var $name = $("#nameAlb");
 	var $description = $('#descriptionAlb');

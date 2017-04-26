@@ -37,9 +37,6 @@ $(function () {
 			data: tags,
 			success: function(tag){
 				$.each(tag, function(index, value){
-					$.each(value, function(i, v){
-	  					console.log(i + " : " + v);
-					});
 					if(count2 == 1){
 						$('#photos').append('<div id = "img" class="row">');
 					}
@@ -60,7 +57,6 @@ $(function () {
 										'</f:form>' + 
 									'</div>'
 								);
-						console.log(count2);
 						count2++;
 					}else if(count2 == 3 || count2 == 8 || count2 == 9 || count2 == 19){	
 						$('#photos').append(
@@ -77,7 +73,6 @@ $(function () {
 									'</div>' +	 	
 								'</div>' 				
 							);
-						console.log(count2);
 						count2++;
 					}else if(count2 == 4 || count2 == 5 || count2 == 6 || count2 == 11){	
 						$('#photos').append(
@@ -94,7 +89,6 @@ $(function () {
 								'</div>' +	 	
 							'</div>' 				
 						);
-						console.log(count2);
 						count2++;
 					}else if(count2 == 7 || count2 == 12){	
 						$('#photos').append(
@@ -111,7 +105,6 @@ $(function () {
 								'</div>' +	 	
 							'</div>' 				
 						);
-						console.log(count2);
 						count2++;
 					}else if(count2 == 14 || count2 ==16){	
 						$('#photos').append(
@@ -128,7 +121,6 @@ $(function () {
 								'</div>' +	 	
 							'</div>' 				
 						);
-						console.log(count2);
 						count2++;
 					} else if(count2 == 21){
 						count2 = 1;

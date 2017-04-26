@@ -25,9 +25,14 @@ public class AlbumController {
 	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 	AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 	
-	@RequestMapping(value="/get",method = RequestMethod.GET)
-	public Album getAlbum(Model model, HttpServletRequest request, HttpSession session) {
-		Long albumId = Long.parseLong(request.getParameter("albumId"));		
+	@RequestMapping(value="/get",method = RequestMethod.POST)
+	public Album getAlbum(HttpServletRequest request, HttpSession session) {
+		String s = request.getParameter("albumId");
+		if(s.contains("albumId=")){
+			s = s.substring(s.indexOf("albumId=")+8);
+			System.out.println(s);
+		}
+		Long albumId = Long.parseLong(s);
 		Album album = null;
 		if(session.getAttribute("logged")!= null){
 			if(albumId != null){
@@ -52,7 +57,8 @@ public class AlbumController {
 		String description = request.getParameter("description");
 		User user = (User)session.getAttribute("user");
 		try {
-			albumDAO.createAlbum(user, name, description);
+			Album album = albumDAO.createAlbum(user, name, description);
+			user.putAlbum(album);
 		} catch (ValidationException e) {
 			System.out.println(e.getMessage());
 		} catch (SQLException e) {

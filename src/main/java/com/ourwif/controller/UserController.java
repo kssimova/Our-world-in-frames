@@ -189,7 +189,6 @@ public class UserController {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		
 		return user;
 	}
 	
@@ -239,10 +238,18 @@ public class UserController {
 
 	@RequestMapping(value="/profile", method=RequestMethod.POST)
 	public User getProfilePage(HttpSession session){
+		User fromSession = (User) session.getAttribute("user");
+		CachedObjects cachedObj = CachedObjects.getInstance();
 		User user = null;
-		if(session.getAttribute("logged")!= null){
-			user = (User)session.getAttribute("user");
+		if(cachedObj.getAllUsers().isEmpty()){
+			try {
+				userDAO.getAllUsers();
+			} catch (ValidationException e) {
+				System.out.println(e.getMessage());
+			}
 		}
+		user = cachedObj.getOneUser(fromSession.getUserId());
+		session.setAttribute("user", user);
 		return user;
 	}
 	

@@ -11,7 +11,6 @@
 	<link rel="stylesheet" type="text/css" href="css/searchPage.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 	<script src="js/userPage.js"></script>
-	<script src="js/likePhoto.js"></script>
 	
 <title>Home</title>
 </head>
@@ -30,7 +29,6 @@ $(function () {
 	 	data: request,
 	 	dataType: "json",
 	 	success: function(user){
-			console.log(user);
 			$.each(user, function(index, val){
 		  		$.ajax({
 		  	 		type: "GET",
@@ -75,7 +73,6 @@ $(function () {
 		  	dataType: "json",
 		  	success: function(user){
 				$.each(user, function(i, value){
-					console.log(i + ': '+ value);
 				  	if(count2 == 1){
 						$('#photos1').append('<div id = "img" class="row">');
 					}
@@ -96,7 +93,6 @@ $(function () {
 								'</f:form>' + 
 							'</div>'
 						);
-						console.log(count2);
 						count2++;
 					}else if(count2 == 3 || count2 == 8 || count2 == 9 || count2 == 19){	
 						$('#photos1').append(
@@ -113,7 +109,6 @@ $(function () {
 							'</div>' +	 	
 						'</div>' 				
 						);
-						console.log(count2);
 						count2++;
 					}else if(count2 == 4 || count2 == 5 || count2 == 6 || count2 == 11){	
 						$('#photos1').append(
@@ -130,7 +125,6 @@ $(function () {
 							'</div>' +	 	
 						'</div>' 				
 						);
-						console.log(count2);
 						count2++;
 					}else if(count2 == 7 || count2 == 12){	
 						$('#photos1').append(
@@ -147,7 +141,6 @@ $(function () {
 							'</div>' +	 	
 						'</div>' 				
 						);
-						console.log(count2);
 						count2++;
 					}else if(count2 == 14 || count2 ==16){	
 						$('#photos1').append(
@@ -164,7 +157,6 @@ $(function () {
 							'</div>' +	 	
 						'</div>' 				
 						);
-						console.log(count2);
 						count2++;
 					} else if(count2 == 21){
 						count2 = 1;

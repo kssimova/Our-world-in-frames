@@ -524,8 +524,12 @@ public class UserDAO {
 			preparedStatement.close();
 			connection.setAutoCommit(true);
 		}
+		System.out.println(user.getFollowers());
 		followedUser.addFollower(user);
+		System.out.println(user.getFollowers());
+		System.out.println(followedUser.getFollowing());
 		user.addFollowing(followedUser);
+		System.out.println(followedUser.getFollowing());
 	}
 	
 	// unfollow user
@@ -545,8 +549,12 @@ public class UserDAO {
 				preparedStatement.close();
 				connection.setAutoCommit(true);
 			}
+			System.out.println(user.getFollowers());
 			followedUser.removeFollower(user);
+			System.out.println(user.getFollowers());
+			System.out.println(followedUser.getFollowing());
 			user.removeFollowing(followedUser);
+			System.out.println(followedUser.getFollowing());
 		}
 	
 	// get user's followers and following

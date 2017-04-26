@@ -17,18 +17,15 @@
 <script type="text/javascript">
 	//get all posts from all followed users
 $(function () {	
-	
-	
-
-	var count2 = 1;
 	var count = 0;
+	var count2 = 1;
 	var	request = {
-			followers: "true",
+			followers: "false",
 			orderBy: "time"
 		};
 	var	$phot = $('#phot');
 	var	request1 = {
-			followers: "true",
+			followers: "false",
 			orderBy: "notTime"
 		};
 	var	$phot1 = $('#pop');
@@ -39,6 +36,7 @@ $(function () {
 		  	data: request1,
 		  	dataType: "json",
 		  	success: function(user){
+		  		count2 = 1;
 				$.each(user, function(index, value){
 				  	if(count2 == 1){
 				  		$phot1.append('<div id = "img" class="row">');
@@ -129,14 +127,13 @@ $(function () {
 						count2 = 1;
 					};
 				});	
-			count++;
 		  	},
 		  	error: function(e){
 			alert(e);
 		}
 	});	
 		
-		
+		var count1 = 1;
 
 		$.ajax({
 		 	type: "POST",
@@ -144,15 +141,15 @@ $(function () {
 		  	data: request,
 		  	dataType: "json",
 		  	success: function(user){
+		  		count1 == 1;
 				$.each(user, function(index, value){
-					console.log(request.followers + request.orderBy);
-				  	if(count2 == 1){
+				  	if(count1 == 1){
 				  		$phot.append('<div id = "img" class="row">');
 						}	
-					if(count2 == 4 || count2 == 7 || count2 == 11 || count2 == 14 || count2 == 16|| count2 == 18){
+					if(count1 == 4 || count1 == 7 || count1 == 11 || count1 == 14 || count1 == 16|| count1 == 18){
 						$phot.append('</div><div id = "img" class="row">');
 					}
-					if(count2 == 1 || count2 == 2 || count2 == 10 || count2 ==13 || count2 == 15 || count2 == 17 || count2 == 18 || count2 == 20){
+					if(count1 == 1 || count1 == 2 || count1 == 10 || count1 ==13 || count1 == 15 || count1 == 17 || count1 == 18 || count1 == 20){
 						$phot.append(
 							'<div class = "col-md-5 size">' + 
 								'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
@@ -165,9 +162,9 @@ $(function () {
 											'</div>' + 
 										'</f:form>' + 
 									'</div>'
-						);
-						count2++;
-						}else if(count2 == 3 || count2 == 8 || count2 == 9 || count2 == 19){	
+							);
+							count1++;
+						}else if(count1 == 3 || count1 == 8 || count1 == 9 || count1 == 19){	
 							$phot.append(
 								'<div class = "col-md-2 size">' +
 									'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
@@ -182,8 +179,8 @@ $(function () {
 								'</div>' +	 	
 							'</div>' 				
 							);
-							count2++;
-						}else if(count2 == 4 || count2 == 5 || count2 == 6 || count2 == 11){	
+							count1++;
+						}else if(count1 == 4 || count1 == 5 || count1 == 6 || count1 == 11){	
 							$phot.append(
 								'<div class = "col-md-4 size">' +
 									'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
@@ -198,8 +195,8 @@ $(function () {
 								'</div>' +	 	
 							'</div>' 				
 							);
-						count2++;
-					}else if(count2 == 7 || count2 == 12){	
+						count1++;
+					}else if(count1 == 7 || count1 == 12){	
 						$phot.append(
 							'<div class = "col-md-3 size">' +
 								'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
@@ -214,8 +211,8 @@ $(function () {
 							'</div>' +	 	
 						'</div>' 				
 						);
-						count2++;
-					}else if(count2 == 14 || count2 ==16){	
+						count1++;
+					}else if(count1 == 14 || count1 ==16){	
 						$phot.append(
 							'<div class = "col-md-7 size">' +
 								'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
@@ -230,12 +227,11 @@ $(function () {
 							'</div>' +	 	
 						'</div>' 				
 						);
-						count2++;
-					} else if(count2 == 21){
-						count2 = 1;
+						count1++;
+					} else if(count1 == 21){
+						count1 = 1;
 					};
 				});	
-			count++;
 		  	},
 		  	error: function(e){
 			alert(e);
@@ -317,16 +313,12 @@ $(function () {
 	
 	  	<!--  image panel     -->
 <div id = "popular" class = "panel active">
-  	<div class="container">
-		<span id = "pop"></span>
-	</div>
+	<span id = "pop"></span>
 </div>	
 	
  	<!--  album panel     -->
 <div id = "fresh" class = "panel">
-	<div class="container">
-		<span id = "phot"></span>
-	</div>
+	<span id = "phot"></span>
 </div>
  
 
