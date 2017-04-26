@@ -1,19 +1,31 @@
 package com.ourwif.model;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
+
 public class Basic {
 	
 	private boolean status;
 	private String url;
 	private Long id;
 	private String strId;
-	
+	private TreeMap<String, String> errors;
 	
 	public Basic(boolean loged, String url) {
 		super();
 		status = loged;
 		this.url = url;
+		errors = new TreeMap<>();
+	}
+	
+	public Map<String, String> getErrors() {
+		return Collections.unmodifiableMap(errors);
 	}
 
+	public void addError(String errorPlace, String error){
+		errors.put(errorPlace, error);
+	}
 
 	public boolean getStatus() {
 		return status;
