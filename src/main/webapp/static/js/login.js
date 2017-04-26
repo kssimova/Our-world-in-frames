@@ -42,7 +42,7 @@ $(function () {
 		var $email = $('#register-email');
 		var $password = $('#register-password');
 		var $confirmPassword = $('#register-confirm-password');
-		var $gender = $('#form-select-gender');
+		var $gender = $("select[name='form-select-gender'] option:selected");
 		
 		document.getElementById('usernameError').innerHTML = "";
 		document.getElementById('emailError').innerHTML = "";

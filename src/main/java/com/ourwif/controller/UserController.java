@@ -82,6 +82,7 @@ public class UserController {
 		String password = request.getParameter("password");	
 		String confirmPassword = request.getParameter("confirmPassword");
 		String email = request.getParameter("email");	
+		String gender = request.getParameter("gender");
 		Basic basic = new Basic();
 		User user = null;
 		boolean validRegistration = true;
@@ -136,16 +137,19 @@ public class UserController {
 			basic.addError("#passwordError", e.getMessage());
 		}
 		
+		user.changeGender(Enum.valueOf(User.Gender.class, (gender.toUpperCase())));
+		
 		System.out.println("************");
 		System.out.println(username);
 		System.out.println(email);
-		System.out.println(email);
+		System.out.println(user.getGender().toString());
 		System.out.println(password);
 		System.out.println("***********");
 		
 		System.out.println(validRegistration);
 		if(validRegistration){
 			basic.addError("#registration", "  * Registration successful! Log in!");
+			userDAO.addUser(user);
 		}
 		
 		return basic;

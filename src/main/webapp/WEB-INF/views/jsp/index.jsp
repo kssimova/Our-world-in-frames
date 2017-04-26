@@ -181,12 +181,12 @@
 				                        
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-select-gender">Select gender</label>
-				                        		<select name="form-select-gender"  id="form-select-gender" class="form-select-gender form-control"style = "height: 50px; font-size:16px; outline: 0; background: #F5F5F5; border: 3px solid #ddd;">
-				                       				 <option value="" selected>Select gender...</option> 
-                   									 <option value="male">Male</option>
-                       								 <option value="female">Female</option>
+				                        		<select name="form-select-gender" required = "required" id="form-select-gender" class="form-select-gender form-control"style = "height: 50px; font-size:16px; outline: 0; background: #F5F5F5; border: 3px solid #ddd;">
+				                       				 <option value="0" selected id = "gender">Select gender...</option> 
+                   									 <option value="male" id = "gender-male">Male</option>
+                       								 <option value="female"  id = "gender-female">Female</option>
 												</select>
-												<span id = "none" style = "font: 15px arial, sans-serif;"> </span><br>
+												<span  style = "font: 15px arial, sans-serif;"> </span><br>
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-select-city-country">Select country and city</label>
