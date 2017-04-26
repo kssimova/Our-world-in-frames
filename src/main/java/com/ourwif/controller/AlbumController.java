@@ -36,11 +36,10 @@ public class AlbumController {
 						albumDAO.getAllAlbums();
 
 					} catch (ValidationException | SQLException e) {
-						System.out.println("i cant get all posts");
+						System.out.println(e.getMessage());
 					}
 				}
 				album = CachedObjects.getInstance().getOneAlbum(albumId);
-				System.out.println(album.toString());
 			}
 		}
 		return album;

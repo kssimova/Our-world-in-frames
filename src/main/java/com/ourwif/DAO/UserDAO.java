@@ -157,18 +157,40 @@ public class UserDAO {
 			result = preparedStatement.executeQuery();
 			while(result.next()){
 				User user = new User(result.getString("username"), result.getString("email"), result.getString("password"), result.getLong("user_id"));
-				user.changeFirstName(result.getString("first_name"));
-				user.changeLastName(result.getString("last_name"));
-				user.changeMobileNumber(result.getString("mobile_number"));
-				//user.changeBirthDate(result.getDate("birthdate").toLocalDate());
-				user.changeDescription(result.getString("description"));
+				String results = result.getString("first_name");
+				if(!result.wasNull()){
+					user.changeFirstName(results);
+				}
+				results = result.getString("last_name");
+				if(!result.wasNull()){
+					user.changeLastName(results);
+				}
+				results = result.getString("mobile_number");
+				if(!result.wasNull()){
+					user.changeMobileNumber(results);
+				}
+				Date res = result.getDate("birthdate");
+				if(!result.wasNull()){
+					user.changeBirthDate(res.toLocalDate());
+				}
+				results = result.getString("description");
+				if(!result.wasNull()){
+					user.changeDescription(results);
+				}
 				// enum parser
 				user.changeGender(Enum.valueOf(User.Gender.class, result.getString("gender").toUpperCase()));
-				if(result.getString("profilephoto_path") != null){
-					user.changeProfilePhoto(result.getString("profilephoto_path"));
+				results = result.getString("profilephoto_path");
+				if(!result.wasNull()){
+					user.changeProfilePhoto(results);
 				}
-				user.changeCity(result.getString("city_name"));
-				user.changeCountry(result.getString("country_name"));
+				results = result.getString("city_name");
+				if(!result.wasNull()){
+					user.changeCity(results);
+				}
+				results = result.getString("country_name");
+				if(!result.wasNull()){
+					user.changeCountry(results);
+				}
 				allUsers.put(user.getUserId(), user);
 				CachedObjects.getInstance().addUser(user);
 				user.addAllAlbums(albumDAO.getUserAlbums(user));
@@ -489,28 +511,19 @@ public class UserDAO {
 	public void followUser(User user, User followedUser) throws SQLException{
 		PreparedStatement preparedStatement = null;
 		Connection connection = null;
-		System.out.println("1");
 		try {
 			connection = (Connection) dataSource.getConnection();
-			System.out.println("2");
  			connection.setAutoCommit(false);
- 			System.out.println("3");
 			preparedStatement = connection.prepareStatement(FOLLOW_USER);
-			System.out.println(FOLLOW_USER);
 			preparedStatement.setLong(1, user.getUserId());
-			System.out.println("5");
 			preparedStatement.setLong(2, followedUser.getUserId());
-			System.out.println("6");
 			preparedStatement.executeUpdate();
-			System.out.println("7");
  		} catch (SQLException e) {
-			System.out.println("roll");
  			connection.rollback();
 		}finally{
 			preparedStatement.close();
 			connection.setAutoCommit(true);
 		}
-		System.out.println("8");
 		followedUser.addFollower(user);
 		user.addFollowing(followedUser);
 	}

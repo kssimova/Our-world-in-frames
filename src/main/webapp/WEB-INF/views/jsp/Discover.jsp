@@ -6,13 +6,245 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" type="text/css" href=css/aboutSectionStyle.css></link>
+	<link rel="stylesheet" type="text/css" href="css/allPages.css">
 	<link rel="stylesheet" type="text/css" href="css/HomePage.css">
-	<link rel="stylesheet" type="text/css" href="css/Discover.css">
+	<link rel="stylesheet" type="text/css" href="css/searchPage.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 	<script src="js/userPage.js"></script>
 	<script src=js/tether.min.js></script>
 <title>Hello</title>
 </head>
+<script type="text/javascript">
+	//get all posts from all followed users
+$(function () {	
+	
+	
+
+	var count2 = 1;
+	var count = 0;
+	var	request = {
+			followers: "true",
+			orderBy: "time"
+		};
+	var	$phot = $('#phot');
+	var	request1 = {
+			followers: "true",
+			orderBy: "notTime"
+		};
+	var	$phot1 = $('#pop');
+		
+		$.ajax({
+		 	type: "POST",
+		  	url: 'post/getPhotos',
+		  	data: request1,
+		  	dataType: "json",
+		  	success: function(user){
+				$.each(user, function(index, value){
+				  	if(count2 == 1){
+				  		$phot1.append('<div id = "img" class="row">');
+						}	
+					if(count2 == 4 || count2 == 7 || count2 == 11 || count2 == 14 || count2 == 16|| count2 == 18){
+						$phot1.append('</div><div id = "img" class="row">');
+					}
+					if(count2 == 1 || count2 == 2 || count2 == 10 || count2 ==13 || count2 == 15 || count2 == 17 || count2 == 18 || count2 == 20){
+						$phot1.append(
+							'<div class = "col-md-5 size">' + 
+								'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
+									'<input type="image" src="' + value.picturePath + '" alt="Submit">' + 
+										'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
+											'<div class="caption">' + 
+												'<p>' + 
+													value.name +
+												'</p>' + 
+											'</div>' + 
+										'</f:form>' + 
+									'</div>'
+						);
+						count2++;
+						}else if(count2 == 3 || count2 == 8 || count2 == 9 || count2 == 19){	
+							$phot1.append(
+								'<div class = "col-md-2 size">' +
+									'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
+										'<input type="image" src="' + value.picturePath + '" alt="Submit">' + 
+										'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
+										'<div class="caption">' + 
+											'<p>' + 
+												value.name +
+											'</p>' + 
+										'</div>' + 
+									'</f:form>' + 
+								'</div>' +	 	
+							'</div>' 				
+							);
+							count2++;
+						}else if(count2 == 4 || count2 == 5 || count2 == 6 || count2 == 11){	
+							$phot1.append(
+								'<div class = "col-md-4 size">' +
+									'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
+										'<input type="image" src="' + value.picturePath + '" alt="Submit">' + 
+										'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
+										'<div class="caption">' + 
+											'<p>' + 
+												value.name +
+											'</p>' + 
+										'</div>' + 
+									'</f:form>' + 
+								'</div>' +	 	
+							'</div>' 				
+							);
+						count2++;
+					}else if(count2 == 7 || count2 == 12){	
+						$phot1.append(
+							'<div class = "col-md-3 size">' +
+								'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
+									'<input type="image" src="' + value.picturePath + '" alt="Submit">' + 
+									'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
+									'<div class="caption">' + 
+										'<p>' + 
+											value.name +
+										'</p>' + 
+									'</div>' + 
+								'</f:form>' + 
+							'</div>' +	 	
+						'</div>' 				
+						);
+						count2++;
+					}else if(count2 == 14 || count2 ==16){	
+						$phot1.append(
+							'<div class = "col-md-7 size">' +
+								'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
+									'<input type="image" src="' + value.picturePath + '" alt="Submit">' + 
+									'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
+									'<div class="caption">' + 
+										'<p>' + 
+											value.name +
+										'</p>' + 
+									'</div>' + 
+								'</f:form>' + 
+							'</div>' +	 	
+						'</div>' 				
+						);
+						count2++;
+					} else if(count2 == 21){
+						count2 = 1;
+					};
+				});	
+			count++;
+		  	},
+		  	error: function(e){
+			alert(e);
+		}
+	});	
+		
+		
+
+		$.ajax({
+		 	type: "POST",
+		  	url: 'post/getPhotos',
+		  	data: request,
+		  	dataType: "json",
+		  	success: function(user){
+				$.each(user, function(index, value){
+					console.log(request.followers + request.orderBy);
+				  	if(count2 == 1){
+				  		$phot.append('<div id = "img" class="row">');
+						}	
+					if(count2 == 4 || count2 == 7 || count2 == 11 || count2 == 14 || count2 == 16|| count2 == 18){
+						$phot.append('</div><div id = "img" class="row">');
+					}
+					if(count2 == 1 || count2 == 2 || count2 == 10 || count2 ==13 || count2 == 15 || count2 == 17 || count2 == 18 || count2 == 20){
+						$phot.append(
+							'<div class = "col-md-5 size">' + 
+								'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
+									'<input type="image" src="' + value.picturePath + '" alt="Submit">' + 
+										'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
+											'<div class="caption">' + 
+												'<p>' + 
+													value.name +
+												'</p>' + 
+											'</div>' + 
+										'</f:form>' + 
+									'</div>'
+						);
+						count2++;
+						}else if(count2 == 3 || count2 == 8 || count2 == 9 || count2 == 19){	
+							$phot.append(
+								'<div class = "col-md-2 size">' +
+									'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
+										'<input type="image" src="' + value.picturePath + '" alt="Submit">' + 
+										'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
+										'<div class="caption">' + 
+											'<p>' + 
+												value.name +
+											'</p>' + 
+										'</div>' + 
+									'</f:form>' + 
+								'</div>' +	 	
+							'</div>' 				
+							);
+							count2++;
+						}else if(count2 == 4 || count2 == 5 || count2 == 6 || count2 == 11){	
+							$phot.append(
+								'<div class = "col-md-4 size">' +
+									'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
+										'<input type="image" src="' + value.picturePath + '" alt="Submit">' + 
+										'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
+										'<div class="caption">' + 
+											'<p>' + 
+												value.name +
+											'</p>' + 
+										'</div>' + 
+									'</f:form>' + 
+								'</div>' +	 	
+							'</div>' 				
+							);
+						count2++;
+					}else if(count2 == 7 || count2 == 12){	
+						$phot.append(
+							'<div class = "col-md-3 size">' +
+								'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
+									'<input type="image" src="' + value.picturePath + '" alt="Submit">' + 
+									'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
+									'<div class="caption">' + 
+										'<p>' + 
+											value.name +
+										'</p>' + 
+									'</div>' + 
+								'</f:form>' + 
+							'</div>' +	 	
+						'</div>' 				
+						);
+						count2++;
+					}else if(count2 == 14 || count2 ==16){	
+						$phot.append(
+							'<div class = "col-md-7 size">' +
+								'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
+									'<input type="image" src="' + value.picturePath + '" alt="Submit">' + 
+									'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
+									'<div class="caption">' + 
+										'<p>' + 
+											value.name +
+										'</p>' + 
+									'</div>' + 
+								'</f:form>' + 
+							'</div>' +	 	
+						'</div>' 				
+						);
+						count2++;
+					} else if(count2 == 21){
+						count2 = 1;
+					};
+				});	
+			count++;
+		  	},
+		  	error: function(e){
+			alert(e);
+		}
+	});	
+});	
+
+</script>
+
 <body>
 	<jsp:include page="Nav.jsp" />
 <script>
@@ -84,175 +316,19 @@
 	
 	
 	  	<!--  image panel     -->
-  <div id = "popular" class = "panel active">
-  
-  <!--   template 1 -->
- 	<div id = "img" class="row">
-		<div class = "col-md-5 size">
-			<img src="http://i.imgur.com/DLCkST0.png" />
-		</div>
-		<div class = "col-md-5 size">
-			<img src="http://i.imgur.com/WtT9f6J.jpg" />
-		</div>		
-		<div class = "col-md-2 size">
-			<img src="http://i.imgur.com/ZrF9do6.jpg" />
-		</div>	 	
- 	</div>
- 	
- 	  <!--   template 2 -->
- 	 <div id = "img" class="row">
-		<div class = "col-md-4 size">
-			<img src="http://i.imgur.com/ZrF9do6.jpg" />
-		</div>
-		<div class = "col-md-4 size">
-			<img src="http://i.imgur.com/DLCkST0.png" />
-		</div>
-		<div class = "col-md-4 size">
-			<img src="http://i.imgur.com/WtT9f6J.jpg" />
-		</div>
+<div id = "popular" class = "panel active">
+  	<div class="container">
+		<span id = "pop"></span>
 	</div>
+</div>	
 	
-	 	  <!--   template 3 -->
-  	<div id = "img" class="row">
-		<div class = "col-md-3 size">
-			<img src="http://i.imgur.com/WtT9f6J.jpg" />
-		</div>
-		<div class = "col-md-2 size">
-			<img src="http://i.imgur.com/kMUgnfZ.jpg" />
-		</div>
-		<div class = "col-md-2 size">
-			<img src="http://i.imgur.com/DLCkST0.png" />
-		</div>
-		<div class = "col-md-5 size">
-			<img src="http://i.imgur.com/xDKN6kn.jpg" />
-		</div>
-	</div>
-	
-		 	  <!--   template 4 -->
-  	<div id = "img" class="row">
-		<div class = "col-md-4 size">
-			<img src="http://i.imgur.com/DLCkST0.png" />
-		</div>
-		<div class = "col-md-3 size">
-			<img src="http://i.imgur.com/WtT9f6J.jpg" />
-		</div>
-		<div class = "col-md-5 size">
-			<img src="http://i.imgur.com/xDKN6kn.jpg" />
-		</div>
-	</div>
-	
-			 	  <!--   template 5 -->
-  	<div id = "img" class="row">
-		<div class = "col-md-7 size">
-			<img src="http://i.imgur.com/ZrF9do6.jpg" />
-		</div>
-		<div class = "col-md-5 size">
-			<img src="http://i.imgur.com/DLCkST0.png" />
-		</div>
-	</div>
-	
-		 	  <!--   template 6 -->
-  	<div id = "img" class="row">
-		<div class = "col-md-5 size">
-			<img src="http://i.imgur.com/ZrF9do6.jpg" />
-		</div>
-		<div class = "col-md-2 size">
-			<img src="http://i.imgur.com/WtT9f6J.jpg" />
-		</div>
-		<div class = "col-md-5 size">
-			<img src="http://i.imgur.com/DLCkST0.png" />
-		</div>
-	</div>
-	
-	
-	
-	
- </div>
- 
  	<!--  album panel     -->
- <div id = "fresh" class = "panel">
- 	<div id = "album" class="row"></div>
-
-			 	  <!--   template 5 -->
-  	<div id = "img" class="row">
-		<div class = "col-md-7 size">
-			<img src="http://i.imgur.com/ZrF9do6.jpg" />
-		</div>
-		<div class = "col-md-5 size">
-			<img src="http://i.imgur.com/DLCkST0.png" />
-		</div>
+<div id = "fresh" class = "panel">
+	<div class="container">
+		<span id = "phot"></span>
 	</div>
-	
-		 	  <!--   template 6 -->
-  	<div id = "img" class="row">
-		<div class = "col-md-5 size">
-			<img src="http://i.imgur.com/ZrF9do6.jpg" />
-		</div>
-		<div class = "col-md-2 size">
-			<img src="http://i.imgur.com/WtT9f6J.jpg" />
-		</div>
-		<div class = "col-md-5 size">
-			<img src="http://i.imgur.com/DLCkST0.png" />
-		</div>
-	</div>
-	 	  <!--   template 1 -->
- 	<div id = "img" class="row">
-		<div class = "col-md-5 size">
-			<img src="http://i.imgur.com/DLCkST0.png" />
-		</div>
-		<div class = "col-md-5 size">
-			<img src="http://i.imgur.com/WtT9f6J.jpg" />
-		</div>		
-		<div class = "col-md-2 size">
-			<img src="http://i.imgur.com/ZrF9do6.jpg" />
-		</div>	 	
- 	</div>
- 	
- 	  <!--   template 2 -->
- 	 <div id = "img" class="row">
-		<div class = "col-md-4 size">
-			<img src="http://i.imgur.com/ZrF9do6.jpg" />
-		</div>
-		<div class = "col-md-4 size">
-			<img src="http://i.imgur.com/DLCkST0.png" />
-		</div>
-		<div class = "col-md-4 size">
-			<img src="http://i.imgur.com/WtT9f6J.jpg" />
-		</div>
-	</div>
-	
-	 	  <!--   template 3 -->
-  	<div id = "img" class="row">
-		<div class = "col-md-3 size">
-			<img src="http://i.imgur.com/WtT9f6J.jpg" />
-		</div>
-		<div class = "col-md-2 size">
-			<img src="http://i.imgur.com/kMUgnfZ.jpg" />
-		</div>
-		<div class = "col-md-2 size">
-			<img src="http://i.imgur.com/DLCkST0.png" />
-		</div>
-		<div class = "col-md-5 size">
-			<img src="http://i.imgur.com/xDKN6kn.jpg" />
-		</div>
-	</div>
-	
-		 	  <!--   template 4 -->
-  	<div id = "img" class="row">
-		<div class = "col-md-4 size">
-			<img src="http://i.imgur.com/DLCkST0.png" />
-		</div>
-		<div class = "col-md-3 size">
-			<img src="http://i.imgur.com/WtT9f6J.jpg" />
-		</div>
-		<div class = "col-md-5 size">
-			<img src="http://i.imgur.com/xDKN6kn.jpg" />
-		</div>
-	</div>
-	
-	
- </div>
-
+</div>
+ 
 
 <br>
 <br>

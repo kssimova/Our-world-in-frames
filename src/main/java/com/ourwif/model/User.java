@@ -255,27 +255,27 @@ public class User implements Comparable<User>{
 	
 	
 	public void addFollower(User user){
-		if(validUser(user)){
+		if(validUser(user) && !followers.contains(user)){
 			this.followers.add(user);
 		}
 	}
 	
 	
 	public void removeFollower(User user){
-		if(validUser(user)){
+		if(validUser(user) && followers.contains(user)){
 			this.followers.remove(user);
 		}
 	}
 	
 	
 	public void addFollowing(User user){
-		if(validUser(user)){
+		if(validUser(user) && !followers.contains(user)){
 			this.following.add(user);
 		}
 	}
 	
 	public void removeFollowing(User user){
-		if(validUser(user)){
+		if(validUser(user) && followers.contains(user)){
 			this.following.remove(user);
 		}
 	}
@@ -318,7 +318,7 @@ public class User implements Comparable<User>{
 		this.albums.putAll(userAlbums);	
 	}
 
-	public Set<User> getAllFollowers() {
+	public Set<User> followers() {
 		return Collections.unmodifiableSortedSet(followers);	
 	}
 	

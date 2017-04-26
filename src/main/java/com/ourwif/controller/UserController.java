@@ -38,7 +38,7 @@ public class UserController {
 	    try {
 			response.sendRedirect("apiJSP");
 		} catch (IOException e) {
-			System.out.println("ops");
+			System.out.println(e.getMessage());
 		}
 	}
 	
@@ -61,10 +61,10 @@ public class UserController {
 						}
 					}
 					u = cachedObj.getOneUser(username);
+					System.out.println(u.toString());
 					session.setAttribute("username", username);
 					session.setAttribute("user", u);
 					session.setAttribute("logged", true);
-					
 				}
 			} catch (ValidationException e) {
 				System.out.println(e.getMessage());
@@ -77,7 +77,6 @@ public class UserController {
 
 	@RequestMapping(value="/register",method = RequestMethod.POST)
 	public Basic register(HttpSession session, HttpServletRequest request) {
-		System.out.println("hi");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");	
 		String confirmPassword = request.getParameter("confirmPassword");
@@ -151,14 +150,13 @@ public class UserController {
 		try {
 			response.sendRedirect("../index");
 		} catch (IOException e) {
-			System.out.println("ops");
+			System.out.println("Can't log out");
 		}
 	}
 	
 	//get user from post id
 	@RequestMapping(value="/{post_id}",method = RequestMethod.GET)
 	public User getUser(Model model, @PathVariable("post_id") String postId) {
-		System.out.println(postId);
 		CachedObjects cachedObj = CachedObjects.getInstance();
 		User user = null;
 		if(cachedObj.getAllPosts().isEmpty()){
@@ -191,6 +189,7 @@ public class UserController {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
+		
 		return user;
 	}
 	
