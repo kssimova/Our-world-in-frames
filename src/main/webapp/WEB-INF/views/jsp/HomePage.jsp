@@ -14,6 +14,13 @@
 	
 <title>Home</title>
 </head>
+<script type="text/javascript">
+	//get all posts from all followed users
+	
+	
+
+</script>
+
 <body>
 	<jsp:include page="Nav.jsp" />
 	

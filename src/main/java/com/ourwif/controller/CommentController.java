@@ -71,7 +71,8 @@ public class CommentController {
 		}	
 		return comment;
 	}	
-
+	
+	//not ready
 	@RequestMapping(value="/change",method = RequestMethod.PUT)
 	public String changeComment(Model model, HttpServletRequest request) {
 		//this will change the content of the post this request should contain the comment id and the new values

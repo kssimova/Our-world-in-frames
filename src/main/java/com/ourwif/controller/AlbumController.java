@@ -61,7 +61,7 @@ public class AlbumController {
 		}
 	}
 	
-	
+	//not ready
 	@RequestMapping(value="/change",method = RequestMethod.PUT)
 	public String changeAlbum(Model model, HttpServletRequest request) {
 		//get the parameters we want to change

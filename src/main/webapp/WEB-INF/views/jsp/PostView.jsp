@@ -285,8 +285,26 @@ $(function () {
 			});
 		}, 1100);
 		
+	//get loged user
+	var thisId;
+	$.ajax({
+  		type: "POST",
+  		url: 'user/profile',
+  		dataType: "json",
+  		success: function(user){
+  			thisId = user.userId;
+  		},
+  		error: function(data){
+  			console.log(data);
+  			alert();
+  		}
+  	});
+		
+		
+	setTimeout(function(){			
 		//dispay post creator
 		var numOfPhotos = 0;
+		var following = false;
 		$.ajax({
 			type: 'GET',
 			url: 'user/' + $postId,
@@ -295,30 +313,59 @@ $(function () {
 					numOfPhotos += v.photos.length;
 				});
 				$('#username').html("Creator: " + user.username);
-		  		$('#followers').html("Followers: " + user.followers.length);
-		  		$('#photos').html("Photos: " + numOfPhotos);
+			 	$('#followers').html("Followers: " + user.followers.length);
+			 	$.ajax({
+			 		type: 'GET',
+					url: 'user/' + thisId,
+					success: function(resp){
+						if(resp.status){
+							following = true;
+						}
+					},
+					error: function(e){
+						alert(e);
+					}
+			 	});
+			 	
+			 	$.each(user.followers, function(index, val){
+					$.each(val, function(ind, va){
+						console.log(ind + ": " + va);
+					});
+			  		if(val.userId == thisId){
+			  			following = true;
+			  		}
+			  	});
+			  	$('#photos').html("Photos: " + numOfPhotos);
+			  	if(following){
+			  		$('#follow').html('<span class="glyphicon glyphicon-send"></span> Unfollow');
+			  	}else{
+			  		$('#follow').html('<span class="glyphicon glyphicon-send"></span> Follow');
+			 	}
 			},			
 			error: function(e){
 				alert(e);
-				console.log($postId);
 			}
 		});
-		
+	}, 100);
+	
 	// follow user 
 	$('#follow').on('click', function(){
+		var url = 'user/follow';
+  		if(following){
+  			url = 'user/unfollow';
+  		};
 		var postche = {
 				postId : $postId
 			};
 		$.ajax({
 			type: 'POST',
-			url: 'user/follow',
+			url: url,
 			data: postche,
 			success: function(){	 
-				console.log("hi");
+				console.log(following);
 			},
 			error: function(e){
 				alert(e);
-				console.log($postId);
 			}
 
 		});	
@@ -354,7 +401,7 @@ $(function () {
                 <h3 id = "username" class="my-3"></h3>
                 <h3 id = "followers" class="my-3"></h3>
                 <h3 id = "photos" class="my-3"></h3>
-                  <button class="btn btn-success btn-circle text-uppercase" type="submit" id="follow"><span class="glyphicon glyphicon-send"></span> Follow</button>
+                  <button class="btn btn-success btn-circle text-uppercase" type="submit" id="follow"></button>
             </div>
 
         </div>

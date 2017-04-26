@@ -12,8 +12,6 @@ import java.util.TreeMap;
 import javax.sql.DataSource;
 import javax.xml.bind.ValidationException;
 
-import org.springframework.context.ApplicationContext;
-
 import com.mysql.jdbc.Connection;
 import com.ourwif.model.CachedObjects;
 import com.ourwif.model.Comment;
@@ -23,7 +21,6 @@ import com.ourwif.model.User;
 public class CommentDAO {
 	
 	private DataSource dataSource;
-	private ApplicationContext context = null;
 
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;

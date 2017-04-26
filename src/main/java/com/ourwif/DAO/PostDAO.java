@@ -88,82 +88,56 @@ public class PostDAO {
  		try {
  			conn = (Connection) dataSource.getConnection();
 			conn.setAutoCommit(false);
-		 	try {
-				sql ="INSERT INTO posts (user_id, name, description, album_id, date_created, picture_path, post_id, delete_hash)"
-							+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-				st = conn.prepareStatement(sql);	
-			 	st.setLong(1, user.getUserId());
-			 	st.setString(2, name);
-				st.setString(3, description);
-				st.setLong(4, album.getAlbumId());
-			 	st.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
-			 	st.setString(6, picturePath); 
-			 	st.setString(7, postId);
-			 	st.setString(8, deleteHash);
-				st.execute();
-			} catch (SQLException e2) {
-				System.out.println("Error#1 in PostDAO. Error message: " + e2.getMessage());
-				throw e2;
-			}
-		 	try {
-			 	post = new Post(user, name, description, dateCreated, picturePath, tags, postId, deleteHash);
-				post.addTags(tags);		
-				//add new tags in tag table if needed! tags are unique they won't be added in if they are already in it
-	 			for(String tag_name: tags){
-	 				sql = "INSERT INTO tags (name) value (?)";
-		 			st = conn.prepareStatement(sql);
-		 			st.setString(1, tag_name);
-		 			st.execute();
-	 			}
-	 			//select all new tag id-s
-	 			lonelyTags = new ArrayList<>();
-	 			for(String tag_name : tags){
-	 				sql = "SELECT tag_id FROM tags where name = ?";
-	 	 			st = conn.prepareStatement(sql);
-		 			st.setString(1, tag_name);
-	 	 			result = st.executeQuery();
-	 	 			while(result.next()){
-	 	 				lonelyTags.add(result.getLong("tag_id"));		
-	 	 			}		
-	 			}
-	 	 		//insert them
-	 	 		for(Long tagId: lonelyTags){			
-	 	 			sql = "INSERT INTO tags_posts (tag_id, post_id) VALUES (?, ?) ";
-	 	 			st = conn.prepareStatement(sql);
-	 	 			st.setLong(1, tagId);
-	 	 			st.setString(2, post.getPostId());
-	 	 			st.execute();
-	 	 		}		
-			} catch (ValidationException e1) {
-				System.out.println("Error#2 in PostDAO. Error message: " + e1.getMessage());
-				throw e1;
-			}
-		 	try {	
-		 		sql ="INSERT INTO albums_posts (album_id, post_id) VALUES (?, ?);";
-			 	st = conn.prepareStatement(sql);	
-			 	st.setLong(1, album.getAlbumId());;
-			 	st.setString(2, postId);
-				st.execute();
-			} catch (SQLException e) {
-				System.out.println("Error#3 in PostDAO. Error message: " + e.getMessage());
-				throw e;
-			}
-		} catch (SQLException e3) {
-			try {
-				conn.rollback();
-			} catch (SQLException e) {
-				System.out.println("Error#4 in PostDAO. Error message: " + e3.getMessage());
-				throw e;
-			}
-			System.out.println("Error#5 in PostDAO. Error message: " + e3.getMessage());
-			throw e3;
-		}finally{
-	 		try {
-	 			conn.setAutoCommit(true);
-	 		} catch (SQLException e) {
-	 			System.out.println("Error#6 in PostDAO. Error message: " + e.getMessage());
-				throw e;
+			sql ="INSERT INTO posts (user_id, name, description, album_id, date_created, picture_path, post_id, delete_hash)"
+						+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+			st = conn.prepareStatement(sql);	
+			st.setLong(1, user.getUserId());
+			st.setString(2, name);
+			st.setString(3, description);
+			st.setLong(4, album.getAlbumId());
+			st.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
+			st.setString(6, picturePath); 
+			st.setString(7, postId);
+			st.setString(8, deleteHash);
+			st.execute();
+			
+			post = new Post(user, name, description, dateCreated, picturePath, tags, postId, deleteHash);
+			post.addTags(tags);		
+			//add new tags in tag table if needed! tags are unique they won't be added in if they are already in it
+	 		for(String tag_name: tags){
+	 			sql = "INSERT INTO tags (name) value (?)";
+		 		st = conn.prepareStatement(sql);
+		 		st.setString(1, tag_name);
+		 		st.execute();
 	 		}
+	 		//select all new tag id-s
+	 		lonelyTags = new ArrayList<>();
+	 		for(String tag_name : tags){
+	 			sql = "SELECT tag_id FROM tags where name = ?";
+	 	 		st = conn.prepareStatement(sql);
+		 		st.setString(1, tag_name);
+	 	 		result = st.executeQuery();
+	 	 		while(result.next()){
+	 	 			lonelyTags.add(result.getLong("tag_id"));		
+	 	 		}		
+	 		}
+	 	 	//insert them
+	 	 	for(Long tagId: lonelyTags){			
+	 	 		sql = "INSERT INTO tags_posts (tag_id, post_id) VALUES (?, ?) ";
+	 	 		st = conn.prepareStatement(sql);
+	 	 		st.setLong(1, tagId);
+	 	 		st.setString(2, post.getPostId());
+	 	 		st.execute();
+	 	 	}		
+		 	sql ="INSERT INTO albums_posts (album_id, post_id) VALUES (?, ?);";
+			st = conn.prepareStatement(sql);	
+			st.setLong(1, album.getAlbumId());;
+			st.setString(2, postId);
+			st.execute();
+		} catch (SQLException e3) {
+			conn.rollback();
+		}finally{
+	 		conn.setAutoCommit(true);
  			conn.close();
 	 	}				
  		CachedObjects.getInstance().addPost(post, album);
@@ -184,25 +158,13 @@ public class PostDAO {
 			st.setString(2, post.getPostId());
 			st.execute();
 			post.changeName(str);
-			return post;
  		} catch (SQLException e) {
- 			try {
- 				conn.rollback();
-				System.out.println("Error#1 in AlbumDAO. Error message: " + e.getMessage());
-				throw e;
- 			} catch (SQLException e1) {
- 				System.out.println("Error#2 in AlbumDAO. Error message: " + e1.getMessage());
- 				throw e1;
- 			}
+ 			conn.rollback();
  		}finally{
- 			try {
- 				conn.setAutoCommit(true);
- 			} catch (SQLException e) {
- 				System.out.println("Error#3 in AlbumDAO. Error message: " + e.getMessage());
- 				throw e;
- 			}
+ 			conn.setAutoCommit(true);
  			conn.close();
  		}
+		return post;
  	}
 	
 	// change description

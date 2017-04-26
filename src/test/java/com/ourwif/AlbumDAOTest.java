@@ -101,20 +101,6 @@ public class AlbumDAOTest {
 	}
 
 	@Test
-	public void testGetAlbum() {
-		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
-		CachedObjects.getInstance().addUser(u);
-		System.out.println("Do we have ne album: " + (newAlbum != null));
-		try {
-			newAlbum = albumDAO.getAlbum(u, a.getAlbumId());
-		} catch (ValidationException | SQLException e) {
-			System.out.println(e.getMessage());
-		}
-		System.out.println("Do we have ne album now: " + (newAlbum != null));
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testGetAllAlbums() {
 		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		

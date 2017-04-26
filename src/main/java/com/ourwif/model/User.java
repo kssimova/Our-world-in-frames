@@ -121,11 +121,19 @@ public class User implements Comparable<User>{
 	public Map<Long, Album> getAlbums()  {
 		return Collections.unmodifiableSortedMap(albums);
 	}
-	public Set<User> getFollowers() {
-		return Collections.unmodifiableSortedSet(followers);
+	public Set<Long> getFollowers() {
+		TreeSet <Long> follower = new TreeSet<>();
+		for(User u : followers){
+			follower.add(u.getUserId());
+		}
+		return Collections.unmodifiableSortedSet(follower);
 	}
-	public Set<User> getFollowing()  {
-		return Collections.unmodifiableSortedSet(following);
+	public Set<Long> getFollowing()  {
+		TreeSet <Long> followin = new TreeSet<>();
+		for(User u : followers){
+			followin.add(u.getUserId());
+		}
+		return Collections.unmodifiableSortedSet(followin);
 	}	
 
 	// setters	
@@ -244,9 +252,22 @@ public class User implements Comparable<User>{
 	}
 	
 	
+	public void removeFollower(User user){
+		if(validUser(user)){
+			this.followers.add(user);
+		}
+	}
+	
+	
 	public void addFollowing(User user){
 		if(validUser(user)){
 			this.following.add(user);
+		}
+	}
+	
+	public void removeFollowing(User user){
+		if(validUser(user)){
+			this.following.remove(user);
 		}
 	}
 	
