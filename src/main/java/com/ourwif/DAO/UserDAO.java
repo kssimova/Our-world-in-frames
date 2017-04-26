@@ -601,7 +601,7 @@ public class UserDAO {
 		return user.getPassword().equals(password);	
 	}
 	
-	public boolean usernameTaken(String username) throws ValidationException {
+	public boolean isUsernameTaken(String username) throws ValidationException {
 		CachedObjects cachedObj = CachedObjects.getInstance();
 		if(cachedObj.getAllUsers().isEmpty()){
 			getAllUsers();
@@ -612,7 +612,7 @@ public class UserDAO {
 		return false;
 	}
 	
-	public boolean emailTaken(String email) throws ValidationException {
+	public boolean isEmailTaken(String email) throws ValidationException {
 		CachedObjects cachedObj = CachedObjects.getInstance();
 		Map<Long, User> allUsers = cachedObj.getAllUsers();
 		boolean containsEmail = false;

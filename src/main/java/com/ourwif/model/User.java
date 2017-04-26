@@ -46,7 +46,7 @@ public class User implements Comparable<User>{
 			this.username = username;
 		}
 		else{
-			throw new ValidationException("Username not valid!");
+			throw new ValidationException("Username is not valid!");
 		}
 	}
 	
@@ -157,7 +157,7 @@ public class User implements Comparable<User>{
 		if(validEmail(email)){
 			this.email = email;		
 		}else{
-			throw new ValidationException("User email not valid");
+			throw new ValidationException(" * Please enter a valid email! ");
 		}
 	}
 	
@@ -165,7 +165,7 @@ public class User implements Comparable<User>{
 		if(patternFinder(MOBILEPHONE_PATTERN, mobileNumber)){
 			this.mobileNumber = mobileNumber;		
 		}else{
-			throw new ValidationException("User phone number not valid");
+			throw new ValidationException(" * Please enter a valid phone number! ");
 		}
 	}
 	@JsonProperty
@@ -173,7 +173,7 @@ public class User implements Comparable<User>{
 		if (validPassword(password)) {
 			this.password = password;
 		}else{
-			throw new ValidationException("User password not valid");
+			throw new ValidationException(" * Your password must be at least 6 characters! ");
 		}
 	}
 	
@@ -182,7 +182,7 @@ public class User implements Comparable<User>{
 		if (validateString(firstName) && firstName.length() <= 45) {
 			this.firstName = firstName;
 		}else{
-			throw new ValidationException("User first name not valid");
+			throw new ValidationException(" * Your first name must be between 2 and 45 symbols! ");
 		}
 	}
 	
@@ -190,7 +190,7 @@ public class User implements Comparable<User>{
 		if (validateString(lastName) && lastName.length() <= 45) {
 			this.lastName = lastName;
 		}else{
-			throw new ValidationException("User last name not valid");
+			throw new ValidationException(" * Your last name must be between 2 and 45 symbols! ");
 		}
 	}
 	
@@ -198,7 +198,7 @@ public class User implements Comparable<User>{
 		if (validateString(country) && country.length() <= 45) {
 			this.country = country;
 		}else{
-			throw new ValidationException("User country not valid");
+			throw new ValidationException(" * User country not valid");
 		}
 	}
 	
@@ -207,7 +207,7 @@ public class User implements Comparable<User>{
 		if (validateString(city) && city.length() <= 45) {
 			this.city = city;
 		}else{
-			throw new ValidationException("User city not valid");
+			throw new ValidationException(" * User city not valid");
 		}
 	}
 	
@@ -216,7 +216,7 @@ public class User implements Comparable<User>{
 		if (desc.length() <= 400) {
 			this.descriprion = desc;
 		}else{
-			throw new ValidationException("User description not valid");
+			throw new ValidationException(" * Description must be less than 500 symbols! ");
 		}
 	}
 	
@@ -304,7 +304,7 @@ public class User implements Comparable<User>{
 		return (patternFinder(EMAIL_PATTERN, email));
 	}
 	private boolean validPassword(String password){
-		return (validateString(password) && password.length() <= 100);
+		return ((!password.isEmpty() && password != null && password.length() >= 6 && !password.startsWith(" ") && !password.endsWith(" ") && password.length() <= 100));
 	}
 	
 	//compare to other Posts

@@ -10,12 +10,15 @@ public class Basic {
 	private String url;
 	private Long id;
 	private String strId;
-	private TreeMap<String, String> errors;
+	public TreeMap<String, String> errors;
 	
 	public Basic(boolean loged, String url) {
-		super();
+		this();
 		status = loged;
 		this.url = url;
+	}
+	
+	public Basic() {
 		errors = new TreeMap<>();
 	}
 	

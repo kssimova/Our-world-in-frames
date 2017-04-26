@@ -80,18 +80,34 @@ public class UserController {
 		System.out.println("hi");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");	
-		String email = request.getParameter("email");	
 		String confirmPassword = request.getParameter("confirmPassword");
-		String gender = request.getParameter("gender");
-		Basic basic = null;
+		String email = request.getParameter("email");	
+		Basic basic = new Basic();
 		User user = null;
 		boolean validRegistration = true;
+		
+		try {
+			userDAO.isUsernameTaken(username);
+		} catch (ValidationException e) {
+			validRegistration = false;
+			basic.addError("#usernameError", " * Username is already taken! Try another one! :) ");
+			return basic;
+		}
 		
 		try {
 			user = new User(username);
 		} catch (ValidationException e) {
 			validRegistration = false;
 			basic.addError("#usernameError", e.getMessage());
+			return basic;
+		}
+		
+		try {
+			userDAO.isEmailTaken(email);
+		} catch (ValidationException e) {
+			validRegistration = false;
+			basic.addError("#emailError", " * Email is already taken! Try another one! :) ");
+			return basic;
 		}
 		
 		try {
@@ -99,6 +115,12 @@ public class UserController {
 		} catch (ValidationException e) {
 			validRegistration = false;
 			basic.addError("#emailError", e.getMessage());
+		}
+		
+		if(!password.equals(confirmPassword)){
+			validRegistration = false;
+			basic.addError("#checkPasswordMatch", " * Passwords do not match!");
+			return basic;
 		}
 		
 		try {
@@ -113,13 +135,11 @@ public class UserController {
 		System.out.println(email);
 		System.out.println(email);
 		System.out.println(password);
-		System.out.println(gender.toString());
 		System.out.println("***********");
 		
-		user.changeGender(Enum.valueOf(User.Gender.class, gender.toUpperCase()));
-		
+		System.out.println(validRegistration);
 		if(validRegistration){
-			basic.addError("#registration", "Registration successful! You may now log in!");
+			basic.addError("#registration", "  * Registration successful! Log in!");
 		}
 		
 		return basic;
