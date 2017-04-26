@@ -87,10 +87,13 @@ public class UserController {
 		boolean validRegistration = true;
 		
 		try {
-			userDAO.isUsernameTaken(username);
+			if(userDAO.isUsernameTaken(username)){
+				validRegistration = false;
+				basic.addError("#usernameError", " * Username is already taken! Try another one! :) ");
+			}
 		} catch (ValidationException e) {
 			validRegistration = false;
-			basic.addError("#usernameError", " * Username is already taken! Try another one! :) ");
+			basic.addError("#usernameError", e.getMessage());
 			return basic;
 		}
 		
@@ -103,10 +106,13 @@ public class UserController {
 		}
 		
 		try {
-			userDAO.isEmailTaken(email);
+			if(userDAO.isEmailTaken(email)){
+				basic.addError("#emailError", " * Email is already taken! Try another one! :) ");
+				validRegistration = false;
+			}
 		} catch (ValidationException e) {
 			validRegistration = false;
-			basic.addError("#emailError", " * Email is already taken! Try another one! :) ");
+			basic.addError("#emailError", e.getMessage());
 			return basic;
 		}
 		
