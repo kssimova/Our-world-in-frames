@@ -6,13 +6,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.ValidationException;
 
+import org.apache.catalina.webresources.Cache;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ui.Model;
@@ -253,9 +256,35 @@ public class PostController {
 		return addTags(tag, tags);
  	}
  	
- 	
- 	
- 	
+	@RequestMapping(value="/getPhotos",method = RequestMethod.POST)
+	public  TreeSet<Post> getPosts(HttpSession session, HttpServletRequest request){
+		TreeSet<Post> posts = new TreeSet<>();
+		boolean followers = (request.getParameter("followers").equals("true"));
+		User user = (User) session.getAttribute("user");
+		//get all posts
+		if(followers){
+			for(User followe: user.getAllFollowers()){
+				for(Album album : followe.getAlbums().values()){
+					posts.addAll(album.getPhotos());
+				}
+			}
+		}else{
+			for(Entry<Long, TreeMap<String, Post>>  e : CachedObjects.getInstance().getAllPosts().entrySet()){
+				for (Entry<String, Post> e2 : e.getValue().entrySet()){
+					posts.add(e2.getValue());
+				}
+			}	
+		}	
+		//order them
+		if(request.getParameter("orderBy") == "time"){	
+			TreeSet<Post> dateCreated = new TreeSet<Post>(CachedObjects.dateCreatedComparator);
+			dateCreated.addAll(posts);
+		}else{
+			TreeSet<Post> mostLikes = new TreeSet<Post>(CachedObjects.mostLikesComparator);
+			mostLikes.addAll(posts);
+		}
+		return posts;
+	}
  	
  	//not used
 	@RequestMapping(value="/change",method = RequestMethod.PUT)

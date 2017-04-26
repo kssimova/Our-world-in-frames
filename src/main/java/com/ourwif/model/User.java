@@ -317,5 +317,9 @@ public class User implements Comparable<User>{
 	public void addAllAlbums(TreeMap<Long, Album> userAlbums) {
 		this.albums.putAll(userAlbums);	
 	}
+
+	public Set<User> getAllFollowers() {
+		return Collections.unmodifiableSortedSet(followers);	
+	}
 	
 }

@@ -3,7 +3,8 @@
  
  import java.util.Map.Entry;
  import java.util.Collections;
- import java.util.Iterator;
+import java.util.Comparator;
+import java.util.Iterator;
  import java.util.Map;
  import java.util.TreeMap;
  import java.util.TreeSet;
@@ -17,6 +18,8 @@ public class CachedObjects {
 	//album id -> postId -> post
 	private final TreeMap<Long, Album> allAlbums = new TreeMap<>();
 	// Album id -> album
+	
+	//used for faster search
 	private final TreeMap<String, TreeSet<String>> allTags = new TreeMap<>();
 	// tag -> tree set of post id-s
 	private final TreeMap<String, TreeSet<String>> allPost = new TreeMap<>();
@@ -229,4 +232,29 @@ public class CachedObjects {
 	public Map<String, TreeSet<String>> getAllTags() {
 		return  Collections.unmodifiableSortedMap(allTags);
 	}
+	
+	
+	//comparators
+	
+	public static Comparator<Post> mostLikesComparator = new Comparator<Post>(){
+		@Override
+		public int compare(Post post1, Post post2) {
+			int result = post1.getLikes().size() - post2.getLikes().size();
+			if(result == 0){
+				return post1.getPostId().compareTo(post2.getPostId());
+			}
+			return result;
+		}
+	};
+	public static Comparator<Post> dateCreatedComparator = new Comparator<Post>(){
+		@Override
+		public int compare(Post post1, Post post2) {
+			int result = post1.getDateCreated().compareTo(post2.getDateCreated());
+			if(result == 0){
+				return post1.getPostId().compareTo(post2.getPostId());
+			}
+			return result;
+		}
+	};
+	
 }

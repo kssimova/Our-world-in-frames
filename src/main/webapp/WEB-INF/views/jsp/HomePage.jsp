@@ -16,8 +16,24 @@
 </head>
 <script type="text/javascript">
 	//get all posts from all followed users
+$(function () {	
+	var request = {
+		followers: "true",
+		orderBy: "time"
+	}
 	
-	
+	$.ajax({
+	 	type: "POST",
+	  	url: 'post/getPhotos',
+	  	data: request,
+	  	dataType: "json",
+	  	success: function(user){
+	  	},
+	  	error: function(e){
+	  		alert(e);
+	  	}
+  	});	
+});	
 
 </script>
 

@@ -219,7 +219,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value="/profile", method=RequestMethod.POST)
-	public User getProfilePage(HttpSession session, Model m) {
+	public User getProfilePage(HttpSession session){
 		User user = null;
 		if(session.getAttribute("logged")!= null){
 			user = (User)session.getAttribute("user");
