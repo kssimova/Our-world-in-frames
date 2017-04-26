@@ -577,4 +577,31 @@ public class UserDAO {
 		return user.getPassword().equals(password);	
 	}
 	
+	public boolean usernameTaken(String username) throws ValidationException {
+		CachedObjects cachedObj = CachedObjects.getInstance();
+		if(cachedObj.getAllUsers().isEmpty()){
+			getAllUsers();
+		}
+		if(cachedObj.containsUser(username)){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean emailTaken(String email) throws ValidationException {
+		CachedObjects cachedObj = CachedObjects.getInstance();
+		Map<Long, User> allUsers = cachedObj.getAllUsers();
+		boolean containsEmail = false;
+		if(allUsers.isEmpty()){
+			allUsers = getAllUsers();
+		}
+		for(User users : allUsers.values()){
+			if(users.getEmail().equals(email)){
+				containsEmail = true;
+				break;
+			}
+		}
+		return containsEmail;
+	}
+	
 }

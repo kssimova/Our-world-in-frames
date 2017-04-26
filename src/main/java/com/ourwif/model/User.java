@@ -41,6 +41,15 @@ public class User implements Comparable<User>{
 	private Pattern pattern = null;
 	private Matcher matcher = null;
 	
+	public User(String username) throws ValidationException{
+		if(validUsername(username)){
+			this.username = username;
+		}
+		else{
+			throw new ValidationException("Username not valid!");
+		}
+	}
+	
 	//again builder pattern
 	public User(String username, String email, String password, long userId) throws ValidationException {
 		if(validUsername(username)){

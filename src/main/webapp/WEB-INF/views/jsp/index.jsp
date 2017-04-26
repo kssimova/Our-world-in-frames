@@ -160,14 +160,17 @@
 				                        <div class="form-group">
 				                    		<label class="sr-only" for="form-username">Username</label>
 				                        	<input type="text" id = "register-username" name="form-username" required="required" placeholder="Username..." class="form-username form-control">
+				                        	<span id = "usernameError"> </span><br>
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-email">Email</label>
 				                        	<input type="text" id = "register-email" name="form-email" required="required" placeholder="Email..." class="form-email form-control">
+				                        	<span id = "emailError"> </span><br>
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-password">Password</label>
 				                        	<input type="password" id = "register-password" name="form-password" required="required" placeholder="Password..." class="form-password form-control">
+				                       		<span id = "passwordError"> </span><br>
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-confirm-password">Confirm Password</label>
@@ -183,6 +186,7 @@
                    									 <option value="male">Male</option>
                        								 <option value="female">Female</option>
 												</select>
+												<span id = "none"> </span><br>
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-select-city-country">Select country and city</label>
@@ -192,7 +196,8 @@
                        								 <option value="female">Female</option>
 												</select>
 				                        </div>
-				                        <button id = "register" type="submit" class="form-button form-control" style = "background-color:#dab3ff; height: 50px; font-size:18px; color: white; border: 3px solid #ddd;">Register!</button>
+				                        <span id = "registration"> </span><br>
+				                        <button id = "registerButton" type="submit" class="form-button form-control" style = "background-color:#dab3ff; height: 50px; font-size:18px; color: white; border: 3px solid #ddd;">Register!</button>
 				                    </form>
 			                    </div>
 			                 
