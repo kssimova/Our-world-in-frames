@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Map.Entry;
 import java.util.Scanner;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -217,25 +216,22 @@ public class PostController {
 	
 	@RequestMapping(value="/tag",method = RequestMethod.POST)
 	public TreeSet<Post> getTags(HttpSession session, HttpServletRequest request){
+		CachedObjects cachedObj = CachedObjects.getInstance();
 		TreeSet<Post> posts = new TreeSet<>();
 		TreeSet<String> tagsForRec = new TreeSet<>();
 		if(request.getParameter("tagche") != null){
 			TreeSet<String> tags = addTags(request.getParameter("tagche"), tagsForRec);
-			TreeSet<String> postIds = new TreeSet<>();
 			if(session.getAttribute("logged")!= null){
 				if(tags.size() > 0){
-					if(CachedObjects.getInstance().getAllTags().isEmpty()){
+					if(CachedObjects.getInstance().getAllUsers().isEmpty()){
 						try {
 							userDAO.getAllUsers();
 						} catch (ValidationException | SQLException e) {
 							System.out.println(e.getMessage());
 						}
 					}
-					postIds.addAll(CachedObjects.getInstance().getPhotosWithTag(tags));
-					postIds.addAll(CachedObjects.getInstance().getPhotosWithName(tags));
-					for(String postId : postIds){
-						posts.add(CachedObjects.getInstance().getOnePost(postId));
-					}
+					posts.addAll(cachedObj.getPhotosWithTag(tags));
+					posts.addAll(cachedObj.getPhotosWithName(tags));
 				}
 			}
 		}
@@ -271,19 +267,21 @@ public class PostController {
 		TreeSet<User> following = new TreeSet<>();
 		boolean followers = (request.getParameter("followers").equals("true"));
 		User user = (User) session.getAttribute("user");
-		//get all posts
+		//get all posts from followers or all users
 		if(followers){
 			for(User followe: user.following()){
 				following.add(followe);
 			}
 			for(User users : cachedObj.getAllUsers()){
-				for(Entry<Long, Album> albums : users.getAlbums().entrySet()){
-					posts.addAll(albums.getValue().getPhotos());
-				}	
+				if(following.contains(users)){
+					for(Entry<Long, Album> albums : users.getAlbums().entrySet()){
+						posts.addAll(albums.getValue().getPhotos());
+					}	
+				}
 			}	
 		}else{
 			for(User users : cachedObj.getAllUsers()){
-				for(Entry<Long, Album> albums : user.getAlbums().entrySet()){
+				for(Entry<Long, Album> albums : users.getAlbums().entrySet()){
 					posts.addAll(albums.getValue().getPhotos());	
 				}	
 			}		
@@ -292,9 +290,6 @@ public class PostController {
 		if(request.getParameter("orderBy").equals("time")){	
 			ordered = new TreeSet<Post>(CachedObjects.dateCreatedComparator);
 			ordered.addAll(posts);
-			for(Post post : ordered){
-				post.getPostId();
-			}
 		}else{
 			ordered = new TreeSet<Post>(CachedObjects.mostLikesComparator);
 			ordered.addAll(posts);

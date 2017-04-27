@@ -44,17 +44,23 @@ public class PostDAO {
     	context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 		CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
 		Connection conn = null;
-		while(result.next()){
-			Long u_id = result.getLong("user_id");
-			String p_id = result.getString("post_id");
-			if(!likes.containsKey(p_id)){
-				likes.put(p_id, new TreeSet<User>());
-			}
-			User liker = chachedObj.getOneUser(u_id);
-			likes.get(p_id).add(liker);
-		}
 		try{
 			conn = (Connection) dataSource.getConnection();
+			//get all likes
+			sql = "SELECT post_id, user_id  FROM post_likes";
+			st = conn.prepareStatement(sql);
+			st.execute();
+			result = st.getResultSet();
+			System.out.println("hello");
+			while(result.next()){
+				Long u_id = result.getLong("user_id");
+				String p_id = result.getString("post_id");
+				if(!likes.containsKey(p_id)){
+					likes.put(p_id, new TreeSet<User>());
+				}
+				User liker = chachedObj.getOneUser(u_id);
+				likes.get(p_id).add(liker);
+			}
 			//get tags
 			sql = "SELECT t.name FROM tags t "
 					+ "JOIN tags_posts tp ON t.tag_id = tp.tag_id "
@@ -81,13 +87,9 @@ public class PostDAO {
 				//add likes
 				if(likes.containsKey(post.getPostId())){
 					for(User liker : likes.get(post.getPostId())){
-						System.out.println("hi");
 						post.addLike(liker);
 					}
 				}
-				//add all post in right albums
-				chachedObj.addPost(post, albumId);
-				chachedObj.addTags(tags, post);
 			}
  		}finally {
 			conn.close();
@@ -160,8 +162,6 @@ public class PostDAO {
  			conn.close();
 	 	}				
  		CachedObjects.getInstance().addPost(post, album);
- 		CachedObjects.getInstance().addTags(tags, post);
- 		CachedObjects.getInstance().addAlbums(album);
  		user.addPhoto(album, post);
  		return post;
 	}

@@ -12,7 +12,6 @@
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
      <script src="js/jquery.min.js"></script>
      <script src="js/bootstrap.min.js"></script>
-     <script src="js/likePhoto.js"></script>
      <script src="js/comments.js"></script>
 <title>post</title>
 </head>
@@ -188,7 +187,6 @@ $(function () {
   		  	});
   		},
   		error: function(data){
-  			console.log(data);
   			alert();
   		}
   	});
@@ -202,12 +200,10 @@ $(function () {
   		url: 'user/profile',
   		dataType: "json",
   		success: function(user){
-  			console.log(user.userId);
   			thisUserId = user.userId;
   		},
   		error: function(data){
-  			console.log(data);
-  			alert();
+  			alert(data);
   		}
   	});
 	
@@ -258,7 +254,6 @@ $(function () {
 				url: url,
 				data: postche,
 				success: function(){	 
-			  		console.log(url);
 				  	if(url == 'user/follow'){
 				  		$('#follow').html('<span class="glyphicon glyphicon-send"></span> Unfollow');
 					 	$('#followers').html("Followers: " + ++numOfFollowers);

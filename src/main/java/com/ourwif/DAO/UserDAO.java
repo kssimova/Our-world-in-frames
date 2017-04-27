@@ -7,10 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.Collections;
 
 import javax.sql.DataSource;
@@ -19,9 +17,7 @@ import javax.xml.bind.ValidationException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.ourwif.model.Album;
 import com.ourwif.model.CachedObjects;
-import com.ourwif.model.Post;
 import com.ourwif.model.User;
 
 public class UserDAO {

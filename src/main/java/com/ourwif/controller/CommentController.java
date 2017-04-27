@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ourwif.DAO.CommentDAO;
-import com.ourwif.DAO.PostDAO;
 import com.ourwif.DAO.UserDAO;
 import com.ourwif.model.CachedObjects;
 import com.ourwif.model.Comment;
@@ -54,7 +53,6 @@ public class CommentController {
 		String postId = request.getParameter("postId");
 		String commentStr = request.getParameter("comment");
 		User user = (User) session.getAttribute("user");
-		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
 		Comment comment = null;
 		if(CachedObjects.getInstance().getAllUsers().isEmpty()){
 			try {

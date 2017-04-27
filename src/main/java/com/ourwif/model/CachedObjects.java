@@ -1,28 +1,17 @@
  package com.ourwif.model;
  
- 
  import java.util.Map.Entry;
-import java.util.Set;
+ import java.util.Set;
+
+
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
- import java.util.Map;
- import java.util.TreeMap;
+ import java.util.Comparator;
  import java.util.TreeSet;
 
 public class CachedObjects {
 	
 	private static CachedObjects instance;
-
 	private final TreeSet<User> allUsers = new TreeSet<>();
-	//album id -> postId -> post
-	
-	
-	//used for faster search
-	private final TreeMap<String, TreeSet<String>> allTags = new TreeMap<>();
-	// tag -> tree set of post id-s
-	private final TreeMap<String, TreeSet<String>> allPost = new TreeMap<>();
-	// name -> tree set of post id-s
 	
 	private CachedObjects() {
 	}	
@@ -135,11 +124,6 @@ public class CachedObjects {
 		if(!user.getAlbums().get(album.getAlbumId()).getPhotos().contains(post)){
 			user.getAlbums().get(album.getAlbumId()).getPhotos().add(post);
 		}
-		
-		if(!allPost.containsKey(post.getName())){
-			allPost.put(post.getName(), new TreeSet<>());
-		}
-		allPost.get(post.getName()).add(post.getPostId());
 	}
 	
 	//add post
@@ -197,44 +181,37 @@ public class CachedObjects {
 		return contains;
 	}
 	
-	
 	//COMMENTS
 	
-	
-	//TAGS
-	public void addTags(TreeSet <String> t, Post post){
-		for(String tag: t){
-			String tagche = tag.toLowerCase().trim();
-			if (!allTags.containsKey(tag)){
-				allTags.put(tagche, new TreeSet<String>());
-				allTags.get(tagche).add(post.getPostId());
-			}else{
-				allTags.get(tagche).add(post.getPostId());
-			}	
-		}
-	}
-	
 	//SEARCH
-	public TreeSet<String> getPhotosWithTag(TreeSet <String> t){
-		TreeSet<String> posts = new TreeSet<>();
-		for(String alltag : allTags.keySet()){
-			for(String tag: t){
-				String tagche = tag.toLowerCase().trim();
-				if(alltag.contains(tagche)){
-					posts.addAll(allTags.get(alltag));
+	public TreeSet<Post> getPhotosWithTag(TreeSet <String> t){
+		TreeSet<Post> posts = new TreeSet<>();
+		for(User user : allUsers){
+			for(Entry <Long, Album> albums : user.getAlbums().entrySet()){
+				for(Post post : albums.getValue().getPhotos()){
+					for(String tag: t){
+						String tagche = tag.toLowerCase().trim();
+						if(post.getTags().contains(tagche)){
+							posts.add(post);
+						}
+					}
 				}
 			}
 		}
 		return posts;
 	}
 	
-	public TreeSet<String> getPhotosWithName(TreeSet <String> t){
-		TreeSet<String> posts = new TreeSet<>();
-		for(String allpost : allPost.keySet()){
-			for(String str: t){
-				String stri =  str.toLowerCase().trim();
-				if(allpost.contains(stri)){
-					posts.addAll(allPost.get(allpost));
+	public TreeSet<Post> getPhotosWithName(TreeSet <String> t){
+		TreeSet<Post> posts = new TreeSet<>();
+		for(User user : allUsers){
+			for(Entry <Long, Album> albums : user.getAlbums().entrySet()){
+				for(Post post : albums.getValue().getPhotos()){
+					for(String str: t){
+						String stri =  str.toLowerCase().trim();
+						if(post.getName().contains(stri)){
+							posts.add(post);
+						}
+					}
 				}
 			}
 		}
@@ -244,12 +221,7 @@ public class CachedObjects {
 	//just for tests
 	public Set <User> getAllUsers() {
 		return  Collections.unmodifiableSortedSet(allUsers);
-	}
-	
-	public Map<String, TreeSet<String>> getAllTags() {
-		return  Collections.unmodifiableSortedMap(allTags);
-	}
-	
+	}	
 	
 	//comparators	
 	public static Comparator<Post> mostLikesComparator = new Comparator<Post>(){

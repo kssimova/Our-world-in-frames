@@ -101,25 +101,6 @@ public class AlbumDAOTest {
 	}
 
 	@Test
-	public void testGetAllAlbums() {
-		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
-		
-		System.out.println("First delete all albums:");
-		System.out.println("All albums: " + CachedObjects.getInstance().getAllUsers().toString());
-		
-		try {
-			albumDAO.getAllAlbums();
-		} catch (ValidationException | SQLException e) {
-			System.out.println(e.getMessage());
-		}
-		
-		System.out.println("Try getting all albums");
-		System.out.println("All albums: " + CachedObjects.getInstance().getAllUsers().toString());
-		
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testGetUserAlbums() {
 		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		

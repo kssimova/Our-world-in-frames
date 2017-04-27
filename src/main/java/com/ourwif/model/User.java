@@ -137,7 +137,6 @@ public class User implements Comparable<User>{
 		for(User u : followers){
 			follower.add(u.getUserId());
 		}
-		follower.size();
 		return Collections.unmodifiableSortedSet(follower);
 	}
 	
@@ -146,7 +145,6 @@ public class User implements Comparable<User>{
 		for(User u : following){
 			followin.add(u.getUserId());
 		}
-		followin.size();
 		return Collections.unmodifiableSortedSet(followin);
 	}	
 

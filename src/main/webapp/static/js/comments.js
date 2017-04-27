@@ -16,6 +16,7 @@ $(function () {
 			type: 'GET',
 			url: 'comment/'+ $postId,
 			success: function(data){
+				console.log(data);
 				$.each(data, function(index, val){
 					$comments.append(
 							'<li class="media">' + 
@@ -38,7 +39,7 @@ $(function () {
 										'<ul class="media-date text-uppercase reviews list-inline">' +
 											'<li> Posted on: </li>' +
 											'<li class="dd">' + val.dateCreated.dayOfMonth + '</li>' +
-											'<li class="mm">' + val.dateCreated.dayOfMonth + '</li>' + 
+											'<li class="mm">' + val.dateCreated.month + '</li>' + 
 											'<li class="aaaa">' + val.dateCreated.year + '</li>' + 
 										'</ul>' +
 										'<p></p>' +
