@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -34,8 +33,10 @@ public class PostDAO {
 	}
 	
 	//get Post from DB
-	public Post getPost(String postId, String deleteHash) throws ValidationException, SQLException {
+	public Post getPost(String postId, String deleteHash, Long albumId) throws ValidationException, SQLException {
 		TreeSet<String> tags = new TreeSet<>();
+		CachedObjects chachedObj = CachedObjects.getInstance();
+		TreeMap<String, TreeSet<User>> likes = new TreeMap<>();
   		PreparedStatement st = null;
   		Post post = null;
   		String sql = "";
@@ -43,9 +44,17 @@ public class PostDAO {
     	context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 		CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
 		Connection conn = null;
+		while(result.next()){
+			Long u_id = result.getLong("user_id");
+			String p_id = result.getString("post_id");
+			if(!likes.containsKey(p_id)){
+				likes.put(p_id, new TreeSet<User>());
+			}
+			User liker = chachedObj.getOneUser(u_id);
+			likes.get(p_id).add(liker);
+		}
 		try{
 			conn = (Connection) dataSource.getConnection();
-			conn.setAutoCommit(false);
 			//get tags
 			sql = "SELECT t.name FROM tags t "
 					+ "JOIN tags_posts tp ON t.tag_id = tp.tag_id "
@@ -60,7 +69,6 @@ public class PostDAO {
 			//create post
 			sql = "SELECT name, user_id, description, album_id, date_created, picture_path "
 					+ "FROM posts WHERE post_id = ? ";
-			//initialization
 			st = conn.prepareStatement(sql);
 			st.setString(1, postId);
 			st.execute();
@@ -70,6 +78,16 @@ public class PostDAO {
 				User user = CachedObjects.getInstance().getOneUser(result.getLong("user_id"));
 				post = new Post(user, result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), result.getString("picture_path"), tags, postId, deleteHash);
 				commentDAO.getAllComments(post);
+				//add likes
+				if(likes.containsKey(post.getPostId())){
+					for(User liker : likes.get(post.getPostId())){
+						System.out.println("hi");
+						post.addLike(liker);
+					}
+				}
+				//add all post in right albums
+				chachedObj.addPost(post, albumId);
+				chachedObj.addTags(tags, post);
 			}
  		}finally {
 			conn.close();
@@ -144,8 +162,6 @@ public class PostDAO {
  		CachedObjects.getInstance().addPost(post, album);
  		CachedObjects.getInstance().addTags(tags, post);
  		CachedObjects.getInstance().addAlbums(album);
- 		System.out.println(album);
- 		System.out.println(post);
  		user.addPhoto(album, post);
  		return post;
 	}
@@ -157,16 +173,12 @@ public class PostDAO {
  		Connection conn = null;
  		try {
  			conn = (Connection) dataSource.getConnection();
-			conn.setAutoCommit(false);
 			st = conn.prepareStatement(sql);
 			st.setString(1, str);
 			st.setString(2, post.getPostId());
 			st.execute();
 			post.changeName(str);
- 		} catch (SQLException e) {
- 			conn.rollback();
  		}finally{
- 			conn.setAutoCommit(true);
  			conn.close();
  		}
 		return post;
@@ -179,28 +191,12 @@ public class PostDAO {
  		Connection conn = null;
  		try {
  			conn = (Connection) dataSource.getConnection();
-			conn.setAutoCommit(false);
 			st = conn.prepareStatement(sql);
 			st.setString(1, str);
 			st.setString(2, post.getPostId());
 			st.execute();
 			post.changeDescription(str);
- 		} catch (SQLException e) {
- 			try {
- 				conn.rollback();
-				System.out.println("Error#1 in AlbumDAO. Error message: " + e.getMessage());
-				throw e;
- 			} catch (SQLException e1) {
- 				System.out.println("Error#2 in AlbumDAO. Error message: " + e1.getMessage());
- 				throw e1;
- 			}
  		}finally{
- 			try {
- 				conn.setAutoCommit(true);
- 			} catch (SQLException e) {
- 				System.out.println("Error#3 in AlbumDAO. Error message: " + e.getMessage());
- 				throw e;
- 			}
  			conn.close();
  		}
 		return post;
@@ -265,22 +261,9 @@ public class PostDAO {
  	 			st.execute();
  	 		}
  	 	}catch (SQLException e1) {
- 			try {
-				conn.rollback();
-	 			System.out.println("Error#1 in PostDAO. Error message: " + e1.getMessage());
-	 			throw e1;
-			} catch (SQLException e) {
-	 			System.out.println("Error#2 in PostDAO. Error message: " + e.getMessage());
-	 			throw e;
-			}
+			conn.rollback();
  	 	}finally{
- 			try {
- 				conn.setAutoCommit(true);
- 	 		
- 			} catch (SQLException e) {
- 				System.out.println("Error#3 in PostDAO. Error message: " + e.getMessage());
-	 			throw e;
- 			}
+ 			conn.setAutoCommit(true);
  			conn.close();
  		}
  		post.addTags(tags);
@@ -295,28 +278,12 @@ public class PostDAO {
  		Connection conn = null;
 		try {
 			conn = (Connection) dataSource.getConnection();
- 			conn.setAutoCommit(false);
  			st = conn.prepareStatement(sql);
  			st.setLong(1, user.getUserId());
  			st.setString(2, post.getPostId());
  			st.execute();
  			CachedObjects.getInstance().getOnePost(post.getPostId()).addLike(user);
- 	 	}catch (SQLException e1) {
- 			try {
-				conn.rollback();
-	 			System.out.println("Error#1 in PostDAO. Error message: " + e1.getMessage());
-	 			throw e1;
-			} catch (SQLException e) {
-	 			System.out.println("Error#2 in PostDAO. Error message: " + e.getMessage());
-	 			throw e;
-			}
  	 	}finally{
- 			try {
- 				conn.setAutoCommit(true);
- 			} catch (SQLException e) {
- 				System.out.println("Error#3 in PostDAO. Error message: " + e.getMessage());
-	 			throw e;
- 			}
  			conn.close();
  		}
  	}
@@ -328,28 +295,12 @@ public class PostDAO {
  		Connection conn = null;
 		try {
 			conn = (Connection) dataSource.getConnection();
- 			conn.setAutoCommit(false);
 			st = conn.prepareStatement(sql);
  			st.setLong(1, user.getUserId());
  			st.setString(2, post.getPostId());
 			st.execute();
 			CachedObjects.getInstance().getOnePost(post.getPostId()).removeLike(user);
- 	 	}catch (SQLException e1) {
- 			try {
-				conn.rollback();
-	 			System.out.println("Error#1 in PostDAO. Error message: " + e1.getMessage());
-	 			throw e1;
-			} catch (SQLException e) {
-	 			System.out.println("Error#2 in PostDAO. Error message: " + e.getMessage());
-	 			throw e;
-			}
  	 	}finally{
- 			try {
- 				conn.setAutoCommit(true);
- 			} catch (SQLException e) {
- 				System.out.println("Error#3 in PostDAO. Error message: " + e.getMessage());
-	 			throw e;
- 			}
  			conn.close();
  		}
  	}
@@ -368,6 +319,7 @@ public class PostDAO {
 			postIds.add(result.getString("post_id"));
 		}
 		for(String str : postIds){
+			System.out.println(str);
 			posts.add(CachedObjects.getInstance().getOnePost(str));
 		}
 		return posts;
@@ -427,111 +379,11 @@ public class PostDAO {
 		 	st.execute();
 	
  		}catch (SQLException e1) {
- 			try {
-				conn.rollback();
-	 			System.out.println("Error#5 in PostDAO. Error message: " + e1.getMessage());
-				throw e1;
-			} catch (SQLException e) {
-	 			System.out.println("Error#6 in PostDAO. Error message: " + e.getMessage());
-				throw e;
-			}
+			conn.rollback();
  	 	}finally{
- 			try {
- 				conn.setAutoCommit(true);
- 			} catch (SQLException e) {
- 				System.out.println("Error#7 in PostDAO. Error message: " + e.getMessage());
-				throw e;
- 			}
+ 			conn.setAutoCommit(true);
  			conn.close();
  		}	
 		CachedObjects.getInstance().removePost(post, album);
  	}
- 	
- 	//getAllPost
-	public synchronized void getAllPosts() throws ValidationException, SQLException {
-		if(CachedObjects.getInstance().getAllPosts().isEmpty()){
-			TreeMap<String, TreeSet<Long>> likes = new TreeMap<>();
-			TreeSet<String> tags = new TreeSet<>();
-			TreeMap<Long, TreeSet<String>> postIds = new TreeMap<>();
-	  		PreparedStatement st = null;
-	  		String sql = "";
-	 		ResultSet result = null;
-	    	context = new ClassPathXmlApplicationContext("Spring-Module.xml");
-			CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
-			Connection conn = null;
-			CachedObjects chachedObj = CachedObjects.getInstance();
-			try{
-				conn = (Connection) dataSource.getConnection();
-				conn.setAutoCommit(false);
-				//select all post_id
-				sql = "SELECT post_id, album_id FROM albums_posts";
-				st = conn.prepareStatement(sql);
-				st.execute();
-				result = st.getResultSet();
-				while(result.next()){
-					if(!postIds.containsKey(result.getLong("album_id"))){
-						postIds.put(result.getLong("album_id"), new TreeSet<String>());
-					}
-					postIds.get(result.getLong("album_id")).add(result.getString("post_id"));
-				}
-				for(Entry <Long, TreeSet<String>> entry: postIds.entrySet()){
-					Long albumId = entry.getKey();
-					for(String postId: entry.getValue()){
-						//get tags
-						sql = "SELECT t.name FROM tags t "
-								+ "JOIN tags_posts tp ON t.tag_id = tp.tag_id "
-								+ "WHERE tp.post_id = ? ";
-						st = conn.prepareStatement(sql);
-						st.setString(1, postId);
-						st.execute();
-						result = st.getResultSet();
-						while(result.next()){
-							tags.add(result.getString("name"));
-						}
-						//get all likes
-						sql = "SELECT post_id, user_id  FROM post_likes";
-						st = conn.prepareStatement(sql);
-						st.execute();
-						result = st.getResultSet();
-						while(result.next()){
-							Long u_id = result.getLong("user_id");
-							String p_id = result.getString("post_id");
-							if(!likes.containsKey(p_id)){
-								likes.put(p_id, new TreeSet<Long>());
-							}
-							likes.get(p_id).add(u_id);
-						}
-						
-						//create post
-						sql = "SELECT name, user_id, description, album_id, date_created, picture_path, delete_hash "
-								+ "FROM posts WHERE post_id = ? ";
-						//initialization
-						st = conn.prepareStatement(sql);
-						st.setString(1, postId);
-						st.execute();
-						//get result
-						result = st.getResultSet();
-						while(result.next()){
-							User user = chachedObj.getOneUser(result.getLong("user_id"));
-							Post post = new Post(user, result.getString("name"), result.getString("description"), result.getDate("date_created").toLocalDate(), result.getString("picture_path"), tags, postId, result.getString("delete_hash"));
-							commentDAO.getAllComments(post);
-							//add likes
-							if(likes.containsKey(post.getPostId())){
-								for(Long longg : likes.get(post.getPostId())){
-									User liker = chachedObj.getOneUser(longg);
-									post.addLike(liker);
-								}
-							}
-							//add all post in right albums
-							chachedObj.addPost(post, albumId);
-							chachedObj.addTags(tags, post);
-						}
-						tags.clear();
-			 		}
-	 			}
-	 		} finally {
-				conn.close();
-			}		
-		}
-	}	
 }

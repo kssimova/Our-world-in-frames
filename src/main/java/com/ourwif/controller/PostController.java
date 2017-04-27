@@ -26,6 +26,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.ourwif.DAO.PostDAO;
+import com.ourwif.DAO.UserDAO;
 import com.ourwif.model.Album;
 import com.ourwif.model.Basic;
 import com.ourwif.model.CachedObjects;
@@ -38,6 +39,7 @@ import com.ourwif.model.User;
 public class PostController {
 	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 	PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
+	UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 	private static final String ACCESS_TOKEN = "bc232b87907ff074efdffbbdaaaaa53aada282a2";
 
 	
@@ -47,9 +49,9 @@ public class PostController {
 		Post post = null;
 		if(session.getAttribute("logged")!= null){
 			if(postId != null){
-				if(CachedObjects.getInstance().getAllPosts().isEmpty()){
+				if(CachedObjects.getInstance().getAllUsers().isEmpty()){
 					try {
-						postDAO.getAllPosts();
+						userDAO.getAllUsers();
 
 					} catch (ValidationException | SQLException e) {
 						System.out.println(e.getMessage());
@@ -197,9 +199,9 @@ public class PostController {
 		User user = (User)session.getAttribute("user");
 		TreeSet<Post> posts = new TreeSet<>();
 		if(session.getAttribute("logged")!= null){
-			if(CachedObjects.getInstance().getAllPosts().isEmpty()){
+			if(CachedObjects.getInstance().getAllUsers().isEmpty()){
 				try {
-					postDAO.getAllPosts();
+					userDAO.getAllUsers();
 				} catch (ValidationException | SQLException e) {
 					System.out.println(e.getMessage());
 				}
@@ -224,8 +226,7 @@ public class PostController {
 				if(tags.size() > 0){
 					if(CachedObjects.getInstance().getAllTags().isEmpty()){
 						try {
-							postDAO.getAllPosts();
-
+							userDAO.getAllUsers();
 						} catch (ValidationException | SQLException e) {
 							System.out.println(e.getMessage());
 						}
@@ -257,9 +258,9 @@ public class PostController {
 	@RequestMapping(value="/getPhotos",method = RequestMethod.POST)
 	public  TreeSet<Post> getPosts(HttpSession session, HttpServletRequest request){
 		CachedObjects cachedObj = CachedObjects.getInstance();
-		if(cachedObj.getAllPosts().isEmpty()){
+		if(cachedObj.getAllUsers().isEmpty()){
 			try {
-				postDAO.getAllPosts();
+				userDAO.getAllUsers();
 			} catch (ValidationException | SQLException e) {
 				System.out.println(e.getMessage());
 			}
@@ -275,22 +276,17 @@ public class PostController {
 			for(User followe: user.following()){
 				following.add(followe);
 			}
-			for(Entry<Long, TreeMap<String, Post>>  e : cachedObj.getAllPosts().entrySet()){
-				for (Entry<String, Post> e2 : e.getValue().entrySet()){
-					for(User ff : following){
-						if(e2.getValue().getUser().getUsername().equals(ff.getUsername())){
-							posts.add(e2.getValue());
-						}
-					}
+			for(User users : cachedObj.getAllUsers()){
+				for(Entry<Long, Album> albums : users.getAlbums().entrySet()){
+					posts.addAll(albums.getValue().getPhotos());
 				}	
-				
 			}	
 		}else{
-			for(Entry<Long, TreeMap<String, Post>>  e : cachedObj.getAllPosts().entrySet()){
-				for (Entry<String, Post> e2 : e.getValue().entrySet()){
-					posts.add(e2.getValue());
-				}
-			}	
+			for(User users : cachedObj.getAllUsers()){
+				for(Entry<Long, Album> albums : user.getAlbums().entrySet()){
+					posts.addAll(albums.getValue().getPhotos());	
+				}	
+			}		
 		}	
 		//order them
 		if(request.getParameter("orderBy").equals("time")){	

@@ -34,7 +34,7 @@ public class UserDAOTest {
 		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		try {
 			List<User> allUsers = (List<User>) userDAO.getAllUsers();
-		} catch (ValidationException e) {
+		} catch (ValidationException | SQLException e) {
 			System.out.println(e.getMessage());
 		}
 		for(User u : allUsers){
@@ -52,7 +52,7 @@ public class UserDAOTest {
 		try {
 			this.user();
 			userDAO.changeFirstName(krisi, "KRISTINA");
-		} catch (ValidationException e) {
+		} catch (ValidationException | SQLException e) {
 			System.out.println(e.getMessage());
 		}	
 				
@@ -65,7 +65,7 @@ public class UserDAOTest {
 		try {
 			this.user();
 			userDAO.changeLastName(krisi, "SIMOVAAAA");
-		} catch (ValidationException e) {
+		} catch (ValidationException | SQLException e) {
 			System.out.println(e.getMessage());
 		}	
 		
@@ -78,7 +78,7 @@ public class UserDAOTest {
 		try {
 			this.user();
 			userDAO.changeEmail(krisi, "krisisisisi@abv.bg");
-		} catch (ValidationException e) {
+		} catch (ValidationException | SQLException e) {
 			System.out.println(e.getMessage());
 		}	
 		
@@ -91,7 +91,7 @@ public class UserDAOTest {
 		try {
 			this.user();
 			userDAO.changeMobileNumber(krisi, "0883411090");
-		} catch (ValidationException e) {
+		} catch (ValidationException | SQLException e) {
 			System.out.println(e.getMessage());
 		}	
 		
@@ -180,7 +180,7 @@ public class UserDAOTest {
 		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		try {
 			System.out.println(userDAO.validLogin("user123", "1234"));
-		} catch (ValidationException e) {
+		} catch (ValidationException | SQLException e) {
 			System.out.println(e.getMessage());
 		}
 		fail("Not yet implemented");
@@ -212,7 +212,7 @@ public class UserDAOTest {
 			mimi.changeBirthDate(LocalDate.now());
 			mimi.changeGender(Gender.FEMALE);
 			userDAO.addUser(mimi);
-		} catch (ValidationException e) {
+		} catch (ValidationException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

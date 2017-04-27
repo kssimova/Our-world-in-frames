@@ -75,21 +75,9 @@ public class AlbumDAO {
 	 		st.setLong(1, album.getAlbumId());
 	 		st.execute();
 		} catch (SQLException e) {
-				try {
-				conn.rollback();
- 				System.out.println("Error#1 in AlbumDAO. Error message: " + e.getMessage());
- 				throw e;
-			} catch (SQLException e1) {
-				System.out.println("Error#2 in AlbumDAO. Error message: " + e1.getMessage());
-				throw e1;
-			}
+			conn.rollback();
 		}finally{
-			try {
-				conn.setAutoCommit(true);
-			} catch (SQLException e) {
-				System.out.println("Error#3 in AlbumDAO. Error message: " + e.getMessage());
-				throw e;
-			}
+			conn.setAutoCommit(true);
  			conn.close();
 		}
  		user.deleteAlbum(album);
@@ -102,28 +90,12 @@ public class AlbumDAO {
  		Connection conn = null;
 	 	conn = (Connection) dataSource.getConnection();
 	 	try{
-	 		conn.setAutoCommit(false);
 	 		st = conn.prepareStatement(sql);
 	 		st.setString(1, str);
 	 		st.setLong(2, album.getAlbumId());
 	 		st.execute();
 	 		album.changeName(str);
-	 	}catch(SQLException e){
-			try {
-			conn.rollback();
-				System.out.println("Error#1 in AlbumDAO. Error message: " + e.getMessage());
-				throw e;
-			} catch (SQLException e1) {
-				System.out.println("Error#2 in AlbumDAO. Error message: " + e1.getMessage());
-				throw e1;
-			}
 		}finally{
-			try {
-				conn.setAutoCommit(true);
-			} catch (SQLException e) {
-				System.out.println("Error#3 in AlbumDAO. Error message: " + e.getMessage());
-				throw e;
-			}
  			conn.close();
 		}
 		return album;
@@ -180,7 +152,7 @@ public class AlbumDAO {
 				st.execute();
 				result = st.getResultSet();
 				while(result.next()){
-					Post p = postDAO.getPost(result.getString("post_id"), result.getString("delete_hash"));
+					Post p = postDAO.getPost(result.getString("post_id"), result.getString("delete_hash"), albumId);
 					posts.add(p);
 				}
 				sql = "SELECT a.name, a.description, a.date_created, a.user_id FROM albums a wHERE a.album_id = ? ;";

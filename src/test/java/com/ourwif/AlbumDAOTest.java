@@ -30,7 +30,7 @@ public class AlbumDAOTest {
 		UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 		try {
 			userDAO.getAllUsers();
-		} catch (ValidationException e2) {
+		} catch (ValidationException | SQLException e2) {
 			System.out.println("ops");
 		}
 		u = CachedObjects.getInstance().getOneUser("user123");
@@ -105,7 +105,7 @@ public class AlbumDAOTest {
 		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		
 		System.out.println("First delete all albums:");
-		System.out.println("All albums: " + CachedObjects.getInstance().getAllAlbums().toString());
+		System.out.println("All albums: " + CachedObjects.getInstance().getAllUsers().toString());
 		
 		try {
 			albumDAO.getAllAlbums();
@@ -114,7 +114,7 @@ public class AlbumDAOTest {
 		}
 		
 		System.out.println("Try getting all albums");
-		System.out.println("All albums: " + CachedObjects.getInstance().getAllAlbums().toString());
+		System.out.println("All albums: " + CachedObjects.getInstance().getAllUsers().toString());
 		
 		fail("Not yet implemented");
 	}
@@ -124,7 +124,7 @@ public class AlbumDAOTest {
 		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		
 		System.out.println("First delete all albums:");
-		System.out.println("All albums: " + CachedObjects.getInstance().getAllAlbums().toString());
+		System.out.println("All albums: " + CachedObjects.getInstance().getAllUsers().toString());
 		
 		try {
 			albumDAO.getUserAlbums(u);
@@ -132,7 +132,7 @@ public class AlbumDAOTest {
 			System.out.println(e.getMessage());
 		}
 		System.out.println("Try getting all albums");
-		System.out.println("All albums: " + CachedObjects.getInstance().getAllAlbums().toString());
+		System.out.println("All albums: " + CachedObjects.getInstance().getAllUsers().toString());
 		
 		fail("Not yet implemented");
 	}

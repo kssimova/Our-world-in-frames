@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ourwif.DAO.CommentDAO;
 import com.ourwif.DAO.PostDAO;
 import com.ourwif.DAO.UserDAO;
 import com.ourwif.model.Basic;
@@ -30,9 +31,8 @@ import com.ourwif.model.User;
 @RequestMapping(value= "/user")
 public class UserController {
 	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
-	UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 	PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
-	
+	UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 	
 	@RequestMapping(value="/api", method=RequestMethod.GET)
 	public void getApi(HttpServletResponse response) {
@@ -54,20 +54,19 @@ public class UserController {
 		User u = null;
 			try {
 				if(userDAO.validLogin(username, password)){
-					if(!cachedObj.containsUser(username)){
+					if(!cachedObj.getAllUsers().isEmpty()){
 						try {
 							userDAO.getAllUsers();
-						} catch (ValidationException e) {
+						} catch (ValidationException | SQLException e) {
 							System.out.println("ops cant log in");
 						}
 					}
 					u = cachedObj.getOneUser(username);
-					System.out.println(u.toString());
 					session.setAttribute("username", username);
 					session.setAttribute("user", u);
 					session.setAttribute("logged", true);
 				}
-			} catch (ValidationException e) {
+			} catch (ValidationException | SQLException e) {
 				System.out.println(e.getMessage());
 			}
 		basic = new Basic(true, "/ourwif/index");
@@ -92,7 +91,7 @@ public class UserController {
 				validRegistration = false;
 				basic.addError("#usernameError", " * Username is already taken! Try another one! :) ");
 			}
-		} catch (ValidationException e) {
+		} catch (ValidationException | SQLException e) {
 			validRegistration = false;
 			basic.addError("#usernameError", e.getMessage());
 			return basic;
@@ -112,7 +111,7 @@ public class UserController {
 				validRegistration = false;
 			}
 			user.changeEmail(email);
-		} catch (ValidationException e) {
+		} catch (ValidationException | SQLException e) {
 			validRegistration = false;
 			basic.addError("#emailError", e.getMessage());
 			return basic;
@@ -152,7 +151,11 @@ public class UserController {
 		System.out.println(validRegistration);
 		if(validRegistration){
 			basic.addError("#registration", "  * Registration successful! Log in!");
-			userDAO.addUser(user);
+			try {
+				userDAO.addUser(user);
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+			}
 		}
 		
 		for(Entry<String, String> entry : basic.getErrors().entrySet()){
@@ -177,9 +180,9 @@ public class UserController {
 	public User getUser(Model model, @PathVariable("post_id") String postId) {
 		CachedObjects cachedObj = CachedObjects.getInstance();
 		User user = null;
-		if(cachedObj.getAllPosts().isEmpty()){
+		if(cachedObj.getAllUsers().isEmpty()){
 			try {
-				postDAO.getAllPosts();
+				userDAO.getAllUsers();
 			} catch (ValidationException | SQLException e) {
 				System.out.println(e.getMessage());
 			}
@@ -194,9 +197,9 @@ public class UserController {
 		CachedObjects cachedObj = CachedObjects.getInstance();
 		User follower = (User) session.getAttribute("user");
 		User user = null;
-		if(cachedObj.getAllPosts().isEmpty()){
+		if(cachedObj.getAllUsers().isEmpty()){
 			try {
-				postDAO.getAllPosts();
+				userDAO.getAllUsers();
 			} catch (ValidationException | SQLException e) {
 				System.out.println(e.getMessage());
 			}
@@ -216,9 +219,9 @@ public class UserController {
 		CachedObjects cachedObj = CachedObjects.getInstance();
 		User follower = (User) session.getAttribute("user");
 		User user = null;
-		if(cachedObj.getAllPosts().isEmpty()){
+		if(cachedObj.getAllUsers().isEmpty()){
 			try {
-				postDAO.getAllPosts();
+				userDAO.getAllUsers();
 			} catch (ValidationException | SQLException e) {
 				System.out.println(e.getMessage());
 			}
@@ -241,7 +244,7 @@ public class UserController {
 		if(cachedObj.getAllUsers().isEmpty()){
 			try {
 				userDAO.getAllUsers();
-			} catch (ValidationException e) {
+			} catch (ValidationException | SQLException e) {
 				System.out.println(e.getMessage());
 			}
 		}
@@ -262,7 +265,7 @@ public class UserController {
 		if(cachedObj.getAllUsers().isEmpty()){
 			try {
 				userDAO.getAllUsers();
-			} catch (ValidationException e) {
+			} catch (ValidationException | SQLException e) {
 				System.out.println(e.getMessage());
 			}
 		}

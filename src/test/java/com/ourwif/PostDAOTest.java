@@ -51,7 +51,7 @@ public class PostDAOTest {
 		Post postchence = null;
 		System.out.println("Get the post... ");
 		try {
-			postchence = postDAO.getPost("EOdEWqM", "sasdafs");
+			postchence = postDAO.getPost("EOdEWqM", "sasdafs", 1L);
 		} catch (ValidationException | SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -66,7 +66,7 @@ public class PostDAOTest {
 		} catch (ValidationException | SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		System.out.println("All albums in cached objects : " + CachedObjects.getInstance().getAllPosts().size());
+		System.out.println("All albums in cached objects : " + CachedObjects.getInstance().getAllUsers().size());
 		Post post4e  = CachedObjects.getInstance().getOnePost(p.getPostId(), a.getAlbumId());
 		
 		System.out.println("Name: " + post4e.getName());
@@ -137,31 +137,14 @@ public class PostDAOTest {
 	@Test
 	public void testDeletePost() {
 		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
-		System.out.println("Post exists: " + CachedObjects.getInstance().getAllPosts().get(a.getAlbumId()).containsKey(p.getPostId()));
+		System.out.println("Post exists: " + CachedObjects.getInstance().getAllUsers().toString());
 		
 		try {
 			postDAO.deletePost(p, u, a);
 		} catch (ValidationException | SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		System.out.println("Post exists: " + CachedObjects.getInstance().getAllPosts().get(a.getAlbumId()).containsKey(p.getPostId()));
-		
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetAllPosts() {
-		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
-		
-		System.out.println(CachedObjects.getInstance().getAllPosts().size());
-		
-		try {
-			postDAO.getAllPosts();
-		} catch (ValidationException | SQLException e) {
-			System.out.println(e.getMessage());
-		}
-		
-		System.out.println(CachedObjects.getInstance().getAllPosts().size());
+		System.out.println("Post exists: " + CachedObjects.getInstance().getAllUsers().toString());
 		
 		fail("Not yet implemented");
 	}

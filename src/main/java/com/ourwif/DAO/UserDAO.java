@@ -8,7 +8,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.Collections;
 
 import javax.sql.DataSource;
@@ -17,7 +19,9 @@ import javax.xml.bind.ValidationException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.ourwif.model.Album;
 import com.ourwif.model.CachedObjects;
+import com.ourwif.model.Post;
 import com.ourwif.model.User;
 
 public class UserDAO {
@@ -62,22 +66,17 @@ public class UserDAO {
 	}
 	
 	//create new user with default album and insert into cachedObjects
-	public synchronized void addUser(User user){
+	public synchronized void addUser(User user) throws SQLException{
 		//TODO when creating new user add 1 album
 		//TODO "default"
-		
-		
-		
-		context = new ClassPathXmlApplicationContext("Spring-Module.xml");
-		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		Connection connection = null;
 		// get city_id and country_id 
-		
-		
+			
 		// add new user to database
 		PreparedStatement prepStatement = null;
 		try {
 			connection = (Connection) dataSource.getConnection();
+			connection.setAutoCommit(false);	
 			prepStatement = connection.prepareStatement(INSERT_USER);
 			prepStatement.setString(1, user.getFirstName());
 			prepStatement.setString(2, user.getLastName());
@@ -93,23 +92,16 @@ public class UserDAO {
 			//prepStatement.setLong(12, country_id);
 			prepStatement.executeUpdate();
 		} catch (SQLException e3) {
-			System.out.println("Error in 2nd catch block in UserDAO method addUser() - " + e3.getMessage());
-		}
-		finally{
-			if(prepStatement != null){
-				try {
-					prepStatement.close();
-				} catch (SQLException e4) {
-					System.out.println("Error when closing statement in 2nd catch block in UserDAO method addUser() - " + e4.getMessage());
-				}
-			}
-		}
-		
-		CachedObjects.getInstance().addUser(user);
-		
+			connection.rollback();
+		}finally{
+			connection.setAutoCommit(true);
+			connection.close();
+			prepStatement.close();
+		}		
+		CachedObjects.getInstance().addUser(user);		
 	}
 		
-	public Map<Long, User> getAllUsers() throws ValidationException{
+	public Map<Long, User> getAllUsers() throws ValidationException, SQLException{
 		context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		PreparedStatement preparedStatement = null;
@@ -144,6 +136,7 @@ public class UserDAO {
 				}
 				// enum parser
 				user.changeGender(Enum.valueOf(User.Gender.class, result.getString("gender").toUpperCase()));
+				
 				results = result.getString("profilephoto_path");
 				if(!result.wasNull()){
 					user.changeProfilePhoto(results);
@@ -158,35 +151,22 @@ public class UserDAO {
 				}
 				allUsers.put(user.getUserId(), user);
 				CachedObjects.getInstance().addUser(user);
+			}
+			for(User user : allUsers.values()){
 				user.addAllAlbums(albumDAO.getUserAlbums(user));
 				//add followers and following
 				getFollows(user, GET_ALL_FOLLOWERS);
 				getFollows(user, GET_ALL_FOLLOWING);
 			}
-		} catch (SQLException e1) {
-			System.out.println("Error in 1st catch block in UserDAO method getAllUsers() - " + e1.getMessage());
-		}
-		finally{
-			if(preparedStatement != null){
-				try {
-					preparedStatement.close();
-				} catch (SQLException e2) {
-					System.out.println("Error when closing statement in 1st catch block in UserDAO method getAllUsers() - " + e2.getMessage());
-				}
-			}
-			if(result != null){
-				try {
-					result.close();
-				} catch (SQLException e3) {
-					System.out.println("Error when closing resultSet in 1st catch block in UserDAO method getAllUsers() - " + e3.getMessage());
-				}
-			}
+		}finally{
+			preparedStatement.close();
+			result.close();
 		}
 		return Collections.unmodifiableMap(allUsers);
 	}
 	
 	//change first name
-	public void changeFirstName(User user, String first_name) throws ValidationException{
+	public void changeFirstName(User user, String first_name) throws ValidationException, SQLException{
 		user.changeFirstName(first_name);
 		PreparedStatement preparedStatement = null;
 		Connection connection = null;
@@ -196,22 +176,14 @@ public class UserDAO {
 			preparedStatement.setString(1, first_name);
 			preparedStatement.setLong(2, user.getUserId());
 			preparedStatement.executeUpdate();
-		} catch (SQLException e1) {
-			System.out.println("Error in 1st catch block in UserDAO method changeFirstName() - " + e1.getMessage());
-		}
-		finally{
-			if(preparedStatement != null){
-				try {
-					preparedStatement.close();
-				} catch (SQLException e2) {
-					System.out.println("Error when closing statement in 1st catch block in UserDAO method changeFirstName() - " + e2.getMessage());
-				}
-			}
+		}finally{
+			preparedStatement.close();
+			connection.close();
 		}
 	}
 	
 	//change last name
-	public void changeLastName(User user, String last_name) throws ValidationException{
+	public void changeLastName(User user, String last_name) throws ValidationException, SQLException{
 		user.changeLastName(last_name);
 		PreparedStatement preparedStatement = null;
 		Connection connection = null;
@@ -221,22 +193,15 @@ public class UserDAO {
 			preparedStatement.setString(1, last_name);
 			preparedStatement.setLong(2, user.getUserId());
 			preparedStatement.executeUpdate();
-		} catch (SQLException e1) {
-			System.out.println("Error in 1st catch block in UserDAO method changeLastName() - " + e1.getMessage());
 		}
 		finally{
-			if(preparedStatement != null){
-				try {
-					preparedStatement.close();
-				} catch (SQLException e2) {
-					System.out.println("Error when closing statement in 1st catch block in UserDAO method changeLastName() - " + e2.getMessage());
-				}
-			}
+			preparedStatement.close();
+			connection.close();
 		}
 	}
 	
 	//change email
-	public void changeEmail(User user, String email) throws ValidationException{
+	public void changeEmail(User user, String email) throws ValidationException, SQLException{
 		user.changeEmail(email);
 		PreparedStatement preparedStatement = null;
 		Connection connection = null;
@@ -246,22 +211,14 @@ public class UserDAO {
 			preparedStatement.setString(1, email);
 			preparedStatement.setLong(2, user.getUserId());
 			preparedStatement.executeUpdate();
-		} catch (SQLException e1) {
-			System.out.println("Error in 1st catch block in UserDAO method changeEmail() - " + e1.getMessage());
-		}
-		finally{
-			if(preparedStatement != null){
-				try {
-					preparedStatement.close();
-				} catch (SQLException e2) {
-					System.out.println("Error when closing statement in 1st catch block in UserDAO method changeEmail() - " + e2.getMessage());
-				}
-			}
+		}finally{
+			preparedStatement.close();
+			connection.close();
 		}
 	}
 	
 	//change mobile number
-	public void changeMobileNumber(User user, String mobile_number) throws ValidationException{
+	public void changeMobileNumber(User user, String mobile_number) throws ValidationException, SQLException{
 		user.changeMobileNumber(mobile_number);
 		PreparedStatement preparedStatement = null;
 		Connection connection = null;
@@ -271,17 +228,8 @@ public class UserDAO {
 			preparedStatement.setString(1, mobile_number);
 			preparedStatement.setLong(2, user.getUserId());
 			preparedStatement.executeUpdate();
-		} catch (SQLException e1) {
-			System.out.println("Error in 1st catch block in UserDAO method changeMobileNumber() - " + e1.getMessage());
-		}
-		finally{
-			if(preparedStatement != null){
-				try {
-					preparedStatement.close();
-				} catch (SQLException e2) {
-					System.out.println("Error when closing statement in 1st catch block in UserDAO method changeMobileNumber() - " + e2.getMessage());
-				}
-			}
+		}finally{
+			preparedStatement.close();
 		}
 	}
 	
@@ -538,6 +486,7 @@ public class UserDAO {
 			resultSet = preparedStatement.executeQuery();
 			while(resultSet.next()){
 				User follower = new User(resultSet.getString("username"), resultSet.getString("email"),resultSet.getString("password"), resultSet.getLong("user_id"));
+				
 				String results = resultSet.getString("first_name");
 				if(!resultSet.wasNull()){
 					follower.changeFirstName(results);
@@ -572,46 +521,40 @@ public class UserDAO {
 		}finally{
 			preparedStatement.close();
 			resultSet.close();
+			connection.close();
 		}
 	}
 
-	public boolean validLogin(String username, String password) throws ValidationException {
+	public boolean validLogin(String username, String password) throws ValidationException, SQLException {
 		CachedObjects cachedObj = CachedObjects.getInstance();
 		if(cachedObj.getAllUsers().isEmpty()){
 			getAllUsers();
 		}
 		User user = cachedObj.getOneUser(username);
-		if(user == null){
-			return false;
-		}
 		return user.getPassword().equals(password);	
 	}
 	
-	public boolean isUsernameTaken(String username) throws ValidationException {
+	public boolean isUsernameTaken(String username) throws ValidationException, SQLException {
 		CachedObjects cachedObj = CachedObjects.getInstance();
 		if(cachedObj.getAllUsers().isEmpty()){
 			getAllUsers();
 		}
-		if(cachedObj.containsUser(username)){
-			return true;
-		}
-		return false;
+		return cachedObj.containsUser(username);
 	}
 	
-	public boolean isEmailTaken(String email) throws ValidationException {
+	public boolean isEmailTaken(String email) throws ValidationException, SQLException {
 		CachedObjects cachedObj = CachedObjects.getInstance();
-		Map<Long, User> allUsers = cachedObj.getAllUsers();
+		Set<User> allUsers = cachedObj.getAllUsers();
 		boolean containsEmail = false;
 		if(allUsers.isEmpty()){
 			getAllUsers();
 		}
-		for(Entry<Long, User> users : allUsers.entrySet()){
-			if(users.getValue().getEmail().equals(email)){
+		for(User users : allUsers){
+			if(users.getEmail().equals(email)){
 				containsEmail = true;
 				break;
 			}
 		}
 		return containsEmail;
-	}
-	
+	}	
 }
