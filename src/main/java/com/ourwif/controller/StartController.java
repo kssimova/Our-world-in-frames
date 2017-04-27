@@ -15,7 +15,6 @@ public class StartController {
 	public String sayHi(HttpSession session) {
 		String url = "index";
 		if(session.getAttribute("logged")!= null){
-			System.out.println(session.getAttribute("logged").toString());
 			url = "Discover";
 		}
 		return url;

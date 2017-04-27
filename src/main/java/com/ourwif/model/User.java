@@ -36,7 +36,9 @@ public class User implements Comparable<User>{
 	private Gender gender;
 	private String profilePhotoPath;
 	private TreeMap <Long, Album> albums;
+	//people that follow you
 	private TreeSet <User> followers;
+	//people that you are following
 	private TreeSet <User> following;
 	private Pattern pattern = null;
 	private Matcher matcher = null;
@@ -135,13 +137,16 @@ public class User implements Comparable<User>{
 		for(User u : followers){
 			follower.add(u.getUserId());
 		}
+		follower.size();
 		return Collections.unmodifiableSortedSet(follower);
 	}
+	
 	public Set<Long> getFollowing()  {
 		TreeSet <Long> followin = new TreeSet<>();
-		for(User u : followers){
+		for(User u : following){
 			followin.add(u.getUserId());
 		}
+		followin.size();
 		return Collections.unmodifiableSortedSet(followin);
 	}	
 
@@ -246,6 +251,20 @@ public class User implements Comparable<User>{
 		return album;
 	}
 	
+	public void addPhoto(Album album, Post post) throws ValidationException {
+		if(!this.albums.containsKey(album.getAlbumId())){
+			this.albums.put(album.getAlbumId(), album);
+		}
+			this.albums.get(album.getAlbumId()).addPosts(post);
+
+	}
+	
+	public void putAlbum(Album album){
+		if(album != null){
+			this.albums.put(album.getAlbumId(), album);
+		}
+	}
+	
 	public void deleteAlbum(Album album) throws ValidationException {
 		if(albums.containsKey(album.getAlbumId())){
 			this.albums.remove(album.getAlbumId());
@@ -255,27 +274,27 @@ public class User implements Comparable<User>{
 	
 	
 	public void addFollower(User user){
-		if(validUser(user)){
+		if(validUser(user) && !followers.contains(user)){
 			this.followers.add(user);
 		}
 	}
 	
 	
 	public void removeFollower(User user){
-		if(validUser(user)){
+		if(validUser(user) && followers.contains(user)){
 			this.followers.remove(user);
 		}
 	}
 	
 	
 	public void addFollowing(User user){
-		if(validUser(user)){
+		if(validUser(user) && !following.contains(user)){
 			this.following.add(user);
 		}
 	}
 	
 	public void removeFollowing(User user){
-		if(validUser(user)){
+		if(validUser(user) && following.contains(user)){
 			this.following.remove(user);
 		}
 	}
@@ -318,8 +337,8 @@ public class User implements Comparable<User>{
 		this.albums.putAll(userAlbums);	
 	}
 
-	public Set<User> getAllFollowers() {
-		return Collections.unmodifiableSortedSet(followers);	
+	public Set<User> following() {
+		return Collections.unmodifiableSortedSet(following);	
 	}
 	
 }

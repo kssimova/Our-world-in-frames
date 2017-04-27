@@ -74,7 +74,6 @@ public class CommentDAO {
 			res.next();
 			long commentId = res.getLong(1);
 			comment = new Comment(post, user, str, LocalDate.now(), commentId);
-			System.out.println(comment.toString());
 			post.addComment(comment);
  		} catch (SQLException e) {
  			try {

@@ -65,7 +65,6 @@ public class CommentController {
 		Post post = CachedObjects.getInstance().getOnePost(postId);
 		try {
 			comment = commentDAO.createComment(post, user, commentStr);
-			System.out.println(comment.toString());
 		} catch (ValidationException | SQLException e) {
 			System.out.println(e.getMessage());
 		}	

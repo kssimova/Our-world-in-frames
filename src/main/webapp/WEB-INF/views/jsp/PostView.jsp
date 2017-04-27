@@ -12,9 +12,10 @@
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
      <script src="js/jquery.min.js"></script>
      <script src="js/bootstrap.min.js"></script>
+     <script src="js/likePhoto.js"></script>
+     <script src="js/comments.js"></script>
 <title>post</title>
 </head>
-
 <script type="text/javascript">
 $(function () {	
 	var url = window.location.href;
@@ -96,6 +97,37 @@ $(function () {
 		}
 	});
 	}, 100);
+		
+	//on click event for liking this image
+	var urlLike = "post/like";
+	var typeMethod = "POST";	
+	setTimeout(function(){			
+		$('#like .heart').on('click', function(){
+			var panelToShow = $(this).attr('rel');
+			var $likeHeart = $(this);
+			if(panelToShow == "panel2"){
+				urlLike = "post/unlike";
+				typeMethod = "POST";
+			};
+			$.ajax({
+				type: typeMethod,
+				url: urlLike,
+				data: post,
+				success: function(){
+					$likeHeart.slideUp(300, function(){
+						$(this).removeClass('active');
+						$('#' + panelToShow).slideDown(300, function(){
+							$(this).addClass('active');
+						});
+					});
+				},
+				error: function(e){
+					console.log(e);
+				}
+			});
+		});
+	}, 1000);
+	
 	
 	//display related images ...with same tags
 	setTimeout(function(){
@@ -131,161 +163,10 @@ $(function () {
 				console.log(e);
 			}
 		});
-	}, 300);
-
-	//on click event for liking this image
-	var urlLike = "post/like";
-	var typeMethod = "POST";	
-	setTimeout(function(){			
-		$('#like .heart').on('click', function(){
-			var panelToShow = $(this).attr('rel');
-			var $likeHeart = $(this);
-			if(panelToShow == "panel2"){
-				urlLike = "post/unlike";
-				typeMethod = "POST";
-			};
-			$.ajax({
-				type: typeMethod,
-				url: urlLike,
-				data: post,
-				success: function(){
-					$likeHeart.slideUp(300, function(){
-						$(this).removeClass('active');
-						$('#' + panelToShow).slideDown(300, function(){
-							$(this).addClass('active');
-						});
-					});
-				},
-				error: function(e){
-					console.log(e);
-				}
-			});
-		});
-	}, 1000);
+	}, 500);
 	
-	//get all coments
-	setTimeout(function(){	
-		$comments = $('#comments');	
-		$.ajax({
-			type: 'GET',
-			url: 'comment/'+ $postId,
-			success: function(data){
-				$.each(data, function(index, val){
-					$comments.append(
-							'<li class="media">' + 
-								'<a class="pull-left"  id = "'+ val.commentId +'">' 
-					);    
-	               	if(val.creatorUrl != null){
-	    				$comments.append(
-									'<img class="media-object img-circle" src="'+ val.creatorUrl +'" alt="profile" style ="height:100px;width:auto;max-width:100px;">'
-	    				); 
-	               	}else{
-	    				$comments.append(
-									'<img class="media-object img-circle" src="http://i.imgur.com/d7jOt4k.jpg" alt="profile" style = "height:100px;width:auto;max-width:100px;">'
-	    				); 
-	               	}
-					$comments.append(
-								'</a>' +
-								'<div class="media-body">' +
-									'<div class="well well-lg">' +
-										'<h4 id = class="media-heading text-uppercase reviews">'+ val.creator +'</h4>' + 
-										'<ul class="media-date text-uppercase reviews list-inline">' +
-											'<li> Posted on: </li>' +
-											'<li class="dd">' + val.dateCreated.dayOfMonth + '</li>' +
-											'<li class="mm">' + val.dateCreated.dayOfMonth + '</li>' + 
-											'<li class="aaaa">' + val.dateCreated.year + '</li>' + 
-										'</ul>' +
-										'<p></p>' +
-										'<p class="media-comment">' +
-											val.content +
-										'</p>' +
-									'</div>' +              
-								'</div> ' +
-							'</li> '  
-					); 
-				});
-			},
-			error: function(e){
-				console.log(e);
-			}
-		});	
-		}, 300);
-	});	
 	
-	//create new comment 
-	$(function () {	
-		var url = window.location.href;
-		var n = url.indexOf("imgId=");
-		var $postId = url.substring(n+6);
-
-		setTimeout(function(){				
-			$('#submitComment').on('click', function(){
-				var $comment = document.getElementById('addComment').value;
-				var commentche = {
-						comment : $comment,
-						postId: $postId
-					};
-				$.ajax({
-					type: 'POST',
-					url: 'comment/add',
-					data: commentche,
-					success: function(val){	               	
-						if(val.creatorUrl != null){
-							 $('#comments').append(
-								'<li class="media">' + 
-									'<a class="pull-left" id = "'+ val.commentId +'">' +
-										'<img class="media-object img-circle" src="'+ val.creatorURL +'" alt="profile" style ="height:100px;width:auto;max-width:100px;">' + 
-									'</a>' +
-									'<div class="media-body">' +
-										'<div class="well well-lg">' +
-											'<h4 id = class="media-heading text-uppercase reviews">'+ val.creator +'</h4>' + 
-											'<ul class="media-date text-uppercase reviews list-inline">' +
-												'<li> Posted on: </li>' +
-												'<li class="dd">' + val.dateCreated.dayOfMonth + '</li>' +
-												'<li class="mm">' + val.dateCreated.dayOfMonth + '</li>' + 
-												'<li class="aaaa">' + val.dateCreated.year + '</li>' + 
-											'</ul>' +
-											'<p></p>' +
-											'<p class="media-comment">' +
-												val.content +
-											'</p>' +
-										'</div>' +              
-									'</div> ' +
-								'</li> '  
-								); 
-						}else{
-							 $('#comments').append(
-								'<li class="media">' + 
-									'<a class="pull-left" id = "'+ val.commentId +'">' +
-										'<img class="media-object img-circle" src="http://i.imgur.com/d7jOt4k.jpg" alt="profile" style = "height:100px;width:auto;max-width:100px;">' +
-									'</a>' +
-									'<div class="media-body">' +
-										'<div class="well well-lg">' +
-											'<h4 id = class="media-heading text-uppercase reviews">'+ val.creator +'</h4>' + 
-											'<ul class="media-date text-uppercase reviews list-inline">' +
-												'<li> Posted on: </li>' +
-												'<li class="dd">' + val.dateCreated.dayOfMonth + '</li>' +
-												'<li class="mm">' + val.dateCreated.dayOfMonth + '</li>' + 
-												'<li class="aaaa">' + val.dateCreated.year + '</li>' + 
-											'</ul>' +
-											'<p></p>' +
-											'<p class="media-comment">' +
-												val.content +
-											'</p>' +
-										'</div>' +              
-									'</div> ' +
-								'</li> '  
-							); 
-		               	};
-					},
-					error: function(e){
-						alert(e);
-					}
-				});
-			});
-		}, 1100);
-		
-	//get loged user
+	//get logged user
 	var thisId;
 	$.ajax({
   		type: "POST",
@@ -314,14 +195,35 @@ $(function () {
 	
 		
 	var following = false;	
+	var thisUserId = "";
+	
+	$.ajax({
+  		type: "POST",
+  		url: 'user/profile',
+  		dataType: "json",
+  		success: function(user){
+  			console.log(user.userId);
+  			thisUserId = user.userId;
+  		},
+  		error: function(data){
+  			console.log(data);
+  			alert();
+  		}
+  	});
+	
 	var numOfFollowers = 0;
 	setTimeout(function(){			
-		//dispay post creator
+		//display post creator
 		var numOfPhotos = 0;
 		$.ajax({
 			type: 'GET',
 			url: 'user/' + $postId,
 			success: function(user){
+				$.each(user.followers, function (a, b){
+					if(b == thisUserId){
+						following = true;
+					}		
+				});
 				$.each(user.albums, function (i, v){
 					numOfPhotos += v.photos.length;
 				});
@@ -330,10 +232,8 @@ $(function () {
 			 	numOfFollowers = user.followers.length;
 			  	$('#photos').html("Photos: " + numOfPhotos);
 			  	if(following){
-			  		console.log(following);
 			  		$('#follow').html('<span class="glyphicon glyphicon-send"></span> Unfollow');
 			  	}else{
-			  		console.log(following);
 			  		$('#follow').html('<span class="glyphicon glyphicon-send"></span> Follow');
 			 	}
 			},			
@@ -341,7 +241,7 @@ $(function () {
 				alert(e);
 			}
 		});
-	}, 100);
+	}, 300);
 	
 	// follow user 
 	setTimeout(function(){	
@@ -377,17 +277,9 @@ $(function () {
 		});	
 	}, 500);
 });
-
-
 </script>
-
-
-
 <body>
 	<jsp:include page="Nav.jsp" />
-	
-	
-
     <!-- Page Content -->
     <div class="container">
 

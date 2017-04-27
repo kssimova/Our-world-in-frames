@@ -237,7 +237,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="team-member">
-                        <img src="img/miki.jpg" class="img-responsive img-circle" alt="">
+                        <img src="img/Miki.jpg" class="img-responsive img-circle" alt="">
                         <h4> <font color=#dab3ff> Miki </font></h4>
                         <p class="text-muted">Lead Kitten</p>
                         <ul class="list-inline social-buttons">
@@ -252,7 +252,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="team-member">
-                        <img src="img/mariq.jpg" class="img-responsive img-circle" alt="" style = "height: 250px">
+                        <img src="img/mariq.jpg" class="img-responsive img-circle" alt="" style = "height: 225px">
                        <h4> <font color=#dab3ff> Mariya Yordanova </font></h4>
                         <p class="text-muted">Java Developer</p>
                         <ul class="list-inline social-buttons">

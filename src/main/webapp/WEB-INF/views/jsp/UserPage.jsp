@@ -65,8 +65,6 @@
 	   				if(count> 4){
 	   					count = 0;
 	   				};
-					console.log(a + " : " + b);	
-					console.log(count);	
 	  				if(name != val.name){
 	  					$album.append(
 	  							'<div class="col-md-4">' + 
@@ -146,7 +144,8 @@
 	  							'</div>' + 
 	  						'</div>');			
 	  				count1++;
-	   			}else if(count1 == 3){
+	   			};
+	   			if(count1 == 3){
 	   				count1 = 0;
 	   			};
 			});

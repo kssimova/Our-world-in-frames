@@ -15,10 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.ValidationException;
 
-import org.apache.catalina.webresources.Cache;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,7 +44,6 @@ public class PostController {
 	@RequestMapping(value="/get",method = RequestMethod.GET)
 	public Post getPost(HttpSession session, HttpServletRequest request){
 		String postId = request.getParameter("postId");		
-		System.out.println(postId);
 		Post post = null;
 		if(session.getAttribute("logged")!= null){
 			if(postId != null){
@@ -55,7 +52,7 @@ public class PostController {
 						postDAO.getAllPosts();
 
 					} catch (ValidationException | SQLException e) {
-						System.out.println("i cant get all posts");
+						System.out.println(e.getMessage());
 					}
 				}
 				post = CachedObjects.getInstance().getOnePost(postId);
@@ -149,7 +146,9 @@ public class PostController {
 					deleteHash = obj2.get("deletehash").getAsString();
 					deleteHash.replaceAll("\"", " ").trim();	
 					try {
-						postDAO.createPost((User)session.getAttribute("user"), name, description, LocalDate.now(), picturePath, tags, album, postId, deleteHash);
+						Post post = postDAO.createPost((User)session.getAttribute("user"), name, description, LocalDate.now(), picturePath, tags, album, postId, deleteHash);
+						u.addPhoto(album, post);
+						session.setAttribute("user", u);
 					} catch (ValidationException e) {
 						System.out.println(e.getMessage());
 					} catch (SQLException e) {
@@ -175,7 +174,7 @@ public class PostController {
 		try {
 			postDAO.addLike(post, user);
 		} catch (ValidationException e) {
-			System.out.println("Error in validation");
+			System.out.println(e.getMessage());
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}	
@@ -184,13 +183,12 @@ public class PostController {
 	
 	@RequestMapping(value="/unlike",method = RequestMethod.POST)
 	public void unlikePost(HttpServletRequest request, HttpSession session) {
-		System.out.println(request.getParameter("postId"));
 		User user = (User)session.getAttribute("user");
 		Post post = CachedObjects.getInstance().getOnePost(request.getParameter("postId"));
 		try {
 			postDAO.removeLike(post, user);
 		} catch (ValidationException | SQLException e) {
-			System.out.println("Error in validation");
+			System.out.println(e.getMessage());
 		}	
 	}	
 	
@@ -203,13 +201,13 @@ public class PostController {
 				try {
 					postDAO.getAllPosts();
 				} catch (ValidationException | SQLException e) {
-					System.out.println("i cant get all liked posts1");
+					System.out.println(e.getMessage());
 				}
 			}
 			try {
 				posts = postDAO.getAllLikedPosts(user);
 			} catch (SQLException | ValidationException e) {
-				System.out.println("i cant get all liked posts2");
+				System.out.println(e.getMessage());
 			}
 		}
 		return posts;
@@ -229,7 +227,7 @@ public class PostController {
 							postDAO.getAllPosts();
 
 						} catch (ValidationException | SQLException e) {
-							System.out.println("i cant get all posts");
+							System.out.println(e.getMessage());
 						}
 					}
 					postIds.addAll(CachedObjects.getInstance().getPhotosWithTag(tags));
@@ -258,32 +256,54 @@ public class PostController {
  	
 	@RequestMapping(value="/getPhotos",method = RequestMethod.POST)
 	public  TreeSet<Post> getPosts(HttpSession session, HttpServletRequest request){
+		CachedObjects cachedObj = CachedObjects.getInstance();
+		if(cachedObj.getAllPosts().isEmpty()){
+			try {
+				postDAO.getAllPosts();
+			} catch (ValidationException | SQLException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		
+		TreeSet<Post> ordered = null;
 		TreeSet<Post> posts = new TreeSet<>();
+		TreeSet<User> following = new TreeSet<>();
 		boolean followers = (request.getParameter("followers").equals("true"));
 		User user = (User) session.getAttribute("user");
 		//get all posts
 		if(followers){
-			for(User followe: user.getAllFollowers()){
-				for(Album album : followe.getAlbums().values()){
-					posts.addAll(album.getPhotos());
-				}
+			for(User followe: user.following()){
+				following.add(followe);
 			}
+			for(Entry<Long, TreeMap<String, Post>>  e : cachedObj.getAllPosts().entrySet()){
+				for (Entry<String, Post> e2 : e.getValue().entrySet()){
+					for(User ff : following){
+						if(e2.getValue().getUser().getUsername().equals(ff.getUsername())){
+							posts.add(e2.getValue());
+						}
+					}
+				}	
+				
+			}	
 		}else{
-			for(Entry<Long, TreeMap<String, Post>>  e : CachedObjects.getInstance().getAllPosts().entrySet()){
+			for(Entry<Long, TreeMap<String, Post>>  e : cachedObj.getAllPosts().entrySet()){
 				for (Entry<String, Post> e2 : e.getValue().entrySet()){
 					posts.add(e2.getValue());
 				}
 			}	
 		}	
 		//order them
-		if(request.getParameter("orderBy") == "time"){	
-			TreeSet<Post> dateCreated = new TreeSet<Post>(CachedObjects.dateCreatedComparator);
-			dateCreated.addAll(posts);
+		if(request.getParameter("orderBy").equals("time")){	
+			ordered = new TreeSet<Post>(CachedObjects.dateCreatedComparator);
+			ordered.addAll(posts);
+			for(Post post : ordered){
+				post.getPostId();
+			}
 		}else{
-			TreeSet<Post> mostLikes = new TreeSet<Post>(CachedObjects.mostLikesComparator);
-			mostLikes.addAll(posts);
+			ordered = new TreeSet<Post>(CachedObjects.mostLikesComparator);
+			ordered.addAll(posts);
 		}
-		return posts;
+		return ordered;
 	}
  	
  	//not used
@@ -299,7 +319,7 @@ public class PostController {
 				try {
 					postDAO.editPostName(post, user, title);
 				} catch (ValidationException e) {
-					System.out.println("Validation fail");
+					System.out.println(e.getMessage());
 				} catch (SQLException e) {
 					System.out.println(e.getMessage());
 				}
@@ -308,7 +328,7 @@ public class PostController {
 				try {
 					postDAO.editPostInfo(post, user, description);
 				} catch (ValidationException e) {
-					System.out.println("Validation fail");
+					System.out.println(e.getMessage());
 				} catch (SQLException e) {
 					System.out.println(e.getMessage());
 				}
@@ -334,7 +354,7 @@ public class PostController {
 			try {
 				postDAO.deletePost(post, user, album);
 			} catch (ValidationException | SQLException e) {
-				System.out.println("something went wrong");
+				System.out.println(e.getMessage());
 			}
 			//this will delete one album the request should contain album id					
 			URL url = null;
@@ -343,7 +363,7 @@ public class PostController {
 				url = new URL("https://api.imgur.com/3/image/" + deletehash);
 				connection = (HttpURLConnection) url.openConnection();
 			} catch (IOException e) {
-				System.out.println("something went wrong");
+				System.out.println(e.getMessage());
 			}
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
@@ -353,7 +373,7 @@ public class PostController {
 				connection.connect();
 				System.out.println(connection.getResponseMessage());
 			} catch (IOException e) {
-				System.out.println("something went wrong");
+				System.out.println(e.getMessage());
 			}
 			return "album/get/" + album.getAlbumId() ;
 		}else{	
