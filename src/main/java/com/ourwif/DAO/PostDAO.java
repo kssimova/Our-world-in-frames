@@ -161,7 +161,6 @@ public class PostDAO {
 	 		conn.setAutoCommit(true);
  			conn.close();
 	 	}				
- 		CachedObjects.getInstance().addPost(post, album);
  		user.addPhoto(album, post);
  		return post;
 	}

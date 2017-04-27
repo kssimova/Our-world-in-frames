@@ -126,3 +126,21 @@ $(function() {
  		});
  	});
  });
+  
+  
+$(function(){
+	$('#btn').on('click', function(){
+		var i = 0;
+		function makeProgress(){
+			if(i < 100){
+				i = i + 1;
+				$(".progress-bar").css("width", i + "%").text(i + " %");
+			}
+		// Wait for sometime before running this script again
+			setTimeout("makeProgress()", 100);
+		}
+		if(i < 100){
+			makeProgress();
+		}
+	});
+});

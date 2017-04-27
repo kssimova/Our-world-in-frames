@@ -21,8 +21,7 @@ public class CachedObjects {
 		}
 		return instance;
 	}
-	
-	
+		
 	//USER
 	public User getOneUser(long userId) {
 		User user = null;

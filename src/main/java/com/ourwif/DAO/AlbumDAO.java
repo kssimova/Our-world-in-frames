@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -19,7 +18,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.mysql.jdbc.Connection;
 import com.ourwif.model.Album;
-import com.ourwif.model.CachedObjects;
 import com.ourwif.model.Post;
 import com.ourwif.model.User;
 
@@ -98,8 +96,7 @@ public class AlbumDAO {
 		}finally{
  			conn.close();
 		}
-		return album;
-		
+		return album;	
  	}
 		
 	//change album description
