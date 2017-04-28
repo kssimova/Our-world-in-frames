@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ourwif.DAO.AlbumDAO;
+import com.ourwif.DAO.UserDAO;
 import com.ourwif.model.Album;
 import com.ourwif.model.CachedObjects;
 import com.ourwif.model.User;
@@ -24,21 +25,21 @@ import com.ourwif.model.User;
 public class AlbumController {
 	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 	AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
+	UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 	
 	@RequestMapping(value="/get",method = RequestMethod.POST)
 	public Album getAlbum(HttpServletRequest request, HttpSession session) {
 		String s = request.getParameter("albumId");
 		if(s.contains("albumId=")){
 			s = s.substring(s.indexOf("albumId=")+8);
-			System.out.println(s);
 		}
 		Long albumId = Long.parseLong(s);
 		Album album = null;
 		if(session.getAttribute("logged")!= null){
 			if(albumId != null){
-				if(CachedObjects.getInstance().getAllAlbums().isEmpty()){
+				if(CachedObjects.getInstance().getAllUsers().isEmpty()){
 					try {
-						albumDAO.getAllAlbums();
+						userDAO.getAllUsers();
 
 					} catch (ValidationException | SQLException e) {
 						System.out.println(e.getMessage());

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ourwif.DAO.CommentDAO;
-import com.ourwif.DAO.PostDAO;
+import com.ourwif.DAO.UserDAO;
 import com.ourwif.model.CachedObjects;
 import com.ourwif.model.Comment;
 import com.ourwif.model.Post;
@@ -26,15 +26,16 @@ import com.ourwif.model.User;
 @RequestMapping(value= "/comment")
 public class CommentController {
 	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
-
+	CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
+	UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
+	
 	@RequestMapping(value="/{post_id}",method = RequestMethod.GET)
 	public TreeMap<Long, Comment> getComments(Model model, @PathVariable("post_id") String postId) {
-		CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
 		TreeMap<Long, Comment> comments = new TreeMap<>();
 		CachedObjects cachedObj = CachedObjects.getInstance();
 		Post post = null;
-		if(cachedObj.getAllPosts().isEmpty()){
-			cachedObj.getAllPosts();
+		if(cachedObj.getAllUsers().isEmpty()){
+			cachedObj.getAllUsers();
 		}
 		post = cachedObj.getOnePost(postId);
 		try {
@@ -52,12 +53,10 @@ public class CommentController {
 		String postId = request.getParameter("postId");
 		String commentStr = request.getParameter("comment");
 		User user = (User) session.getAttribute("user");
-		CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
-		PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
 		Comment comment = null;
-		if(CachedObjects.getInstance().getAllPosts().isEmpty()){
+		if(CachedObjects.getInstance().getAllUsers().isEmpty()){
 			try {
-				postDAO.getAllPosts();
+				userDAO.getAllUsers();
 			} catch (ValidationException | SQLException e) {
 				System.out.println(e.getMessage());
 			}

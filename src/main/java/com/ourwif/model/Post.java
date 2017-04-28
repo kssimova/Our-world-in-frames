@@ -96,8 +96,12 @@ public class Post implements Comparable<Post>{
 	}
 	
 	
-	public Set<User> getLikes() {
-		return Collections.unmodifiableSortedSet(likes);
+	public Set<Long> getLikes() {
+		TreeSet <Long> like = new TreeSet<>();
+		for(User u : likes){
+			like.add(u.getUserId());
+		}
+		return Collections.unmodifiableSortedSet(like);
 	}
 	
 	

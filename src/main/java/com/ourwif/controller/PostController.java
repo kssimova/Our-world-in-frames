@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Map.Entry;
 import java.util.Scanner;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +25,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.ourwif.DAO.PostDAO;
+import com.ourwif.DAO.UserDAO;
 import com.ourwif.model.Album;
 import com.ourwif.model.Basic;
 import com.ourwif.model.CachedObjects;
@@ -38,6 +38,7 @@ import com.ourwif.model.User;
 public class PostController {
 	ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 	PostDAO postDAO = (PostDAO) context.getBean("PostDAO");
+	UserDAO userDAO = (UserDAO) context.getBean("UserDAO");
 	private static final String ACCESS_TOKEN = "bc232b87907ff074efdffbbdaaaaa53aada282a2";
 
 	
@@ -47,9 +48,9 @@ public class PostController {
 		Post post = null;
 		if(session.getAttribute("logged")!= null){
 			if(postId != null){
-				if(CachedObjects.getInstance().getAllPosts().isEmpty()){
+				if(CachedObjects.getInstance().getAllUsers().isEmpty()){
 					try {
-						postDAO.getAllPosts();
+						userDAO.getAllUsers();
 
 					} catch (ValidationException | SQLException e) {
 						System.out.println(e.getMessage());
@@ -197,9 +198,9 @@ public class PostController {
 		User user = (User)session.getAttribute("user");
 		TreeSet<Post> posts = new TreeSet<>();
 		if(session.getAttribute("logged")!= null){
-			if(CachedObjects.getInstance().getAllPosts().isEmpty()){
+			if(CachedObjects.getInstance().getAllUsers().isEmpty()){
 				try {
-					postDAO.getAllPosts();
+					userDAO.getAllUsers();
 				} catch (ValidationException | SQLException e) {
 					System.out.println(e.getMessage());
 				}
@@ -215,26 +216,22 @@ public class PostController {
 	
 	@RequestMapping(value="/tag",method = RequestMethod.POST)
 	public TreeSet<Post> getTags(HttpSession session, HttpServletRequest request){
+		CachedObjects cachedObj = CachedObjects.getInstance();
 		TreeSet<Post> posts = new TreeSet<>();
 		TreeSet<String> tagsForRec = new TreeSet<>();
 		if(request.getParameter("tagche") != null){
 			TreeSet<String> tags = addTags(request.getParameter("tagche"), tagsForRec);
-			TreeSet<String> postIds = new TreeSet<>();
 			if(session.getAttribute("logged")!= null){
 				if(tags.size() > 0){
-					if(CachedObjects.getInstance().getAllTags().isEmpty()){
+					if(CachedObjects.getInstance().getAllUsers().isEmpty()){
 						try {
-							postDAO.getAllPosts();
-
+							userDAO.getAllUsers();
 						} catch (ValidationException | SQLException e) {
 							System.out.println(e.getMessage());
 						}
 					}
-					postIds.addAll(CachedObjects.getInstance().getPhotosWithTag(tags));
-					postIds.addAll(CachedObjects.getInstance().getPhotosWithName(tags));
-					for(String postId : postIds){
-						posts.add(CachedObjects.getInstance().getOnePost(postId));
-					}
+					posts.addAll(cachedObj.getPhotosWithTag(tags));
+					posts.addAll(cachedObj.getPhotosWithName(tags));
 				}
 			}
 		}
@@ -257,9 +254,9 @@ public class PostController {
 	@RequestMapping(value="/getPhotos",method = RequestMethod.POST)
 	public  TreeSet<Post> getPosts(HttpSession session, HttpServletRequest request){
 		CachedObjects cachedObj = CachedObjects.getInstance();
-		if(cachedObj.getAllPosts().isEmpty()){
+		if(cachedObj.getAllUsers().isEmpty()){
 			try {
-				postDAO.getAllPosts();
+				userDAO.getAllUsers();
 			} catch (ValidationException | SQLException e) {
 				System.out.println(e.getMessage());
 			}
@@ -270,35 +267,29 @@ public class PostController {
 		TreeSet<User> following = new TreeSet<>();
 		boolean followers = (request.getParameter("followers").equals("true"));
 		User user = (User) session.getAttribute("user");
-		//get all posts
+		//get all posts from followers or all users
 		if(followers){
 			for(User followe: user.following()){
 				following.add(followe);
 			}
-			for(Entry<Long, TreeMap<String, Post>>  e : cachedObj.getAllPosts().entrySet()){
-				for (Entry<String, Post> e2 : e.getValue().entrySet()){
-					for(User ff : following){
-						if(e2.getValue().getUser().getUsername().equals(ff.getUsername())){
-							posts.add(e2.getValue());
-						}
-					}
-				}	
-				
-			}	
-		}else{
-			for(Entry<Long, TreeMap<String, Post>>  e : cachedObj.getAllPosts().entrySet()){
-				for (Entry<String, Post> e2 : e.getValue().entrySet()){
-					posts.add(e2.getValue());
+			for(User users : cachedObj.getAllUsers()){
+				if(following.contains(users)){
+					for(Entry<Long, Album> albums : users.getAlbums().entrySet()){
+						posts.addAll(albums.getValue().getPhotos());
+					}	
 				}
 			}	
+		}else{
+			for(User users : cachedObj.getAllUsers()){
+				for(Entry<Long, Album> albums : users.getAlbums().entrySet()){
+					posts.addAll(albums.getValue().getPhotos());	
+				}	
+			}		
 		}	
 		//order them
 		if(request.getParameter("orderBy").equals("time")){	
 			ordered = new TreeSet<Post>(CachedObjects.dateCreatedComparator);
 			ordered.addAll(posts);
-			for(Post post : ordered){
-				post.getPostId();
-			}
 		}else{
 			ordered = new TreeSet<Post>(CachedObjects.mostLikesComparator);
 			ordered.addAll(posts);

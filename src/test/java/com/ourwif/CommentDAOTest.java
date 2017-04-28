@@ -60,8 +60,7 @@ public class CommentDAOTest {
 	public void testGetAllComments() {
 		CommentDAO commentDAO = (CommentDAO) context.getBean("CommentDAO");
 		CachedObjects.getInstance().addUser(u);	
-		TreeMap<Long, Comment> comments = null;
-		
+		TreeMap<Long, Comment> comments = new TreeMap<>();
 		try {
 			comments = commentDAO.getAllComments(p);
 		} catch (ValidationException | SQLException e) {

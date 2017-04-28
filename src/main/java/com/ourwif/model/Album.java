@@ -83,6 +83,12 @@ public class Album implements Comparable<Album>{
 		}
 	}
 	
+	public void removePost(Post post){
+		if(validPost(post)){
+			photos.remove(post);
+		}
+	}
+	
 	public void setAlbumId(long albumId) {
 		this.albumId = albumId;
 	}
