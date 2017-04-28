@@ -8,6 +8,7 @@
 		<link rel="stylesheet" type="text/css" href=css/aboutSectionStyle.css></link>
 		<link rel="stylesheet" type="text/css" href="css/allPages.css">
 		<link rel="stylesheet" type="text/css" href="css/HomePage.css">
+		 <link rel="stylesheet" type="text/css" href="css/UserPage.css">
 		<link rel="stylesheet" type="text/css" href="css/searchPage.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 		<script src="js/userPage.js"></script>
@@ -240,87 +241,62 @@
 	});	
 	
 	</script>
-	<script>
-	  window.fbAsyncInit = function() {
-	    FB.init({
-	      appId      : '792399230917035',
-	      xfbml      : true,
-	      version    : 'v2.8'
-	    });
-	    FB.AppEvents.logPageView();
-	  };
-	  (function(d, s, id){
-	     var js, fjs = d.getElementsByTagName(s)[0];
-	     if (d.getElementById(id)) {return;}
-	     js = d.createElement(s); js.id = id;
-	     js.src = "//connect.facebook.net/en_US/sdk.js";
-	     fjs.parentNode.insertBefore(js, fjs);
-	   }(document, 'script', 'facebook-jssdk'));
-	</script>
-
 	<body>
 		<jsp:include page="Nav.jsp" />
-		<div
-		  class="fb-like"
-		  data-share="true"
-		  data-width="450"
-		  data-show-faces="true">
-		</div>	
+		<div style= "background-color:white;margin: 0 70px 0 70px;">			
+			<!--  second row     -->
+			<div class="container">
+				<div class="row visible-lg-block tabs">
+					<div class="col-lg-4 firstLarge1">
+						<input rel = "popular" class = "button btn1" type="submit" value="Popular" Style = "font-size:13pt;">
+		             </div>
+		             <div class="col-lg-4">
+		 				<input rel = "fresh" class = "button btn2" type="submit" value="Fresh" Style = "font-size:13pt;">
+		             </div>
+		      	 </div>
+		 	</div>
+		 	<div class="container">
+		         <div class="row visible-md-block tabs">
+		             <div class="col-md-2 first1">
+		 				<input rel = "popular" class = "button btn1" type="submit" value="Popular">
+		             </div>
+		             <div class="col-md-2">
+		 				<input rel = "fresh" class = "button btn2" type="submit" value="Fresh">
+		             </div>
 		
-		 <!--  second row     -->
-	   <div class="container">
-	         <div class="row visible-lg-block tabs">
-	             <div class="col-lg-2 firstLarge">
-	 				<input rel = "popular" class = "button btn1" type="submit" value="Popular">
-	             </div>
-	             <div class="col-lg-2">
-	 				<input rel = "fresh" class = "button btn2" type="submit" value="Fresh">
-	             </div>
-	      	 </div>
-	 	</div>
-	 	<div class="container">
-	         <div class="row visible-md-block tabs">
-	             <div class="col-md-2 first">
-	 				<input rel = "popular" class = "button btn1" type="submit" value="Popular">
-	             </div>
-	             <div class="col-md-2">
-	 				<input rel = "fresh" class = "button btn2" type="submit" value="Fresh">
-	             </div>
-	
-	      	 </div>
-	 	</div>
-	 	<div class="container">
-	         <div class="row visible-sm-block tabs">
-	             <div class="col-md-3 second">
-	 				<input rel = "popular" class = "button btn1" type="submit" value="Popular">
-	             </div>
-	             <div class="col-md-3 second">
-	 				<input rel = "fresh" class = "button btn2" type="submit" value="Fresh">
-	             </div>
-	      	 </div>
-	 	</div>
-	 	<div class="container">
-	         <div class="row visible-xs-block tabs">
-	             <div class="col-md-3 second">
-	 				<input rel = "popular" class = "button btn1" type="submit" value="Popular">
-	             </div>
-	             <div class="col-md-3 second">
-	 				<input rel = "fresh" class = "button btn2" type="submit" value="Fresh">
-	             </div>
-	       	 </div>	
-	 	</div>	
-		
-			
-		<!--  image panel     -->
-		<div id = "popular" class = "panel active">
-			<span id = "pop"></span>
-		</div>	
-			
-		 	<!--  album panel     -->
-		<div id = "fresh" class = "panel">
-			<span id = "phot"></span>
+		      	 </div>
+		 	</div>
+		 	<div class="container">
+		         <div class="row visible-sm-block tabs">
+		             <div class="col-md-3 second1">
+		 				<input rel = "popular" class = "button btn1" type="submit" value="Popular">
+		             </div>
+		             <div class="col-md-3 second1">
+		 				<input rel = "fresh" class = "button btn2" type="submit" value="Fresh">
+		             </div>
+		      	 </div>
+		 	</div>
+		 	<div class="container">
+		         <div class="row visible-xs-block tabs">
+		             <div class="col-md-3 second1">
+		 				<input rel = "popular" class = "button btn1" type="submit" value="Popular">
+		             </div>
+		             <div class="col-md-3 second1">
+		 				<input rel = "fresh" class = "button btn2" type="submit" value="Fresh">
+		             </div>
+		       	 </div>	
+		 	</div>	
+						
+			<!--  image panel     -->
+			<div id = "popular" class = "panel active">
+				<span id = "pop"></span>
+			</div>	
+				
+			 	<!--  album panel     -->
+			<div id = "fresh" class = "panel">
+				<span id = "phot"></span>
+			</div>
 		</div>
-	
 	
 	
 	</body>

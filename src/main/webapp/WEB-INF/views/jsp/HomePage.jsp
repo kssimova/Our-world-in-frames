@@ -7,6 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<link rel="stylesheet" type="text/css" href=css/aboutSectionStyle.css></link>
 		<link rel="stylesheet" type="text/css" href="css/allPages.css">
+		<link rel="stylesheet" type="text/css" href="css/UserPage.css">
 		<link rel="stylesheet" type="text/css" href="css/HomePage.css">
 		<link rel="stylesheet" type="text/css" href="css/searchPage.css">
 		<link rel="stylesheet" type="text/css" href="css/PostView.css">
@@ -63,7 +64,7 @@
 				  				$follo.append(
 							 		'<li>' + 
 										'<div class="timeline-badge up"><i class="fa fa-thumbs-up"></i></div>' +
-										'<div class="timeline-panel" style = "background-color: #f5eaff;">' +
+										'<div class="timeline-panel" style = "background-color: #f5f5f5;">' +
 											'<div class="timeline-heading">' +
 												'<img class="media-object img-circle imageFloat" src="http://i.imgur.com/d7jOt4k.jpg" alt="profile" style = "height:50px;width:auto;max-width:50px;">' + 
 												'<h2 class="timeline-title">'+ post.username + ' </h2>'+
@@ -95,7 +96,7 @@
 					  			$follo.append(
 									'<li>' + 
 										'<div class="timeline-badge up"><i class="fa fa-thumbs-up"></i></div>' +
-										'<div class="timeline-panel" style = "background-color: #f5eaff;">' +
+										'<div class="timeline-panel" style = "background-color: #f5f5f5;">' +
 											'<div class="timeline-heading">' +
 												'<img class="media-object img-circle imageFloat" src="http://i.imgur.com/d7jOt4k.jpg" alt="profile" style = "height:50px;width:auto;max-width:50px;">' + 
 												'<h2 class="timeline-title">'+ post.username + ' </h2>'+
@@ -247,75 +248,63 @@
 	</script>
 	<body>
 		<jsp:include page="Nav.jsp" />
-		
-	   <div class="container">
-			<div class="row visible-lg-block tabs">
-	             <div class="col-lg-2 firstLarge">
-	 				<input rel = "follows" class = "button btn1" type="submit" value="Following">
-	             </div>
-	             <div class="col-lg-2">
-	 				<input rel = "activities" class = "button btn2" type="submit" value="Activity">
-	             </div>
-	      	 </div>
-	 	</div>
-	 	<div class="container">
-	         <div class="row visible-md-block tabs">
-	             <div class="col-md-2 first">
-	 				<input rel = "follows" class = "button btn1" type="submit" value="Following">
-	             </div>
-	             <div class="col-md-2">
-	 				<input rel = "activities" class = "button btn2" type="submit" value="Activity">
-	             </div>
+		<div style= "background-color:white;margin: 0 70px 0 70px;">	
+		   <div class="container">
+				<div class="row visible-lg-block tabs">
+		             <div class="col-lg-4 firstLarge1">
+		 				<input rel = "follows" class = "button btn1" type="submit" value="Following"  Style = "font-size:13pt;">
+		             </div>
+		             <div class="col-lg-4">
+		 				<input rel = "activities" class = "button btn2" type="submit" value="Activity"  Style = "font-size:13pt;">
+		             </div>
+		      	 </div>
+		 	</div>
+		 	<div class="container">
+		         <div class="row visible-md-block tabs">
+		             <div class="col-md-2 first1">
+		 				<input rel = "follows" class = "button btn1" type="submit" value="Following">
+		             </div>
+		             <div class="col-md-2">
+		 				<input rel = "activities" class = "button btn2" type="submit" value="Activity">
+		             </div>	
+		      	 </div>
+		 	</div>
+		 	<div class="container">
+		         <div class="row visible-sm-block tabs">
+		             <div class="col-md-3 second1">
+		 				<input rel = "follows" class = "button btn1" type="submit" value="Following">
+		             </div>
+		             <div class="col-md-3 second1">
+		 				<input rel = "activities" class = "button btn2" type="submit" value="Activity">
+		             </div>
+		      	 </div>
+		 	</div>
+		 	<div class="container">
+		         <div class="row visible-xs-block tabs">
+		             <div class="col-md-3 second1">
+		 				<input rel = "follows" class = "button btn1" type="submit" value="Following">
+		             </div>
+		             <div class="col-md-3 second1">
+		 				<input rel = "activities" class = "button btn2" type="submit" value="Activity">
+		             </div>
+		       	 </div>	
+		 	</div>	
+					
+			  	<!--  follow panel     -->
+			  	<!--  followed user last uploaded images -->
+			<div id = "follows" class = "panel active">
+				<div id = "follow" class="row"></div>
+				<div class="container">
+					<ul class="timeline" id ="foll">		
+				    </ul>
+				</div>	
+			</div>
+		 
+		 	<!--  album panel     -->
+			<div id = "activities" class = "panel">
+				<span id = "photos1"></span>
 	
-	      	 </div>
-	 	</div>
-	 	<div class="container">
-	         <div class="row visible-sm-block tabs">
-	             <div class="col-md-3 second">
-	 				<input rel = "follows" class = "button btn1" type="submit" value="Following">
-	             </div>
-	             <div class="col-md-3 second">
-	 				<input rel = "activities" class = "button btn2" type="submit" value="Activity">
-	             </div>
-	      	 </div>
-	 	</div>
-	 	<div class="container">
-	         <div class="row visible-xs-block tabs">
-	             <div class="col-md-3 second">
-	 				<input rel = "follows" class = "button btn1" type="submit" value="Following">
-	             </div>
-	             <div class="col-md-3 second">
-	 				<input rel = "activities" class = "button btn2" type="submit" value="Activity">
-	             </div>
-	       	 </div>	
-	 	</div>	
-		
-		
-		  	<!--  follow panel     -->
-		  	<!--  followed user last uploaded images -->
-		<div id = "follows" class = "panel active">
-			<div id = "follow" class="row"></div>
-			<div class="container">
-				<ul class="timeline" id ="foll">	
-					
-					
-					
-					
-					
-			    </ul>
-			</div>	
+			</div> 
 		</div>
-	 
-	 	<!--  album panel     -->
-		<div id = "activities" class = "panel ">
-			<span id = "photos1"></span>
-
-		</div>
-	
-		<!-- footer -->
-		<footer class = "footer">
-			Mage by: Mariya and Kristina 
-		</footer>
-	 
 	</body>
 </html>

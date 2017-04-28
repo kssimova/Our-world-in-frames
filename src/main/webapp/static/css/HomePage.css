@@ -1,34 +1,13 @@
-.firstLarge{
-	margin-left: 33%;
+.firstLarge1{
+	margin-left: 28%;
 }
 
-.first{
+.first1{
 	margin-left: 33%;
 	
 }
-.second{
+.second1{
 	margin-left: 40%;
-}
-
-.button{
-	width   : 100px;
-    cursor  : pointer;
-   	font-size: 15px;
-   	background: none;
-    border : none;
-    margin : 0px;
-	padding: 15px 0 10px 0 ;
-}
-
-.panel {
-    display:none;
-    background: #c9c9c9;
-    padding: 30px;
-    border-radius: 0 0 10px 10px;
-}
-
-.panel.active {
-    display:block;
 }
 
 .timeline {

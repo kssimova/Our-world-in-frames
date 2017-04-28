@@ -32,8 +32,8 @@ $(function () {
 	               	}
 					$comments.append(
 								'</a>' +
-								'<div class="media-body">' +
-									'<div class="well well-lg" style = "width: 600px" >' +
+								'<div class="media-body" >' +
+									'<div class="well well-lg" style = "width:1000px;" >' +
 										'<h4 id = class="media-heading text-uppercase reviews">'+ val.creator +'</h4>' + 
 										'<ul class="media-date text-uppercase reviews list-inline">' +
 											'<li> Posted on: </li>' +
