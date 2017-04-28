@@ -26,3 +26,12 @@
   padding: 10px;
   pointer-events: none;
 }
+
+.errors{
+	color: red;
+}
+
+.sizeComment{
+    word-break: inherit;
+
+}

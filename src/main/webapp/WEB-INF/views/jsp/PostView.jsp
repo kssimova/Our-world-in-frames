@@ -27,6 +27,7 @@ $(function () {
 	var tagcheta = "";
 	var liked = false;
 	var count = 0;
+	var isSameUser = false;
 	
 	//check if this image is already liked
 	$.ajax({
@@ -56,7 +57,7 @@ $(function () {
 			if(!liked){
 	  			$('#name').html(post.name + 
 	  								'<span id = "like">' +
-										'<ul style = "list-style: none outside none; margin:0; padding: 0; text-align: cente;">' + 
+										'<ul style = "list-style: none outside none; margin:0; padding: 0; text-align: center;">' + 
 											'<li id ="panel1" rel = "panel2" class = "heart">' + 
 												'<span class="glyphicon glyphicon-heart"></span>' +
 											'</li>' +
@@ -215,6 +216,9 @@ $(function () {
 			type: 'GET',
 			url: 'user/' + $postId,
 			success: function(user){
+				if(user.userId == thisUserId){
+					isSameUser = true;
+				}
 				$.each(user.followers, function (a, b){
 					if(b == thisUserId){
 						following = true;
@@ -232,6 +236,11 @@ $(function () {
 			  	}else{
 			  		$('#follow').html('<span class="glyphicon glyphicon-send"></span> Follow');
 			 	}
+			  	
+			  	if(isSameUser){
+			  		$('#usertoshow button').remove();
+			  		$('#usertoshow').append('<button class="btn btn-success btn-circle text-uppercase disabled" type="submit"><span class="glyphicon glyphicon-send"></span> Follow</button>');
+			  	}
 			},			
 			error: function(e){
 				alert(e);
@@ -287,16 +296,16 @@ $(function () {
             <div id = "img" class="col-md-9">
                 <img class="img-fluid" src="#" alt="">
             </div>
-
-            <div class="col-md-3">
-                <h3 class="my-3">Description:</h3>
-                <p id = "desc"></p>
-                <h3 id = "username" class="my-3"></h3>
-                <h3 id = "followers" class="my-3"></h3>
-                <h3 id = "photos" class="my-3"></h3>
-                  <button class="btn btn-success btn-circle text-uppercase" type="submit" id="follow"></button>
-            </div>
-
+			<div class = "col-lg-3"  style = "background-color: #f5eaff;">
+	            <div class="col-md-3" id = "usertoshow">
+	                <h3 class="my-3">Description:</h3>
+	                <p id = "desc"></p>
+	                <h3 id = "username" class="my-3"></h3>
+	                <h3 id = "followers" class="my-3"></h3>
+	                <h3 id = "photos" class="my-3"></h3>
+	                  <button class="btn btn-success btn-circle text-uppercase" type="submit" id="follow"></button>
+	            </div>
+			</div>
         </div>
         <!-- /.row -->
         <div id = "tags" class= "row">
@@ -331,12 +340,14 @@ $(function () {
                         <div class="form-group">
                             <label for="email" class="col-sm-2 control-label">Comment</label>
                             <div class="col-sm-10">
-                            <input id = "addComment" type="text" placeholder="..." class="form-control" > 
+                            <textarea  id = "addComment" type="text" placeholder="..." class="form-control" maxlength="500" style="font-size:15pt;width: 500px;rows: 15;" required> </textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">                    
                                 <button class="btn btn-success btn-circle text-uppercase" type="submit" id="submitComment"><span class="glyphicon glyphicon-send"></span> Summit comment</button>
+                           		<br>
+                           		<span id = "error"></span>
                             </div>
                         </div>            
                     </div>
@@ -347,7 +358,7 @@ $(function () {
   </div>
 </div>
 
-
+ 	<p style = "padding: 0 0 100px 0">.</p>
     <!-- Bootstrap core JavaScript -->
     <script src="js/tether.min.js"></script>
 </body>

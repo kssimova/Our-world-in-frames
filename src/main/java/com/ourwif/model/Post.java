@@ -10,7 +10,7 @@ import javax.xml.bind.ValidationException;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class Post implements Comparable<Post>{
+public class Post implements Comparable<Post> , Requestable{
 	
 	private String postId;
 	private String deleteHash;

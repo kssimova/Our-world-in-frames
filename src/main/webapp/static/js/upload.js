@@ -129,8 +129,8 @@ $(function() {
   
   
 $(function(){
+	var i = 0;
 	$('#btn').on('click', function(){
-		var i = 0;
 		function makeProgress(){
 			if(i < 100){
 				i = i + 1;
