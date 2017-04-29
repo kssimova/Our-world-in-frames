@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.Collections;
@@ -23,8 +24,10 @@ import com.ourwif.model.User;
 public class UserDAO {
 
 	// works
-	private static final String SELECT_ALL_USERS = "SELECT user_id, first_name, last_name, username, email, password, mobile_number, birthdate, description, gender, profilephoto_path, CITY.name AS city_name, COUNTRY.name AS country_name FROM ourwif.users JOIN ourwif.cities CITY ON (users.city_id = CITY.city_id) JOIN ourwif.countries COUNTRY ON (CITY.country_id = COUNTRY.country_id)";
+	private static final String SELECT_ALL_USERS = "SELECT user_id, first_name, last_name, username, email, password, mobile_number, birthdate, description, gender, profilephoto_path FROM ourwif.users ";
 	// works
+	private static final String ADD_COUNTRIS_TO_USERS = "SELECT user_id, CITY.name AS city_name, COUNTRY.name AS country_name FROM ourwif.users JOIN ourwif.cities CITY ON (users.city_id = CITY.city_id) JOIN ourwif.countries COUNTRY ON (CITY.country_id = COUNTRY.country_id)";
+	
 	private static final String INSERT_USER = "INSERT INTO ourwif.users (first_name, last_name, username, email, password, mobile_number, birthdate, description, gender, profilephoto_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	// works
 	private static final String CHANGE_FIRST_NAME = "UPDATE ourwif.users SET first_name = ? WHERE user_id = ?";
@@ -97,12 +100,15 @@ public class UserDAO {
 		CachedObjects.getInstance().addUser(user);		
 	}
 		
+	@SuppressWarnings("resource")
 	public Map<Long, User> getAllUsers() throws ValidationException, SQLException{
 		context = new ClassPathXmlApplicationContext("Spring-Module.xml");
 		AlbumDAO albumDAO = (AlbumDAO) context.getBean("AlbumDAO");
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
 		TreeMap<Long, User> allUsers = new TreeMap<>();
+		TreeMap<Long, TreeMap<String, String>> userCounties = new TreeMap<>();
+		//county -> city -> user_id
 		Connection connection = null;
 		try {
 			connection = (Connection) dataSource.getConnection();
@@ -110,6 +116,7 @@ public class UserDAO {
 			result = preparedStatement.executeQuery();
 			while(result.next()){
 				User user = new User(result.getString("username"), result.getString("email"), result.getString("password"), result.getLong("user_id"));
+				System.out.println(user.getUserId());
 				String results = result.getString("first_name");
 				if(!result.wasNull()){
 					user.changeFirstName(results);
@@ -137,14 +144,7 @@ public class UserDAO {
 				if(!result.wasNull()){
 					user.changeProfilePhoto(results);
 				}
-				results = result.getString("city_name");
-				if(!result.wasNull()){
-					user.changeCity(results);
-				}
-				results = result.getString("country_name");
-				if(!result.wasNull()){
-					user.changeCountry(results);
-				}
+				
 				allUsers.put(user.getUserId(), user);
 				CachedObjects.getInstance().addUser(user);
 			}
@@ -154,9 +154,35 @@ public class UserDAO {
 				getFollows(user, GET_ALL_FOLLOWERS);
 				getFollows(user, GET_ALL_FOLLOWING);
 			}
+			//get counties
+			preparedStatement = connection.prepareStatement(ADD_COUNTRIS_TO_USERS);
+			preparedStatement.execute();
+			result = preparedStatement.getResultSet();
+			while(result.next()){
+				String city = result.getString("city_name");
+				String country = result.getString("country_name");
+				Long userId = result.getLong("user_id");
+				if(!userCounties.containsKey(userId)){
+					userCounties.put(userId, new TreeMap<String, String>());
+				}
+				if(!userCounties.get(userId).containsKey(country)){
+					userCounties.get(userId).put(city, country);
+				}
+			}
+			for(Entry<Long, TreeMap<String, String>> e : userCounties.entrySet()){
+				for(Entry<String, String> e2 : e.getValue().entrySet()){
+					for(User user : allUsers.values()){
+						if(user.getUserId() == e.getKey()){
+							user.changeCountry(e2.getKey());
+							user.changeCity(e2.getValue());
+						}
+					}
+				}
+			}
 		}finally{
 			preparedStatement.close();
 			result.close();
+			connection.close();
 		}
 		return Collections.unmodifiableMap(allUsers);
 	}
@@ -524,6 +550,7 @@ public class UserDAO {
 	public boolean validLogin(String username, String password) throws ValidationException, SQLException {
 		CachedObjects cachedObj = CachedObjects.getInstance();
 		if(cachedObj.getAllUsers().isEmpty()){
+
 			getAllUsers();
 		}
 		User user = cachedObj.getOneUser(username);

@@ -27,7 +27,11 @@
 	  		url: 'user/profile',
 	  		dataType: "json",
 	  		success: function(user){
-	  			$('#name').html('<h4 style = "color:white;">' + user.firstName + ' ' + user.lastName+ '</h4>');
+	  			if(user.firstName == null || user.lastName == null){
+	  				$('#name').html('<h4 style = "color:white;">' + user.username + '</h4>');
+	  			}else{
+	  				$('#name').html('<h4 style = "color:white;">' + user.firstName + ' ' + user.lastName + '</h4>');
+	  			}
 	  			$('.followers').html("Followers: " + user.followers.length);
 	  			$('.following').html("Following: " + user.following.length);
 	  			$('.address').html(user.country + " " +  user.city);
