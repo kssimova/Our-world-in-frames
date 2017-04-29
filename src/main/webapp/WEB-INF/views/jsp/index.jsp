@@ -98,7 +98,7 @@
                     
                     <div class="row">
                         <div class="col-sm-5" >
-                        	
+            
                         	<div class="form-box">
 	                        	<div class="form-top">
 	                        		<div class="form-top-left">
@@ -209,22 +209,22 @@
 
     <!-- Team Section -->
     
-    <section id="team" class="bg-light-gray"> <br><br>
+    <section id="team" class="bg-light-gray2"> <br><br>
              <span id = "team-pointer"> </span>
         <div class="container">
             <div class="row" >
                 <div class="col-lg-12 text-center" >
                
                     <h2 class="section-heading"><font color=#dab3ff> Our Amazing Team </font></h2>
-                    <h3 class="section-subheading text-muted">This is our amazing team!</h3>
+                    <h3 class="section-subheading text-muted" style = "color: white">This is our amazing team!</h3>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-4">
                     <div class="team-member">
                         <img src="img/krisi.jpg" class="img-responsive img-circle" alt="">
-                        <h4> <font color=#dab3ff> Kristina Simova </font></h4>
-                        <p class="text-muted">Java Developer</p>
+                        <h4> <font color=#A386BF> Kristina Simova </font></h4>
+                        <p class="text-muted" style = "color: white">Java Developer</p>
                         <ul class="list-inline social-buttons">
                             <li><a href="https://twitter.com/KristinaSimovaa"><i class="fa fa-twitter"></i></a>
                             </li>
@@ -237,9 +237,11 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="team-member">
+
                         <img src="img/miki.jpg" class="img-responsive img-circle" alt="">
-                        <h4> <font color=#dab3ff> Miki </font></h4>
-                        <p class="text-muted">Lead Kitten</p>
+                        <h4> <font color=#A386BF> Miki </font></h4>
+                        <p class="text-muted" style = "color: white">Lead Kitten</p>
+                      
                         <ul class="list-inline social-buttons">
                             <li><a href="#"><i class="fa fa-twitter"></i></a>
                             </li>
@@ -253,8 +255,8 @@
                 <div class="col-sm-4">
                     <div class="team-member">
                         <img src="img/mariq.jpg" class="img-responsive img-circle" alt="" style = "height: 225px">
-                       <h4> <font color=#dab3ff> Mariya Yordanova </font></h4>
-                        <p class="text-muted">Java Developer</p>
+                       <h4> <font color=#A386BF> Mariya Yordanova </font></h4>
+                        <p class="text-muted" style = "color: white">Java Developer</p>
                         <ul class="list-inline social-buttons">
                             <li><a href="https://twitter.com/josette_darling"><i class="fa fa-twitter"></i></a>
                             </li>
@@ -268,7 +270,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <p class="large text-muted">"Talent wins games, but teamwork and intelligence win championships."<br>
+                    <p class="large text-muted" style = "color: white">"Talent wins games, but teamwork and intelligence win championships."<br>
                     	"Individual commitment to a group effort--that is what makes a team work, a company work, a society work, a civilization work."<br>
                     </p>
                 </div>
@@ -280,11 +282,11 @@
 
     <!-- Contact Section -->
     <section id="contact">
-        <div class="container">
+        <div class="container"> 
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <h2 class="section-heading"> <font color = "#dab3ff">  Contact Us </font> </h2> 
-                    <h3 class="section-subheading text-muted"> <font color = "#dab3ff"> Tell us what you think about our website! </font> </h3>
+                    <h3 class="section-subheading text-muted"> <font color = "white"> Tell us what you think about our website! </font> </h3>
                 </div>
             </div>
             <div class="row">
@@ -293,7 +295,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Please enter your name *"  id="name" required data-validation-required-message="Please enter your name.">
+                                    <input type="text" class="form-control" placeholder="Please enter your name *"  id="name"  "Please enter your name.">
                                     <p class="help-block text-danger"></p>
                                 </div>
                                 <div class="form-group">
@@ -313,27 +315,18 @@
                             </div>
                             <div class="clearfix"></div>
                             <div class="col-lg-12 text-center">
-                                <div id="success"></div>
-                                <button type="submit" class="btn btn-xl" style = "background-color:#dab3ff"> Send Message </button>
+                                <div id="success"></div><br>
+                                <button type="submit" class="btn btn-xl" style = "background-color: #A386BF"> Send Message </button><br><br><br>
+                                 <span class="copyright" style = "color: white; font: 16px arial, sans-serif; font-style: italic;">Copyright &copy; Our world in frames 2017. Designed by Mariya & Kristina</span>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
+           
         </div>
     </section>
     
-    
-     <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <span class="copyright" style = "color: black">Copyright &copy; Our world in frames 2017. Designed by Mariya & Kristina</span>
-                </div>
-            </div>
-        </div>
-    </footer>
-
 
    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <!-- jQuery -->
