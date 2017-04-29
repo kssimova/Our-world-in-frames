@@ -65,109 +65,120 @@ public class PostController {
 	
 	@RequestMapping(value="/add",method = RequestMethod.POST)
 	public Basic addPost(HttpServletRequest request, HttpSession session){
-		TreeSet<String> tagsForRec = new TreeSet<>();
-		TreeSet<String> tags = new TreeSet<>();
-		String tagStr = request.getParameter("tags");
-		if(!tagStr.isEmpty() && tagStr != null){
-			tags = addTags(tagStr, tagsForRec);
-		}		
-		String name = request.getParameter("name");
-		String description = request.getParameter("description");		
-		String albumName = request.getParameter("album");
-		Album album = null;
-
-		User u = (User)session.getAttribute("user");
-		for(Album albums : u.getAlbums().values()){
-			if (albums.getName().equals(albumName)){
-				album = albums;
-			}
-		}
-		String picturePath = "";
 		Basic basic = null;
-		String postId = "";
-		String deleteHash = "";		
-		String file = request.getParameter("file");
-		file = file.substring(file.indexOf(",")+1);	
-		//working Request is OK
-		if(session.getAttribute("logged")!= null){
-			//connect to imgur
-			URL url;
-			HttpURLConnection connection = null;
-			try {
-				url = new URL("https://api.imgur.com/3/image.json");
-				connection = (HttpURLConnection) url.openConnection();
-			} catch (IOException e2) {
-				System.out.println(e2.getMessage());
-			}				
-			//set request
-
-			// String expires_in="2419200";
-			// String token_type = "bearer";
-			// String refresh_token = "412b9ea1f4dfefb804e5746e8f6590311b2e0e26"; 
-			// String account_username = "werewolfgirl";
-			// String account_id = "335056";
-			connection.setDoOutput(true);
-			connection.setDoInput(true);
-			connection.setRequestProperty("authorization", "Bearer " + ACCESS_TOKEN);
-			try {
-				connection.setRequestMethod("POST");
-				connection.connect();
-			} catch (IOException e1) {
-				System.out.println(e1.getMessage());
-			}		   
-			//send base64 String
-			OutputStreamWriter osw = null;
-			try {
-				osw = new OutputStreamWriter(connection.getOutputStream());
-				osw.write(file);
-				osw.flush();
-				connection.connect();
-				System.out.println(connection.getResponseMessage());
-			} catch (IOException e1) {
-				System.out.println(e1.getMessage());
+		if(validImageInfo(request)){
+			TreeSet<String> tagsForRec = new TreeSet<>();
+			TreeSet<String> tags = new TreeSet<>();
+			String tagStr = request.getParameter("tags");
+			if(!tagStr.isEmpty() && tagStr != null){
+				tags = addTags(tagStr, tagsForRec);
 			}		
-			//get response
-			try {
-				if(connection.getResponseCode() == 200){
-					StringBuilder sb = new StringBuilder();		
-					Scanner sc = new Scanner(connection.getInputStream());
-					while(sc.hasNextLine()){
-						  sb.append(sc.nextLine());
-					}
-					sc.close();	
-					//response to JSON object
-					String responseData = sb.toString();
-					JsonParser parser = new JsonParser();
-					JsonObject jsonObj = parser.parse(responseData).getAsJsonObject();
-					JsonObject obj2 = jsonObj.getAsJsonObject("data");
-					postId = obj2.get("id").getAsString();
-					postId.replaceAll("\"", " ").trim();
-					picturePath = obj2.get("link").getAsString();
-					picturePath.replaceAll("\"", " ").trim();
-					deleteHash = obj2.get("deletehash").getAsString();
-					deleteHash.replaceAll("\"", " ").trim();	
-					try {
-						Post post = postDAO.createPost((User)session.getAttribute("user"), name, description, LocalDate.now(), picturePath, tags, album, postId, deleteHash);
-						u.addPhoto(album, post);
-						session.setAttribute("user", u);
-					} catch (ValidationException e) {
-						System.out.println(e.getMessage());
-					} catch (SQLException e) {
-						System.out.println(e.getMessage());
-					}	
+			String name = request.getParameter("name");
+			String description = request.getParameter("description");		
+			String albumName = request.getParameter("album");
+			name.trim();
+			description.trim();
+			Album album = null;
+	
+			User u = (User)session.getAttribute("user");
+			for(Album albums : u.getAlbums().values()){
+				if (albums.getName().equals(albumName)){
+					album = albums;
 				}
-			} catch (JsonSyntaxException e) {
-				System.out.println(e.getMessage());
-			} catch (IOException e) {
-				System.out.println(e.getMessage());
-			}	
-		}else{
-			basic = new Basic(true, "login");
-			basic.setStrId(postId);
+			}
+			String picturePath = "";
+			String postId = "";
+			String deleteHash = "";		
+			String file = request.getParameter("file");
+			file = file.substring(file.indexOf(",")+1);	
+			//working Request is OK
+			if(session.getAttribute("logged")!= null){
+				//connect to imgur
+				URL url;
+				HttpURLConnection connection = null;
+				try {
+					url = new URL("https://api.imgur.com/3/image.json");
+					connection = (HttpURLConnection) url.openConnection();
+				} catch (IOException e2) {
+					System.out.println(e2.getMessage());
+				}				
+				//set request
+	
+				// String expires_in="2419200";
+				// String token_type = "bearer";
+				// String refresh_token = "412b9ea1f4dfefb804e5746e8f6590311b2e0e26"; 
+				// String account_username = "werewolfgirl";
+				// String account_id = "335056";
+				connection.setDoOutput(true);
+				connection.setDoInput(true);
+				connection.setRequestProperty("authorization", "Bearer " + ACCESS_TOKEN);
+				try {
+					connection.setRequestMethod("POST");
+					connection.connect();
+				} catch (IOException e1) {
+					System.out.println(e1.getMessage());
+				}		   
+				//send base64 String
+				OutputStreamWriter osw = null;
+				try {
+					osw = new OutputStreamWriter(connection.getOutputStream());
+					osw.write(file);
+					osw.flush();
+					connection.connect();
+					System.out.println(connection.getResponseMessage());
+					if(connection.getResponseCode() != 200){
+						basic = new Basic();
+						basic.addError("ImageToBigError", "This image is too big!");
+						return basic;
+					}
+				} catch (IOException e1) {
+					System.out.println(e1.getMessage());
+				}		
+				//get response
+				try {
+					if(connection.getResponseCode() == 200){
+						StringBuilder sb = new StringBuilder();		
+						Scanner sc = new Scanner(connection.getInputStream());
+						while(sc.hasNextLine()){
+							  sb.append(sc.nextLine());
+						}
+						sc.close();	
+						//response to JSON object
+						String responseData = sb.toString();
+						JsonParser parser = new JsonParser();
+						JsonObject jsonObj = parser.parse(responseData).getAsJsonObject();
+						JsonObject obj2 = jsonObj.getAsJsonObject("data");
+						postId = obj2.get("id").getAsString();
+						postId.replaceAll("\"", " ").trim();
+						picturePath = obj2.get("link").getAsString();
+						picturePath.replaceAll("\"", " ").trim();
+						deleteHash = obj2.get("deletehash").getAsString();
+						deleteHash.replaceAll("\"", " ").trim();	
+						try {
+							Post post = postDAO.createPost((User)session.getAttribute("user"), name, description, LocalDate.now(), picturePath, tags, album, postId, deleteHash);
+							u.addPhoto(album, post);
+							session.setAttribute("user", u);
+						} catch (ValidationException e) {
+							System.out.println(e.getMessage());
+						} catch (SQLException e) {
+							System.out.println(e.getMessage());
+						}	
+					}
+				} catch (JsonSyntaxException e) {
+					System.out.println(e.getMessage());
+				} catch (IOException e) {
+					System.out.println(e.getMessage());
+				}	
+			}else{
+				basic = new Basic(true, "login");
+				basic.setStrId(postId);
+			}
+			return basic;
 		}
+		basic = getError(request);
 		return basic;
 	}		
-	
+
 	@RequestMapping(value="/like",method = RequestMethod.POST)
 	public void likePost(HttpServletRequest request, HttpSession session) {
 		User user = (User)session.getAttribute("user");
@@ -237,19 +248,6 @@ public class PostController {
 		}
 		return posts;
 	}
-		
- 	public TreeSet<String> addTags(String tag, TreeSet<String> tags) {
-  		if (tag.length() == 0) {
-  			return tags;
-  		}
- 		if(!tag.contains(",")){
- 			tags.add(tag);
- 			return tags;
- 		}
- 		tags.add(tag.substring(0, tag.indexOf(',')));
- 		tag = tag.substring(tag.indexOf(',') + 1).trim();
-		return addTags(tag, tags);
- 	}
  	
 	@RequestMapping(value="/getPhotos",method = RequestMethod.POST)
 	public  TreeSet<Post> getPosts(HttpSession session, HttpServletRequest request){
@@ -369,5 +367,67 @@ public class PostController {
 		}else{	
 			return "login";
 		}
+	}	
+		
+	public TreeSet<String> addTags(String tag, TreeSet<String> tags) {
+		if (tag.length() == 0) {
+			return tags;
+		}
+		if(!tag.contains(",")){
+			tags.add(tag);
+			return tags;
+		}
+		tags.add(tag.substring(0, tag.indexOf(',')));
+		tag = tag.substring(tag.indexOf(',') + 1).trim();
+	return addTags(tag, tags);
+	}
+	
+	private boolean validImageInfo(HttpServletRequest request) {
+		String name = request.getParameter("name");
+		name.trim();
+		if(name.isEmpty() || name.length() > 50){
+			return false;
+		}
+		String desc = request.getParameter("description");
+		desc.trim();
+		if(desc.length() > 200 ){
+			return false;
+		}
+		String tags = request.getParameter("description");
+		tags.trim();
+		if(tags.length() > 200 ){
+			return false;
+		}
+		return true;
+	}
+
+	
+	@RequestMapping(value="/valid",method = RequestMethod.POST)
+	private Basic getError(HttpServletRequest request) {
+		Basic basic = new Basic();
+		basic.setStatus(false);
+		if(!validImageInfo(request)){
+			String name = request.getParameter("name");
+			name.trim();
+			if(name.isEmpty() && name.length() < 2){
+				basic.addError("NameError", "Image name must be at least 3 character long!");	
+			}
+			if(name.length() > 50){
+				basic.addError("NameLength", "Image name must be less than 50 character!");
+			}
+			String desc = request.getParameter("description");
+			desc.trim();
+			if(desc.length() > 200 ){
+				basic.addError("DescriptionLength", "Image description must be less than 200 character!");
+			}
+			String tags = request.getParameter("description");
+			tags.trim();
+			if(tags.length() > 200 ){;
+				basic.addError("TagLength", "All image tags combined must be less than 200 character!");
+			}
+			return basic;
+		}
+		basic.setStatus(true);
+		return basic;
 	}	
 }
