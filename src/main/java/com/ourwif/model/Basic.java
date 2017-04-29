@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class Basic {
+public class Basic implements Requestable{
 	
 	private boolean status;
 	private String url;
@@ -67,6 +67,6 @@ public class Basic {
 
 	public void setStrId(String strId) {
 		this.strId = strId;
-	}	
-
+	}
+	
 }

@@ -8,7 +8,7 @@ import javax.xml.bind.ValidationException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
-public class Comment implements Comparable<Comment>{
+public class Comment implements Comparable<Comment>, Requestable{
 	
 	private long commentId;
 	@JsonIgnore
@@ -21,7 +21,7 @@ public class Comment implements Comparable<Comment>{
 	private String creatorUrl;
 	
 	
-	public Comment(Post picture, User user, String content, LocalDate localDate, long commentId) throws ValidationException {
+	public Comment(Post picture, User user, String content, LocalDate localDate) throws ValidationException {
 		if(validPost(picture)){
 			this.picture = picture;
 		}else{
@@ -42,7 +42,6 @@ public class Comment implements Comparable<Comment>{
 		}else{
 			throw new ValidationException("Comment date not valid");
 		}
-		setCommentId(commentId);
 		this.creator = user.getUsername();
 		this.creatorUrl = user.getProfilePhotoPath();
 	}

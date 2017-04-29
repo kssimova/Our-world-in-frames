@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ourwif.DAO.CommentDAO;
 import com.ourwif.DAO.UserDAO;
+import com.ourwif.model.Basic;
 import com.ourwif.model.CachedObjects;
 import com.ourwif.model.Comment;
 import com.ourwif.model.Post;
+import com.ourwif.model.Requestable;
 import com.ourwif.model.User;
 
 @RestController
@@ -49,25 +51,37 @@ public class CommentController {
 	}
 
 	@RequestMapping(value="/add",method = RequestMethod.POST)
-	public Comment addComment(HttpServletRequest request, HttpSession session) {
+	public Requestable addComment(HttpServletRequest request, HttpSession session) {
 		String postId = request.getParameter("postId");
-		String commentStr = request.getParameter("comment");
+		String commentStr = request.getParameter("comment").trim();
 		User user = (User) session.getAttribute("user");
 		Comment comment = null;
-		if(CachedObjects.getInstance().getAllUsers().isEmpty()){
-			try {
-				userDAO.getAllUsers();
-			} catch (ValidationException | SQLException e) {
-				System.out.println(e.getMessage());
+		Basic basic = new Basic();
+		System.out.println(commentStr);
+		if(commentStr.length() <= 200){
+			if(!commentStr.isEmpty()){
+				if(CachedObjects.getInstance().getAllUsers().isEmpty()){
+					try {
+						userDAO.getAllUsers();
+					} catch (ValidationException | SQLException e) {
+						System.out.println(e.getMessage());
+					}
+				}
+				Post post = CachedObjects.getInstance().getOnePost(postId);
+				try {
+					comment = commentDAO.createComment(post, user, commentStr);
+					return comment;
+				} catch (ValidationException | SQLException e) {
+					System.out.println(e.getMessage());
+				}	
 			}
+			basic.addError("commentError", "You must enter at least one character to make a comment!");
+			System.out.println(basic.getErrors().toString());
+			return basic;
 		}
-		Post post = CachedObjects.getInstance().getOnePost(postId);
-		try {
-			comment = commentDAO.createComment(post, user, commentStr);
-		} catch (ValidationException | SQLException e) {
-			System.out.println(e.getMessage());
-		}	
-		return comment;
+		basic.addError("commentError", "Your comment is over 200 character long.");
+		System.out.println(basic.getErrors().toString());
+		return basic;
 	}	
 	
 	//not ready

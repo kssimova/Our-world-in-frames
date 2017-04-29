@@ -47,7 +47,8 @@ public class CommentDAO {
 			while(result.next()){
 					Long userId = result.getLong("user_id");
 					user = CachedObjects.getInstance().getOneUser(userId);
-					comment = new Comment(post, user, result.getString("content"), result.getDate("date_created").toLocalDate(), result.getLong("comment_id"));
+					comment = new Comment(post, user, result.getString("content"), result.getDate("date_created").toLocalDate());
+					comment.setCommentId(result.getLong("comment_id"));
 					allComments.put(result.getLong("comment_id"), comment);
  				}
 		}finally {
@@ -63,6 +64,8 @@ public class CommentDAO {
  					"VALUES (?, ?, ?, ?)";
 		Connection conn = null;
  		try {
+			comment = new Comment(post, user, str, LocalDate.now());
+			post.addComment(comment);
  			conn = (Connection) dataSource.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			st.setString(1, post.getPostId());
@@ -73,8 +76,7 @@ public class CommentDAO {
 			ResultSet res = st.getGeneratedKeys();
 			res.next();
 			long commentId = res.getLong(1);
-			comment = new Comment(post, user, str, LocalDate.now(), commentId);
-			post.addComment(comment);
+			comment.setCommentId(commentId);
  		}finally{
  			conn.close();
  		}
