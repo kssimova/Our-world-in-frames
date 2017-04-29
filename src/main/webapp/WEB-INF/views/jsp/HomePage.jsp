@@ -34,7 +34,12 @@
 		 	url: 'post/getPhotos',
 		 	data: request,
 		 	dataType: "json",
-		 	success: function(user){					
+		 	success: function(user){	
+		 		console.log(user.length);
+		 		if(user.length == 0){
+					$('#photos1').append("<h3 class = 'noFollowers'>Ops! You don't follow anyone.</h3>");
+					$follo.append("<h3 class = 'noFollowers'>Ops! You don't follow anyone.</h3>");
+		 		};
 					//check if this image is already liked
 					$.ajax({
 				  		type: "GET",
@@ -150,11 +155,8 @@
 			  	dataType: "json",
 			  	success: function(user){
 					$.each(user, function(i, value){
-					  	if(count2 == 1){
+						if(count2 == 1 || count2 == 4 || count2 == 7 || count2 == 11 || count2 == 14 || count2 == 16|| count2 == 18){
 							$('#photos1').append('<div id = "img" class="row">');
-						}
-						if(count2 == 4 || count2 == 7 || count2 == 11 || count2 == 14 || count2 == 16|| count2 == 18){
-							$('#photos1').append('</div><div id = "img" class="row">');
 						}
 						if(count2 == 1 || count2 == 2 || count2 == 10 || count2 ==13 || count2 == 15 || count2 == 17 || count2 == 18 || count2 == 20){
 							$('#photos1').append(
@@ -306,5 +308,6 @@
 	
 			</div> 
 		</div>
+	
 	</body>
 </html>

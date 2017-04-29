@@ -261,7 +261,6 @@ public class PostController {
 				System.out.println(e.getMessage());
 			}
 		}
-		
 		TreeSet<Post> ordered = null;
 		TreeSet<Post> posts = new TreeSet<>();
 		TreeSet<User> following = new TreeSet<>();

@@ -243,7 +243,7 @@ $(function () {
 			  	
 			  	if(isSameUser){
 			  		$('#usertoshow button').remove();
-			  		$('#usertoshow').append('<button class="btn btn-success btn-circle text-uppercase disabled" type="submit"><span class="glyphicon glyphicon-send"></span> Follow</button>');
+			  		$('#usertoshow').append('<button class="btn btn btn-circle text-uppercase disabled uploadButton" type="submit"><span class="glyphicon glyphicon-send"></span> Follow</button>');
 			  	}
 			},			
 			error: function(e){
@@ -301,7 +301,7 @@ $(function () {
 	                <div id = "username" ></div>
 	                <div id = "followers" ></div>
 	                <div id = "photos"></div>
-					<button class="btn btn-success btn-circle text-uppercase" type="submit" id="follow"></button>
+					<button class="btn btn btn-circle text-uppercase uploadButton" type="submit" id="follow"></button>
 	            </div>
 	            <div id = "desc"></div>
 			</div>
@@ -349,7 +349,7 @@ $(function () {
 	                        	</div>
 	                        	<div class="form-group">
 	                            	<div class="col-sm-offset-2 col-sm-10">                    
-	                                	<button class="btn btn-success btn-circle text-uppercase" type="submit" id="submitComment"><span class="glyphicon glyphicon-send"></span> Summit comment</button>
+	                                	<button class="btn btn btn-circle text-uppercase uploadButton" type="submit" id="submitComment"><span class="glyphicon glyphicon-send"></span> Summit comment</button>
 	                           			<br>
 	                           			<span id = "error"></span>
 	                            	</div>

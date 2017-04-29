@@ -39,11 +39,8 @@
 			  	success: function(user){
 			  		count2 = 1;
 					$.each(user, function(index, value){
-					  	if(count2 == 1){
-					  		$phot1.append('<div id = "img" class="row">');
-							}	
-						if(count2 == 4 || count2 == 7 || count2 == 11 || count2 == 14 || count2 == 16|| count2 == 18){
-							$phot1.append('</div><div id = "img" class="row">');
+						if(count2 == 1 || count2 == 4 || count2 == 7 || count2 == 11 || count2 == 14 || count2 == 16|| count2 == 18){
+							$phot1.append('<div id = "img" class="row">');
 						}
 						if(count2 == 1 || count2 == 2 || count2 == 10 || count2 ==13 || count2 == 15 || count2 == 17 || count2 == 18 || count2 == 20){
 							$phot1.append(
@@ -126,8 +123,10 @@
 							count2++;
 						} else if(count2 == 21){
 							count2 = 1;
+							$phot1.append('</div>');
 						};
 					});	
+			  		$phot1.append('<div id = "img" class="row">');
 			  	},
 			  	error: function(e){
 				alert(e);
@@ -144,25 +143,22 @@
 			  	success: function(user){
 			  		count1 == 1;
 					$.each(user, function(index, value){
-					  	if(count1 == 1){
-					  		$phot.append('<div id = "img" class="row">');
-							}	
-						if(count1 == 4 || count1 == 7 || count1 == 11 || count1 == 14 || count1 == 16|| count1 == 18){
-							$phot.append('</div><div id = "img" class="row">');
+						if(count1 == 1 || count1 == 4 || count1 == 7 || count1 == 11 || count1 == 14 || count1 == 16|| count1 == 18){
+							$phot.append('<div id = "img" class="row">');
 						}
 						if(count1 == 1 || count1 == 2 || count1 == 10 || count1 ==13 || count1 == 15 || count1 == 17 || count1 == 18 || count1 == 20){
 							$phot.append(
 								'<div class = "col-md-5 size">' + 
 									'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
 										'<input type="image" src="' + value.picturePath + '" alt="Submit">' + 
-											'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
-												'<div class="caption">' + 
-													'<p>' + 
-														value.name +
-													'</p>' + 
-												'</div>' + 
-											'</f:form>' + 
-										'</div>'
+										'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
+										'<div class="caption">' + 
+											'<p>' + 
+												value.name +
+											'</p>' + 
+										'</div>' + 
+									'</f:form>' + 
+								'</div>'
 								);
 								count1++;
 							}else if(count1 == 3 || count1 == 8 || count1 == 9 || count1 == 19){	
@@ -231,8 +227,10 @@
 							count1++;
 						} else if(count1 == 21){
 							count1 = 1;
+							$phot.append('</div>');
 						};
 					});	
+					$phot.append('<div id = "img" class="row">');
 			  	},
 			  	error: function(e){
 				alert(e);
@@ -263,7 +261,6 @@
 		             <div class="col-md-2">
 		 				<input rel = "fresh" class = "button btn2" type="submit" value="Fresh">
 		             </div>
-		
 		      	 </div>
 		 	</div>
 		 	<div class="container">
@@ -284,20 +281,16 @@
 		             <div class="col-md-3 second1">
 		 				<input rel = "fresh" class = "button btn2" type="submit" value="Fresh">
 		             </div>
-		       	 </div>	
-		 	</div>	
+		       	 </div>
+		 	</div>
 						
 			<!--  image panel     -->
 			<div id = "popular" class = "panel active">
 				<span id = "pop"></span>
-			</div>	
-				
+			</div>
 			 	<!--  album panel     -->
 			<div id = "fresh" class = "panel">
 				<span id = "phot"></span>
 			</div>
-		</div>
-	
-	
 	</body>
 </html>
