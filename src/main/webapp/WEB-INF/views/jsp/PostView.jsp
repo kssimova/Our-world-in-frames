@@ -68,7 +68,7 @@ $(function () {
 										'</ul>' +
 									'</span>');			 							 
 	  			$('#img').html(' <img class="img-fluid" src="'+ post.picturePath +'" alt="" style = "max-width: 100%;" >');
-	  			$('#desc').html(post.description);
+	  			$('#desc').html("<h3>Description: " + post.description + "<h3>");
 				$.each(post.tags, function(index, val){
 					tagcheta += val + ", ";
 					$tags.append('<button>' + val + '</button>');
@@ -231,7 +231,7 @@ $(function () {
 				});
 				
 				
-				$('#username').html('<h3><img class="media-object img-circle imageFloat" src="http://i.imgur.com/d7jOt4k.jpg" alt="profile" style = "height:150px;width:auto;max-width:150px;">' + user.username + "</h3>");
+				$('#username').html('<h3><img class="media-object img-circle imageFloat" src="http://i.imgur.com/ADi2E7S.jpg" alt="profile" style = "height:150px;width:auto;max-width:150px;">' + user.username + "</h3>");
 			 	$('#followers').html("<h3>Followers: " + user.followers.length + "</h3>");
 			 	numOfFollowers = user.followers.length;
 			  	$('#photos').html("<h3>Photos: " + numOfPhotos + "</h3>");

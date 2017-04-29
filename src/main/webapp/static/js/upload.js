@@ -1,19 +1,26 @@
 $(function() {
  	var base64;
- 	var input = document.getElementById("images"), 
- 		formdata = false;
- 
+ 	var input = document.getElementById("images");
+ 	var	formdata = false;
+ 	var magic = true;
+ 	var imgOk = false;
+ 	
+ 	//show image at the bottom of the screen
  	function showUploadedItem (source) {
- 		var list = document.getElementById("image-list"),
- 		li   = document.createElement("li"),
- 		img  = document.createElement("img");
+ 		var list = document.getElementById("image-list");
+ 		var li   = document.createElement("li");
+ 		var img  = document.createElement("img");
+ 		
  		img.src = source;
  		li.appendChild(img);
  		list.appendChild(li);
- 	}   
+ 	};
+ 	
  	if (window.FormData) {
   		formdata = new FormData();
   	}
+ 	
+ 	//on click event for getting all data for this image
   	$("#btn").click(function (evt) {
   		evt.preventDefault();
   		var i = 0, len = input.files.length, img, reader, file;
@@ -22,6 +29,7 @@ $(function() {
  			file = input.files[i];
  	
  			if (!!file.type.match(/image.*/)) {
+ 				imgOk = true;
  				if ( window.FileReader ) {
  					reader = new FileReader();
  					reader.onloadend = function (e) { 
@@ -33,14 +41,49 @@ $(function() {
  				if (formdata) {
  					formdata.append("images[]", file);
  				}
- 			}   
+ 			}else{
+ 				imgOk = false;
+ 			}
+			var $description = document.getElementById('description').value;
+ 			var $tags = document.getElementById('tags').value;
+ 			var $album = document.getElementById('albums').value;
+ 			var $name = document.getElementById('name').value;
+ 			var data = {
+ 					name: $name,
+ 					description: $description,
+ 					album: $album,
+ 					tags: $tags,
+ 				};
+ 			//validate this data
+ 			$.ajax({
+ 				url: "post/valid",
+ 				type: "POST",
+ 				data: data,
+ 				dataType: 'JSON',
+ 				success: function (res) {
+ 					if(!res.status){
+ 						magic = false;
+ 					}
+ 					$.each(res.errors, function(a, b){
+ 	 					console.log(a + " : "+ b);
+ 					});
+ 				},
+ 				error: function(res){
+ 					console.log(res);
+ 					alert();
+ 				} 	
+ 			});
+ 			if (!imgOk) {
+  				$('#image-list li').remove();
+  				$('#image-list').append('<li class = "erro"><h4 style = "color:red">This file is not an image.</h4></li>');
+  			}else{
+  				$('#image-list li').remove();
+  			}
  		}
+ 		
+ 		//make post request to create this image
  		setTimeout(function(){
  			if (formdata && base64 != null) {
- 				var $name = document.getElementById('name').value;
- 				var $description = document.getElementById('description').value;
- 				var $tags = document.getElementById('tags').value;
- 				var $album = document.getElementById('albums').value;
  				var user = {
  					name: $name,
  					description: $description,
@@ -48,27 +91,31 @@ $(function() {
  					tags: $tags,
  					file: base64
  				};
+ 				//only if the input is valid
+ 		        if(magic){	    
+	 				$.ajax({
+	 					url: "post/add",
+	 					type: "POST",
+	 					data: user,
+	 					dataType: 'JSON',
+	 					success: function (res) {
+	 						alert("Image done");
+	 						document.getElementById("response").innerHTML = res; 
+	 					},
+	 					error: function(res){
+	 						console.log(res);
+	 						alert();
+	  					} 	
+	  				});
+ 		        };
+ 		        if(!magic){
  		        	
- 				$.ajax({
- 					url: "post/add",
- 					type: "POST",
- 					data: user,
- 					dataType: 'JSON',
- 					success: function (res) {
- 						alert("Image done");
- 						document.getElementById("response").innerHTML = res; 
- 					},
- 					error: function(res){
- 						console.log(res);
- 						console.log(base64);
- 						alert();
-  					} 	
-  				});
-  			}
+ 		        }
+  			};
  		}, 10000);
-  	});
-  }); 
-  	
+  	});  	
+ }); 
+
 
  //show all albums of this user
   $(function (){	
@@ -90,7 +137,7 @@ $(function() {
   });
   	
  
- //show album bar
+ //show create album bar
   $(function() {
   	$('.inputs div').on('click', function() {
   		$('.panel').toggle(300);
@@ -118,8 +165,6 @@ $(function() {
  				console.log(res);
  			},
  			error: function(res){
- 				console.log($name.val());
- 				console.log($description.val());
  				console.log(res);
  				alert();
  			} 	
@@ -127,20 +172,3 @@ $(function() {
  	});
  });
   
-  
-$(function(){
-	var i = 0;
-	$('#btn').on('click', function(){
-		function makeProgress(){
-			if(i < 100){
-				i = i + 1;
-				$(".progress-bar").css("width", i + "%").text(i + " %");
-			}
-		// Wait for sometime before running this script again
-			setTimeout("makeProgress()", 100);
-		}
-		if(i < 100){
-			makeProgress();
-		}
-	});
-});

@@ -80,7 +80,6 @@ public class CommentController {
 			return basic;
 		}
 		basic.addError("commentError", "Your comment is over 200 character long.");
-		System.out.println(basic.getErrors().toString());
 		return basic;
 	}	
 	
