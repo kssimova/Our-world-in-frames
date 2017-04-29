@@ -71,7 +71,7 @@
 										'<div class="timeline-badge up"><i class="fa fa-thumbs-up"></i></div>' +
 										'<div class="timeline-panel" style = "background-color: #f5f5f5;">' +
 											'<div class="timeline-heading">' +
-												'<img class="media-object img-circle imageFloat" src="http://i.imgur.com/d7jOt4k.jpg" alt="profile" style = "height:50px;width:auto;max-width:50px;">' + 
+												'<img class="media-object img-circle imageFloat" src="http://i.imgur.com/ADi2E7S.jpg" alt="profile" style = "height:50px;width:auto;max-width:50px;">' + 
 												'<h2 class="timeline-title">'+ post.username + ' </h2>'+
 											'</div>' +
 											'<div class="timeline-body" align="center">' +
@@ -103,7 +103,7 @@
 										'<div class="timeline-badge up"><i class="fa fa-thumbs-up"></i></div>' +
 										'<div class="timeline-panel" style = "background-color: #f5f5f5;">' +
 											'<div class="timeline-heading">' +
-												'<img class="media-object img-circle imageFloat" src="http://i.imgur.com/d7jOt4k.jpg" alt="profile" style = "height:50px;width:auto;max-width:50px;">' + 
+												'<img class="media-object img-circle imageFloat" src="http://i.imgur.com/ADi2E7S.jpg" alt="profile" style = "height:50px;width:auto;max-width:50px;">' + 
 												'<h2 class="timeline-title">'+ post.username + ' </h2>'+
 											'</div>' +
 											'<div class="timeline-body" align="center">' +
@@ -240,7 +240,8 @@
 						} else if(count2 == 21){
 							count2 = 1;
 						};
-					});			
+					});		
+					$('#photos1').append('<div id = "img" class="row">');
 			  	},
 				error: function(e){
 		 			alert(e);

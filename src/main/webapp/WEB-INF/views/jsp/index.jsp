@@ -237,7 +237,7 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="team-member">
-                        <img src="img/Miki.jpg" class="img-responsive img-circle" alt="">
+                        <img src="img/miki.jpg" class="img-responsive img-circle" alt="">
                         <h4> <font color=#dab3ff> Miki </font></h4>
                         <p class="text-muted">Lead Kitten</p>
                         <ul class="list-inline social-buttons">
