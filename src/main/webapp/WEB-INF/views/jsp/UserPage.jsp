@@ -34,7 +34,11 @@
 	  			}
 	  			$('.followers').html("Followers: " + user.followers.length);
 	  			$('.following').html("Following: " + user.following.length);
-	  			$('.address').html(user.country + " " +  user.city);
+	  			if(user.country == null || user.city == null){
+	  				$('.address').html("Country, City");
+	  			}else{
+	  				$('.address').html(user.country + " " +  user.city);
+	  			}
 	  			$('.description').html(user.description);
 	  			$('.mobileNumber').html(user.mobileNumber);
 	  			if(user.birthdate != null){
