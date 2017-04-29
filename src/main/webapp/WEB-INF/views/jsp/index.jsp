@@ -130,7 +130,8 @@
 	                        	<h3>...or login with:</h3>
 	                        	<div class="social-login-buttons">
 		                        	<a class="btn btn-link-1 btn-link-1-facebook" href="#">
-		                        		<i class="fa fa-facebook"> </i> Facebook
+		                        		<i> <fb:login-button onlogin="checkLoginState()"></fb:login-button> </i>
+		                        		<div id="status"> </div>
 		                        	</a>
 		                        	<a class="btn btn-link-1 btn-link-1-google-plus" href="#">
 		                        		<i class="fa fa-google-plus"></i> Google Plus
@@ -352,6 +353,7 @@
         <script src="js/bootstrap.min.js"></script>
         <script src="js/jquery.backstretch.js"></script>
         <script src="js/scripts.js"></script>
+        <script src="js/FBLogin.js"></script>
         
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css" />
