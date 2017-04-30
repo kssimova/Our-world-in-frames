@@ -48,7 +48,7 @@ public class User implements Comparable<User>{
 			this.username = username;
 		}
 		else{
-			throw new ValidationException("Username is not valid!");
+			throw new ValidationException("* Please enter a valid username! ");
 		}
 	}
 	
@@ -57,17 +57,17 @@ public class User implements Comparable<User>{
 		if(validUsername(username)){
 			this.username = username;
 		}else{
-			throw new ValidationException("Username not valid");
+			throw new ValidationException("* Please enter a valid username! ");
 		}
 		if(validEmail(email)){
 			this.email = email;
 		}else{
-			throw new ValidationException("User email not valid");
+			throw new ValidationException("* Please enter a valid email address! ");
 		}
 		if(validPassword(password)){
 			this.password = password;
 		}else{
-			throw new ValidationException("User password not valid");
+			throw new ValidationException("* Your password must be at least 6 characters! ");
 		}
 		this.albums = new TreeMap<>();
 		this.followers = new TreeSet<>();
@@ -160,7 +160,7 @@ public class User implements Comparable<User>{
 		if(validEmail(email)){
 			this.email = email;		
 		}else{
-			throw new ValidationException(" * Please enter a valid email! ");
+			throw new ValidationException(" * Please enter a valid email address! ");
 		}
 	}
 	
@@ -306,7 +306,7 @@ public class User implements Comparable<User>{
 	}
 	
 	public boolean validateString(String str){
-		return (!str.isEmpty() && str != null && str.length() >= 2 && !str.startsWith(" ") && !str.endsWith(" "));
+		return (!str.isEmpty() && str != null && str.length() >= 2 && !str.contains(" "));
 	}
 	
 	private boolean validUser(User user){
@@ -321,7 +321,7 @@ public class User implements Comparable<User>{
 		return (patternFinder(EMAIL_PATTERN, email));
 	}
 	private boolean validPassword(String password){
-		return ((!password.isEmpty() && password != null && password.length() >= 6 && !password.startsWith(" ") && !password.endsWith(" ") && password.length() <= 100));
+		return ((!password.isEmpty() && password != null && password.length() >= 6 && !password.contains(" ") && password.length() <= 100));
 	}
 	
 	//compare to other Posts
