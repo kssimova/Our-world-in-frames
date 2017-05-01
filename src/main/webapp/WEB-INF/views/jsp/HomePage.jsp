@@ -107,7 +107,7 @@
 												'<h2 class="timeline-title">'+ post.username + ' </h2>'+
 											'</div>' +
 											'<div class="timeline-body" align="center">' +
-												'<2>'+ val.name +' </h2>'+			
+												'<h2>'+ val.name +' </h2>'+			
 												'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
 													'<input type="image" src="' + val.picturePath + '" alt="Submit" class = "timeline-img">' + 
 													'<input type="hidden" name = "imgId" value="' + val.postId + '" >' +  

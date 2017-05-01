@@ -278,9 +278,11 @@ public class PostController {
 			}	
 		}else{
 			for(User users : cachedObj.getAllUsers()){
-				for(Entry<Long, Album> albums : users.getAlbums().entrySet()){
-					posts.addAll(albums.getValue().getPhotos());	
-				}	
+				if(!users.getAlbums().isEmpty() || users.getAlbums().size() > 0 || users.getAlbums() != null ){
+					for(Entry<Long, Album> albums : users.getAlbums().entrySet()){
+						posts.addAll(albums.getValue().getPhotos());		
+					}
+				}
 			}		
 		}	
 		//order them
@@ -424,6 +426,11 @@ public class PostController {
 			tags.trim();
 			if(tags.length() > 200 ){;
 				basic.addError("TagLength", "All image tags combined must be less than 200 character!");
+			}
+			String album = request.getParameter("description");
+			album.trim();
+			if(album.isEmpty() || album.length() < 2){;
+				basic.addError("AlbumLength", "All images have to be in albums!");
 			}
 			return basic;
 		}
