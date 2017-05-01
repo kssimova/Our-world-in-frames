@@ -60,8 +60,10 @@
 					<h3 style = "font-family: Alegreya Sans; font-size: 28px; margin: 5% 5% 5% 5%;">Create new album</h3>
 					Name: <br>
 					<input id= "nameAlb" type="text" placeholder="name..." class="form-username form-control">
+					<ul id = "albumNameError"></ul>
 					Description: <br>
 					<input id = "descriptionAlb" type="text" placeholder="description..." class="form-username form-control">
+					<ul id = "albumDescError"></ul>
 					<input id = "createAlb" type= "submit" value="create" class="form-button form-control buttons">
 				</div>
 			</div>

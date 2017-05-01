@@ -83,6 +83,8 @@ $(function() {
  				success: function (res) {
  					if(!res.status){
  						magic = false;
+ 					}else if(res.status){
+ 						magic = true;	
  					}
  					if(res.errors.NameError){
  		  				$('#nameError li').remove();
@@ -184,27 +186,56 @@ $(function() {
   		
  
  //add album
-  $(function(){
+$(function(){
   	var $name = $("#nameAlb");
   	var $description = $('#descriptionAlb');
- 	$('#createAlb').on('click', function(){
- 			
+  	var valid = true;
+ 	$('#createAlb').on('click', function(){		
  		var albums = {
  			name : $name.val(),
  			description : $description.val()
  		};
- 			
- 		$.ajax({
- 			url: "album/add",
- 			type: "POST",
- 			data: albums,
- 			success: function (res) {
- 				$albums.append('<option value="'+ $name.val() +'">'+ $name.val() +'</option>');
- 				console.log(res);
- 			},
- 			error: function(res){
- 				console.log(res);
- 			} 	
- 		});
+	 		$.ajax({
+	 			url: "album/valid",
+	 			type: "POST",
+	 			data: albums,
+	 			success: function (res) {
+	 				$('#albumNameError li').remove();
+		  			$('#albumDescError li').remove();
+		  			console.log(res.status)
+ 					if(!res.status){
+ 						valid = false;
+ 					}else if(res.status){
+ 						valid = true;	
+ 					}
+ 					if(res.errors.NameError){
+ 		  				$('#albumNameError').append('<li class = "erro"><h5 style = "color:red">'+ res.errors.NameError + '</h5></li>');
+ 					}
+ 					if(res.errors.NameLength){
+ 		  				$('#albumNameError').append('<li class = "erro"><h5 style = "color:red">'+ res.errors.NameError + '</h5></li>');
+ 					}
+ 					if(res.errors.DescriptionLength){
+ 		  				$('#albumDescError').append('<li class = "erro"><h5 style = "color:red">'+ res.errors.NameError + '</h5></li>');
+ 					}
+	 			},
+	 			error: function(res){
+	 				console.log(res);
+	 			} 	
+	 		});
+	 	setTimeout(function(){
+	 		if(valid){
+		 		$.ajax({
+		 			url: "album/add",
+		 			type: "POST",
+		 			data: albums,
+		 			success: function (res) {
+		 				$albums.append('<option value="'+ $name.val() +'">'+ $name.val() +'</option>');
+		 			},
+		 			error: function(res){
+		 				console.log(res);
+		 			} 	
+		 		});
+	 		}
+		}, 100);
  	});
  });

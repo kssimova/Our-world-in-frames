@@ -272,12 +272,4 @@ public class UserController {
 		session.setAttribute("user", user);
 		return user;
 	}
-	
-	//not ready
-	
-	@RequestMapping(value="/change",method = RequestMethod.PUT)
-	public String changeUser(Model model, HttpServletRequest request) {
-		//this will change the content of the post this request should contain the comment id and the new values
-		return "user";
-	}
 }
