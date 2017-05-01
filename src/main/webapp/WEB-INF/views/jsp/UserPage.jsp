@@ -263,7 +263,7 @@
 		 				<input rel = "likes" class = "button btn2" type="submit" value="Liked photos">
 		             </div>
 		             <div class="col-lg-2">
-		 				<input rel = "about" class = "button btn3" type="submit" value="About">
+		 				<input rel = "about" class = "button btn3" type="submit" value="About me">
 		        		</div>
 		      	 </div>
 		 	</div>
@@ -279,7 +279,7 @@
 		 				<input rel = "likes" class = "button btn2" type="submit" value="Liked photos">
 		             </div>
 		             <div class="col-md-2">
-		 				<input rel = "about" class = "button btn3" type="submit" value="About">
+		 				<input rel = "about" class = "button btn3" type="submit" value="About me">
 		        		</div>
 		      	 </div>
 		 	</div>
@@ -295,7 +295,7 @@
 		 				<input rel = "likes" class = "button btn2" type="submit" value="Liked photos">
 		             </div>
 		             <div class="col-md-3 second">
-		 				<input rel = "about" class = "button btn3" type="submit" value="About">
+		 				<input rel = "about" class = "button btn3" type="submit" value="About me">
 		        		</div>
 		      	 </div>
 		 	</div>
@@ -311,7 +311,7 @@
 		 				<input rel = "likes" class = "button btn2" type="submit" value="Liked photos">
 		             </div>
 		             <div class="col-md-3 second">
-		  				<input rel = "about" class = "button btn3" type="submit" value="About">
+		  				<input rel = "about" class = "button btn3" type="submit" value="About me">
 		         		</div>
 		       	 </div>	
 		 	</div>		
@@ -334,25 +334,21 @@
 		 
 		 
 		 <div id = "about" class = "panel">
-		     <div class="col-md-3 thumbnail">
+		     <div class="col-md-3 thumbnail"  style = "background-color: #f5f5f5;">
 		   		 Description: 
 		     	<div class = "description thumbnail" ></div>
-		 		<input class = "button btn3" type="submit" value="Edit">
 		     </div>
-		     <div class="col-md-3 thumbnail">
+		     <div class="col-md-3 thumbnail"  style = "background-color: #f5f5f5;">
 		     	Mobile Number:
 		     	<div class = "mobileNumber thumbnail" ></div>
-		 		<input class = "button btn3" type="submit" value="Edit">
 		     </div>
-		     <div class="col-md-3 thumbnail">
+		     <div class="col-md-3 thumbnail"  style = "background-color: #f5f5f5;">
 		   		Birthday: 
 		     	<div class = "birthdate thumbnail" >.</div>
-		 		<input class = "button btn3" type="submit" value="Edit">
 		     </div>
-		     <div class="col-md-3 thumbnail">
+		     <div class="col-md-3 thumbnail"  style = "background-color: #f5f5f5;">
 		     	Gender: 
 		     	<div class = "gender thumbnail" ></div>
-		 		<input class = "button btn3" type="submit" value="Edit">
 		     </div>
 		     <p style = "padding: 0 0 30px 0">.</p>
 		 </div>

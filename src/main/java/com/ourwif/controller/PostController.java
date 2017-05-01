@@ -295,81 +295,6 @@ public class PostController {
 		}
 		return ordered;
 	}
- 	
- 	//not used
-	@RequestMapping(value="/change",method = RequestMethod.PUT)
-	public String changePost(HttpServletRequest request, HttpSession session) {
-		//if we get a put request with JSON with name/ description and id of one post we will change what's in the database accordingly
-		if(session.getAttribute("logged")!= null){
-			Post post = CachedObjects.getInstance().getOnePost(request.getParameter("post_id"));
-			User user = CachedObjects.getInstance().getOneUser( request.getParameter("user_id"));			
-			String title = request.getParameter("tittle");
-			String description = request.getParameter("description");
-			if(!title.isEmpty() && title != null){
-				try {
-					postDAO.editPostName(post, user, title);
-				} catch (ValidationException e) {
-					System.out.println(e.getMessage());
-				} catch (SQLException e) {
-					System.out.println(e.getMessage());
-				}
-			}
-			if(!description.isEmpty() && description != null){
-				try {
-					postDAO.editPostInfo(post, user, description);
-				} catch (ValidationException e) {
-					System.out.println(e.getMessage());
-				} catch (SQLException e) {
-					System.out.println(e.getMessage());
-				}
-			}
-			return "PostView";
-			
-		}else{
-			return "login";
-		}
-	}
-	
-	@RequestMapping(value="/deletePost/{post_id}/album/{album_id}",method = RequestMethod.DELETE)
-	public String deletePost(@PathVariable("post_id") String postId,
-							 @PathVariable("album_id") Integer albumId,
-							 HttpSession session){
-		if(session.getAttribute("logged")!= null){
-			Post post = CachedObjects.getInstance().getOnePost(postId);
-			Album album = CachedObjects.getInstance().getOneAlbum(albumId);
-			User user = CachedObjects.getInstance().getOneUser((long)session.getAttribute("user_id"));
-			String deletehash = post.getDeleteHash();
-			
-			CachedObjects.getInstance().removePost(post, album);
-			try {
-				postDAO.deletePost(post, user, album);
-			} catch (ValidationException | SQLException e) {
-				System.out.println(e.getMessage());
-			}
-			//this will delete one album the request should contain album id					
-			URL url = null;
-			HttpURLConnection connection = null;
-			try {
-				url = new URL("https://api.imgur.com/3/image/" + deletehash);
-				connection = (HttpURLConnection) url.openConnection();
-			} catch (IOException e) {
-				System.out.println(e.getMessage());
-			}
-			connection.setDoOutput(true);
-			connection.setDoInput(true);
-			connection.setRequestProperty("authorization", "Bearer ef5590f1e88e136817e6a544f174c567fec38215");
-			try {
-				connection.setRequestMethod("DELETE");
-				connection.connect();
-				System.out.println(connection.getResponseMessage());
-			} catch (IOException e) {
-				System.out.println(e.getMessage());
-			}
-			return "album/get/" + album.getAlbumId() ;
-		}else{	
-			return "login";
-		}
-	}	
 		
 	public TreeSet<String> addTags(String tag, TreeSet<String> tags) {
 		if (tag.length() == 0) {
@@ -395,7 +320,7 @@ public class PostController {
 		if(desc.length() > 200 ){
 			return false;
 		}
-		String tags = request.getParameter("description");
+		String tags = request.getParameter("tags");
 		tags.trim();
 		if(tags.length() > 200 ){
 			return false;
@@ -427,7 +352,7 @@ public class PostController {
 			if(tags.length() > 200 ){;
 				basic.addError("TagLength", "All image tags combined must be less than 200 character!");
 			}
-			String album = request.getParameter("description");
+			String album = request.getParameter("album");
 			album.trim();
 			if(album.isEmpty() || album.length() < 2){;
 				basic.addError("AlbumLength", "All images have to be in albums!");

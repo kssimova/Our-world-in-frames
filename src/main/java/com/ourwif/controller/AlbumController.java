@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ourwif.DAO.AlbumDAO;
 import com.ourwif.DAO.UserDAO;
 import com.ourwif.model.Album;
+import com.ourwif.model.Basic;
 import com.ourwif.model.CachedObjects;
 import com.ourwif.model.User;
 
@@ -57,30 +58,57 @@ public class AlbumController {
 		String name = request.getParameter("name");
 		String description = request.getParameter("description");
 		User user = (User)session.getAttribute("user");
-		try {
-			Album album = albumDAO.createAlbum(user, name, description);
-			user.putAlbum(album);
-		} catch (ValidationException e) {
-			System.out.println(e.getMessage());
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+		if(validInfo(request)){
+			try {
+	
+				Album album = albumDAO.createAlbum(user, name, description);
+				user.putAlbum(album);
+			} catch (ValidationException e) {
+				System.out.println(e.getMessage());
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+			}
 		}
 	}
 	
-	//not ready
-	@RequestMapping(value="/change",method = RequestMethod.PUT)
-	public String changeAlbum(Model model, HttpServletRequest request) {
-		//get the parameters we want to change
-		//change them in our DB and cached obj
-		//return this album id		
-		return "album";
+	
+	private boolean validInfo(HttpServletRequest request) {
+		String name = request.getParameter("name");
+		name.trim();
+		if(name.isEmpty() || name.length() > 50){
+			return false;
+		}
+		String desc = request.getParameter("description");
+		desc.trim();
+		if(desc.length() > 200 ){
+			return false;
+		}
+		return true;
 	}
 
-	@RequestMapping(value="/{album_id}",method = RequestMethod.DELETE)
-	public String deleteAlbum(Model model, @PathVariable("album_id") Integer productId) {
-		//get this album from cached objects
-		//delete it from the DB and then from the cached obj
-		//redirect to profile page	
-		return "redirect:index.html";
+	
+	@RequestMapping(value="/valid",method = RequestMethod.POST)
+	private Basic getError(HttpServletRequest request) {
+		Basic basic = new Basic();
+		basic.setStatus(false);
+		if(!validInfo(request)){
+			String name = request.getParameter("name");
+			name.trim();
+			if(name.isEmpty() && name.length() < 2){
+				basic.addError("NameError", "Album name must be at least 3 character long!");	
+			}
+			if(name.length() > 50){
+				basic.addError("NameLength", "Album name must be less than 50 character!");
+			}
+			String desc = request.getParameter("description");
+			desc.trim();
+			if(desc.length() > 200 ){
+				basic.addError("DescriptionLength", "Album description must be less than 200 character!");
+			}
+			return basic;
+		}
+		basic.setStatus(true);
+		return basic;
 	}	
+	
 }

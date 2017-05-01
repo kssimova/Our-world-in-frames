@@ -4,6 +4,26 @@ $(function() {
  	var	formdata = false;
  	var magic = true;
  	var imgOk = false;
+	var progres = 0;
+	
+	//progress bar 
+	function makeProgress(){
+		if(progres < 100){
+			progres++;
+			$(".progress-bar").css("width", progres + "%").text(progres + " %");
+			}else{
+				return;
+			}
+		if(progres < 100){
+	 		setTimeout(
+	 			function (){
+	 				makeProgress();
+	 		}, 100);
+		}
+		if(progres == 100){
+			alert("Image uploaded successfully!");
+		}
+	}
  	
  	//show image at the bottom of the screen
  	function showUploadedItem (source) {
@@ -22,6 +42,7 @@ $(function() {
  	
  	//on click event for getting all data for this image
   	$("#btn").click(function (evt) {
+  		progres = 0;
   		evt.preventDefault();
   		var i = 0, len = input.files.length, img, reader, file;
   	
@@ -63,21 +84,50 @@ $(function() {
  				success: function (res) {
  					if(!res.status){
  						magic = false;
+ 					}else if(res.status){
+ 						magic = true;	
  					}
- 					$.each(res.errors, function(a, b){
- 	 					console.log(a + " : "+ b);
- 					});
+ 					if(res.errors.NameError){
+ 		  				$('#nameError li').remove();
+ 		  				$('#nameError').append('<li class = "erro"><h5 style = "color:red">'+ res.errors.NameError + '</h5></li>');
+ 					}
+ 					if(res.errors.NameLength){
+ 		  				$('#nameError li').remove();
+ 		  				$('#nameError').append('<li class = "erro"><h5 style = "color:red">'+ res.errors.NameError + '</h5></li>');
+ 					}
+ 					if(res.errors.AlbumLength){
+ 		  				$('#albumError li').remove();
+ 		  				$('#albumError').append('<li class = "erro"><h5 style = "color:red">'+ res.errors.NameError + '</h5></li>');
+ 					}
+ 					if(res.errors.DescriptionLength){
+ 		  				$('#descError li').remove();
+ 		  				$('#descError').append('<li class = "erro"><h5 style = "color:red">'+ res.errors.NameError + '</h5></li>');
+ 					}
+ 					if(res.errors.TagLength){
+ 		  				$('#tagError li').remove();
+ 		  				$('#tagError').append('<li class = "erro"><h5 style = "color:red">'+ res.errors.NameError + '</h5></li>');
+ 					}
  				},
  				error: function(res){
  					console.log(res);
- 					alert();
  				} 	
  			});
  			if (!imgOk) {
-  				$('#image-list li').remove();
-  				$('#image-list').append('<li class = "erro"><h4 style = "color:red">This file is not an image.</h4></li>');
+  				$('#typeError li').remove();
+  				$('#nameError li').remove();
+	  			$('#tagError li').remove();
+	  			$('#descError li').remove();
+	  			$('#albumError li').remove();
+  				$('#typeError').append('<li class = "erro"><h4 style = "color:red">This file is not an image.</h4></li>');
   			}else{
-  				$('#image-list li').remove();
+  				$('#typeError li').remove();
+  				$('#nameError li').remove();
+	  			$('#tagError li').remove();
+	  			$('#descError li').remove();
+	  			$('#albumError li').remove();
+  			}
+			if(magic){
+  	  			makeProgress();
   			}
  		}
  		
@@ -93,6 +143,7 @@ $(function() {
  				};
  				//only if the input is valid
  		        if(magic){	    
+ 		        	makeProgress();
 	 				$.ajax({
 	 					url: "post/add",
 	 					type: "POST",
@@ -104,7 +155,6 @@ $(function() {
 	 					},
 	 					error: function(res){
 	 						console.log(res);
-	 						alert();
 	  					} 	
 	  				});
  		        };
@@ -131,44 +181,62 @@ $(function() {
  		},
  		error: function(data){
  			console.log(data);
- 			alert();
  		}
-  	});
-  });
-  	
- 
- //show create album bar
-  $(function() {
-  	$('.inputs div').on('click', function() {
-  		$('.panel').toggle(300);
   	});
   });
   		
  
  //add album
-  $(function(){
+$(function(){
   	var $name = $("#nameAlb");
   	var $description = $('#descriptionAlb');
- 	$('#createAlb').on('click', function(){
- 			
+  	var valid = true;
+ 	$('#createAlb').on('click', function(){		
  		var albums = {
  			name : $name.val(),
  			description : $description.val()
  		};
- 			
- 		$.ajax({
- 			url: "album/add",
- 			type: "POST",
- 			data: albums,
- 			success: function (res) {
- 				$albums.append('<option value="'+ $name.val() +'">'+ $name.val() +'</option>');
- 				console.log(res);
- 			},
- 			error: function(res){
- 				console.log(res);
- 				alert();
- 			} 	
- 		});
+	 		$.ajax({
+	 			url: "album/valid",
+	 			type: "POST",
+	 			data: albums,
+	 			success: function (res) {
+	 				$('#albumNameError li').remove();
+		  			$('#albumDescError li').remove();
+		  			console.log(res.status)
+ 					if(!res.status){
+ 						valid = false;
+ 					}else if(res.status){
+ 						valid = true;	
+ 					}
+ 					if(res.errors.NameError){
+ 		  				$('#albumNameError').append('<li class = "erro"><h5 style = "color:red">'+ res.errors.NameError + '</h5></li>');
+ 					}
+ 					if(res.errors.NameLength){
+ 		  				$('#albumNameError').append('<li class = "erro"><h5 style = "color:red">'+ res.errors.NameError + '</h5></li>');
+ 					}
+ 					if(res.errors.DescriptionLength){
+ 		  				$('#albumDescError').append('<li class = "erro"><h5 style = "color:red">'+ res.errors.NameError + '</h5></li>');
+ 					}
+	 			},
+	 			error: function(res){
+	 				console.log(res);
+	 			} 	
+	 		});
+	 	setTimeout(function(){
+	 		if(valid){
+		 		$.ajax({
+		 			url: "album/add",
+		 			type: "POST",
+		 			data: albums,
+		 			success: function (res) {
+		 				$albums.append('<option value="'+ $name.val() +'">'+ $name.val() +'</option>');
+		 			},
+		 			error: function(res){
+		 				console.log(res);
+		 			} 	
+		 		});
+	 		}
+		}, 100);
  	});
  });
-  

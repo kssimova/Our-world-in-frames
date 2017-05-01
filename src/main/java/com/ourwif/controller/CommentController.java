@@ -57,7 +57,6 @@ public class CommentController {
 		User user = (User) session.getAttribute("user");
 		Comment comment = null;
 		Basic basic = new Basic();
-		System.out.println(commentStr);
 		if(commentStr.length() <= 200){
 			if(!commentStr.isEmpty()){
 				if(CachedObjects.getInstance().getAllUsers().isEmpty()){
@@ -82,18 +81,4 @@ public class CommentController {
 		basic.addError("commentError", "Your comment is over 200 character long.");
 		return basic;
 	}	
-	
-	//not ready
-	@RequestMapping(value="/change",method = RequestMethod.PUT)
-	public String changeComment(Model model, HttpServletRequest request) {
-		//this will change the content of the post this request should contain the comment id and the new values
-		return "post";
-	}
-
-	
-	@RequestMapping(value="/{comment_id}",method = RequestMethod.DELETE)
-	public String deleteComment(Model model, @PathVariable("comment_id") Integer productId) {
-		//this will delete one comment.. request should contain the id of this comment 
-		return "redirect:index.html";
-	}
 }

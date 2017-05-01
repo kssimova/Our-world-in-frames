@@ -68,7 +68,7 @@ $(function () {
 										'</ul>' +
 									'</span>');			 							 
 	  			$('#img').html(' <img class="img-fluid" src="'+ post.picturePath +'" alt="" style = "max-width: 100%;" >');
-	  			$('#desc').html("<h3>Description: " + post.description + "<h3>");
+	  			$('#desc').html("<h3 style = 'overflow:hidden;'>Description: " + post.description + "<h3>");
 				$.each(post.tags, function(index, val){
 					tagcheta += val + ", ";
 					$tags.append('<button>' + val + '</button>');
