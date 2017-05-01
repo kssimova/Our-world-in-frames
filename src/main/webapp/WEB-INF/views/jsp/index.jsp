@@ -104,7 +104,7 @@
 	                        		<div class="form-top-left">
 	                        			<h3 style = "font-family: Alegreya Sans; font-size: 28px">Login to our site!</h3>
 	                            		<p style = "font-family: Alegreya Sans; font-size: 18px">Enter username and password to log in:</p>
-	                        		</div>
+	                        		</div><br>
 	                        		<div class="form-top-right">
 	                        			<i class="fa fa-key"></i>
 	                        		</div>
@@ -126,18 +126,7 @@
 			                    
 		                    </div>
 		                
-		                	<div class="social-login">
-	                        	<h3>...or login with:</h3>
-	                        	<div class="social-login-buttons">
-		                        	<a class="btn btn-link-1 btn-link-1-facebook" href="#">
-		                        		<i> <fb:login-button onlogin="checkLoginState()"></fb:login-button> </i>
-		                        		<div id="status"> </div>
-		                        	</a>
-		                        	<a class="btn btn-link-1 btn-link-1-google-plus" href="#">
-		                        		<i class="fa fa-google-plus"></i> Google Plus
-		                        	</a>
-	                        	</div>
-	                        </div>
+		           
 	                        
                         </div>
                         
@@ -151,26 +140,25 @@
 	                        		<div class="form-top-left">
 	                        			<h3 style = "font-family: Alegreya Sans; font-size: 28px">Register here!</h3>
 	                            		<p style = "font-family: Alegreya Sans; font-size: 18px">If you don't have an account create one:</p>
-	                        		</div>
+	                        		</div><br>
 	                        		<div class="form-top-right">
 	                        			<i class="fa fa-pencil"></i>
 	                        		</div>
 	                            </div>
 	                            <div class="form-bottom">
-				            
 				                        <div class="form-group">
 				                    		<label class="sr-only" for="form-username">Username</label>
-				                        	<input type="text" id = "register-username" name="form-username" required="required" placeholder="Username..." class="form-username form-control"><br>
+				                        	<input type="text" id = "register-username" name="form-username" placeholder="Username..." class="form-username form-control"><br>
 				                        	<span id = "usernameError" style = "font: 16px arial, sans-serif; color: red"> </span>
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-email">Email</label>
-				                        	<input type="text" id = "register-email" name="form-email" required="required" placeholder="Email..." class="form-email form-control"><br>
+				                        	<input type="text" id = "register-email" name="form-email" placeholder="Email..." class="form-email form-control"><br>
 				                        	<span id = "emailError" style = "font: 16px arial, sans-serif; color: red"> </span>
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-password">Password</label>
-				                        	<input type="password" id = "register-password" name="form-password" required="required" placeholder="Password..." class="form-password form-control">
+				                        	<input type="password" id = "register-password" name="form-password" placeholder="Password..." class="form-password form-control">
 				                       		<span id = "passwordError" style = "font: 16px arial, sans-serif; color: red"> </span><br>
 				                        </div>
 				                        <div class="form-group">
@@ -188,8 +176,10 @@
                        								 <option value="female"  id = "gender-female">Female</option>
 												</select>
 				                        </div>
+				                        
 				                        <span id = "selectGender" style = "font: 16px arial, sans-serif; color: red"> </span>
 				                        <span id = "registration" style = "font: 16px arial, sans-serif; color: green"> </span><br><br>
+				                        
 				                        <button id = "signup" type="submit" class="form-button form-control" style = "background-color:#dab3ff; height: 50px; font-size:18px; color: white; border: 3px solid #ddd;">Sign up!</button>
 				                    
 			                    </div>
@@ -231,7 +221,7 @@
                             </li>
                             <li><a href="https://www.facebook.com/Sunshin3e"><i class="fa fa-facebook"></i></a>
                             </li>
-                            <li><a href="#"><i class="fa fa-linkedin"></i></a>
+                            <li><a href="https://www.linkedin.com/in/kristina-simova-5a954b142/"><i class="fa fa-linkedin"></i></a>
                             </li>
                         </ul>
                     </div>
@@ -242,15 +232,6 @@
                         <img src="http://i.imgur.com/D9lx6zT.jpg" class="img-responsive img-circle" alt="">
                         <h4> <font color=#A386BF> Miki </font></h4>
                         <p class="text-muted" style = "color: white">Lead Kitten</p>
-                      
-                        <ul class="list-inline social-buttons">
-                            <li><a href="#"><i class="fa fa-twitter"></i></a>
-                            </li>
-                            <li><a href="#"><i class="fa fa-facebook"></i></a>
-                            </li>
-                            <li><a href="#"><i class="fa fa-linkedin"></i></a>
-                            </li>
-                        </ul>
                     </div>
                 </div>
                 <div class="col-sm-4">
@@ -262,8 +243,6 @@
                             <li><a href="https://twitter.com/josette_darling"><i class="fa fa-twitter"></i></a>
                             </li>
                             <li><a href="https://www.facebook.com/werewolf0girl"><i class="fa fa-facebook" color = "blue"></i></a>
-                            </li>
-                            <li><a href="#"><i class="fa fa-linkedin"></i></a>
                             </li>
                         </ul>
                     </div>
@@ -353,7 +332,6 @@
         <script src="js/bootstrap.min.js"></script>
         <script src="js/jquery.backstretch.js"></script>
         <script src="js/scripts.js"></script>
-        <script src="js/FBLogin.js"></script>
         
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css" />
