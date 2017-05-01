@@ -318,7 +318,6 @@ public class PostDAO {
 			postIds.add(result.getString("post_id"));
 		}
 		for(String str : postIds){
-			System.out.println(str);
 			posts.add(CachedObjects.getInstance().getOnePost(str));
 		}
 		return posts;

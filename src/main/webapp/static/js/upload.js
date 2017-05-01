@@ -42,6 +42,7 @@ $(function() {
  	
  	//on click event for getting all data for this image
   	$("#btn").click(function (evt) {
+  		progres = 0;
   		evt.preventDefault();
   		var i = 0, len = input.files.length, img, reader, file;
   	
@@ -124,9 +125,9 @@ $(function() {
 	  			$('#tagError li').remove();
 	  			$('#descError li').remove();
 	  			$('#albumError li').remove();
-  				if(!magic){
-  	  				makeProgress();
-  				}
+  			}
+			if(magic){
+  	  			makeProgress();
   			}
  		}
  		
