@@ -164,11 +164,6 @@
 									'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
 										'<input type="image" src="' + value.picturePath + '" alt="Submit">' + 
 										'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
-										'<div class="caption">' + 
-											'<p>' + 
-												value.name +
-											'</p>' + 
-										'</div>' + 
 									'</f:form>' + 
 								'</div>'
 							);
@@ -179,11 +174,6 @@
 									'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
 										'<input type="image" src="' + value.picturePath + '" alt="Submit">' + 
 										'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
-										'<div class="caption">' + 
-											'<p>' + 
-												value.name +
-											'</p>' + 
-										'</div>' + 
 									'</f:form>' + 
 								'</div>' +	 	
 							'</div>' 				
@@ -195,11 +185,6 @@
 									'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
 										'<input type="image" src="' + value.picturePath + '" alt="Submit">' + 
 										'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
-										'<div class="caption">' + 
-											'<p>' + 
-												value.name +
-											'</p>' + 
-										'</div>' + 
 									'</f:form>' + 
 								'</div>' +	 	
 							'</div>' 				
@@ -211,11 +196,6 @@
 									'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
 										'<input type="image" src="' + value.picturePath + '" alt="Submit">' + 
 										'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
-										'<div class="caption">' + 
-											'<p>' + 
-												value.name +
-											'</p>' + 
-										'</div>' + 
 									'</f:form>' + 
 								'</div>' +	 	
 							'</div>' 				
@@ -227,11 +207,6 @@
 									'<f:form commandName="goToPostPage" action="postView" method = "GET">' + 
 										'<input type="image" src="' + value.picturePath + '" alt="Submit">' + 
 										'<input type="hidden" name = "imgId" value="' + value.postId + '" >' +  
-										'<div class="caption">' + 
-											'<p>' + 
-												value.name +
-											'</p>' + 
-										'</div>' + 
 									'</f:form>' + 
 								'</div>' +	 	
 							'</div>' 				

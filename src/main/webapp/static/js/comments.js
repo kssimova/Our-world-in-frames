@@ -27,7 +27,7 @@ $(function () {
 	    				); 
 	               	}else{
 	    				$comments.append(
-									'<img class="media-object img-circle" src="http://i.imgur.com/ADi2E7S.jpg" alt="profile" style = "height:100px;width:auto;max-width:100px;">'
+									'<img class="media-object img-circle" src= "http://i.imgur.com/ADi2E7S.jpg" alt="profile" style = "height:100px;width:auto;max-width:100px;">'
 	    				); 
 	               	}
 					$comments.append(

@@ -20,7 +20,7 @@ img {
 	filete: none;
 }
 
-img:hover {
+img:hover{
     -webkit-filter: opacity(50%); /* Safari */
     filter: opacity(50%);
 }

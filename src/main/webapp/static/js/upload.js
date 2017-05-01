@@ -4,6 +4,23 @@ $(function() {
  	var	formdata = false;
  	var magic = true;
  	var imgOk = false;
+	var progres = 0;
+	
+	//progress bar 
+	function makeProgress(){
+		if(progres < 100){
+			progres++;
+			$(".progress-bar").css("width", progres + "%").text(progres + " %");
+			}else{
+				return;
+			}
+		if(progres < 100){
+	 		setTimeout(
+	 			function (){
+	 				makeProgress();
+	 		}, 100);
+		}
+	}
  	
  	//show image at the bottom of the screen
  	function showUploadedItem (source) {
@@ -70,7 +87,6 @@ $(function() {
  				},
  				error: function(res){
  					console.log(res);
- 					alert();
  				} 	
  			});
  			if (!imgOk) {
@@ -78,6 +94,7 @@ $(function() {
   				$('#image-list').append('<li class = "erro"><h4 style = "color:red">This file is not an image.</h4></li>');
   			}else{
   				$('#image-list li').remove();
+  				makeProgress();
   			}
  		}
  		
@@ -93,6 +110,7 @@ $(function() {
  				};
  				//only if the input is valid
  		        if(magic){	    
+ 		        	makeProgress();
 	 				$.ajax({
 	 					url: "post/add",
 	 					type: "POST",
@@ -104,7 +122,6 @@ $(function() {
 	 					},
 	 					error: function(res){
 	 						console.log(res);
-	 						alert();
 	  					} 	
 	  				});
  		        };
@@ -131,16 +148,7 @@ $(function() {
  		},
  		error: function(data){
  			console.log(data);
- 			alert();
  		}
-  	});
-  });
-  	
- 
- //show create album bar
-  $(function() {
-  	$('.inputs div').on('click', function() {
-  		$('.panel').toggle(300);
   	});
   });
   		
@@ -166,9 +174,7 @@ $(function() {
  			},
  			error: function(res){
  				console.log(res);
- 				alert();
  			} 	
  		});
  	});
  });
-  

@@ -118,7 +118,7 @@
 				                        <label class="sr-only" for="form-password">Password</label>
 				                       	<input id = "form-password" name="form-password" type="password" placeholder="Password..." class="form-password form-control" >
 									</div>
-									<span id = "login_message" style = "color: red; font: 15px arial, sans-serif;" ;></span><br>
+									<span id = "login_message" style = "color: red; font: 15px arial, sans-serif;"></span><br>
 										<button id ="login" type="submit" class="form-button form-control" style = "background-color:#dab3ff; height: 50px; font-size:18px; color: white; border: 3px solid #ddd;"> Sign in! </button>
 			                    </div>
 			                    
