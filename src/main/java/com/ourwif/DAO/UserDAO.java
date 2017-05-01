@@ -57,6 +57,8 @@ public class UserDAO {
 	
 	private static final String GET_ALL_FOLLOWING = "SELECT u.user_id, u.first_name, u.last_name, u.username, u.email, u.password, u.mobile_number, u.birthdate, u.description, u.gender, u.profilephoto_path FROM users u JOIN followers f ON (u.user_id = f.followed_id) WHERE f.user_id = ?";
 
+	private static final String CONTACT_US = "INSERT INTO ourwif.messages (name, email, mobile_number, message) VALUES (?,?,?,?)";
+	
 	private DataSource dataSource;
 	private ApplicationContext context = null;
 
@@ -579,5 +581,25 @@ public class UserDAO {
 			}
 		}
 		return containsEmail;
-	}	
+	}
+	
+	// contact form 
+	public void contactUs(String name, String email, String message, String mobile_number) throws SQLException{
+		PreparedStatement preparedStatement = null;
+		Connection connection = null;
+		try {
+			connection = (Connection) dataSource.getConnection();
+			preparedStatement = connection.prepareStatement(CONTACT_US);
+			preparedStatement.setString(1, name);
+			preparedStatement.setString(2, email);
+			preparedStatement.setString(3, mobile_number);
+			preparedStatement.setString(4, message);
+			preparedStatement.executeUpdate();
+		}
+		finally{
+			preparedStatement.close();
+			connection.close();
+		}
+	}
+	
 }

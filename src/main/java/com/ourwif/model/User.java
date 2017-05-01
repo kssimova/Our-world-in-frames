@@ -219,7 +219,7 @@ public class User implements Comparable<User>{
 		if (desc.length() <= 400) {
 			this.descriprion = desc;
 		}else{
-			throw new ValidationException(" * Description must be less than 500 symbols! ");
+			throw new ValidationException(" * Description must be less than 400 symbols! ");
 		}
 	}
 	
