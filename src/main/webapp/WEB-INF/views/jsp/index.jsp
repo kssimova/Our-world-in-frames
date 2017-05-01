@@ -239,7 +239,7 @@
                 <div class="col-sm-4">
                     <div class="team-member">
 
-                        <img src="img/miki.jpg" class="img-responsive img-circle" alt="">
+                        <img src="http://i.imgur.com/D9lx6zT.jpg" class="img-responsive img-circle" alt="">
                         <h4> <font color=#A386BF> Miki </font></h4>
                         <p class="text-muted" style = "color: white">Lead Kitten</p>
                       

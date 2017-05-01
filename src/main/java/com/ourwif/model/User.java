@@ -306,7 +306,8 @@ public class User implements Comparable<User>{
 	}
 	
 	public boolean validateString(String str){
-		return (!str.isEmpty() && str != null && str.length() >= 2 && !str.contains(" "));
+		String s = str.trim();
+		return (!str.isEmpty() && str != null && str.length() >= 2 && s.equals(str));
 	}
 	
 	private boolean validUser(User user){

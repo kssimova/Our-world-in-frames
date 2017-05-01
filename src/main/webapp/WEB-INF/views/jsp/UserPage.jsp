@@ -21,6 +21,8 @@
 	  	var name = 'name';
 	  	var $album = $('#album');
 	  	var $like = $('#like');
+	  	var numOfAlbums = 0;
+	  	var numOfImg = 0;
 	  	
 	  	$.ajax({
 	  		type: "POST",
@@ -51,8 +53,8 @@
 	  				$('.card-background').finf('img').remove();
 	  				$('.card-background').append('<img class="card-bkimg" alt="" src= "' + user.profilePhotoPath + '" >');
 	  			}
-	  						
 	   			$.each(user.albums, function(index, val){
+	   				numOfAlbums++;
 		   			if(val.photos.length == 0){
 		  				$album.append(
 		  				'<div class="col-md-4">' +
@@ -71,6 +73,7 @@
 		   			}
 		  			
 		   			$.each(val.photos, function(a, b){
+		   				numOfImg ++;
 		   				if(count> 4){
 		   					count = 0;
 		   				};
@@ -124,6 +127,12 @@
 		   				};
 	   				});
 	   			});
+	   			if(numOfAlbums == 0){ 			
+			 		$album.append("<h3 class = 'noFollowers'>Ops, you don't have any albums!</h3>");
+	   			};
+		 		if(numOfImg == 0){
+		 			$img.append("<h3 class = 'noFollowers'>Ops, you don't have any photos!</h3>");
+		 		};
 	  		},
 	  		error: function(data){
 	  			console.log(data);
@@ -137,6 +146,9 @@
 	  		url: 'post/getLike',
 	  		dataType: "json",
 	  		success: function(post){	
+		 		if(post.length == 0){
+	  				$like.append("<h3 class = 'noFollowers'>Ops, you don't have liked photos!</h3>");
+	  			}
 				$.each(post, function(index, val){	
 		   			if(count1 < 3){
 		  				$like.append('<div class="col-md-4">' + 

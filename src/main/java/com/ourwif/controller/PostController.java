@@ -278,7 +278,7 @@ public class PostController {
 			}	
 		}else{
 			for(User users : cachedObj.getAllUsers()){
-				if(!users.getAlbums().isEmpty() || users.getAlbums().size() > 0){
+				if(!users.getAlbums().isEmpty() || users.getAlbums().size() > 0 || users.getAlbums() != null ){
 					for(Entry<Long, Album> albums : users.getAlbums().entrySet()){
 						posts.addAll(albums.getValue().getPhotos());		
 					}
