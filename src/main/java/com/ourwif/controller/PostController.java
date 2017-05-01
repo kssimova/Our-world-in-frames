@@ -427,7 +427,7 @@ public class PostController {
 			if(tags.length() > 200 ){;
 				basic.addError("TagLength", "All image tags combined must be less than 200 character!");
 			}
-			String album = request.getParameter("description");
+			String album = request.getParameter("album");
 			album.trim();
 			if(album.isEmpty() || album.length() < 2){;
 				basic.addError("AlbumLength", "All images have to be in albums!");

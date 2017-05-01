@@ -20,6 +20,9 @@ $(function() {
 	 				makeProgress();
 	 		}, 100);
 		}
+		if(progres == 100){
+			alert("Image uploaded successfully!");
+		}
 	}
  	
  	//show image at the bottom of the screen
@@ -81,20 +84,47 @@ $(function() {
  					if(!res.status){
  						magic = false;
  					}
- 					$.each(res.errors, function(a, b){
- 	 					console.log(a + " : "+ b);
- 					});
+ 					if(res.errors.NameError){
+ 		  				$('#nameError li').remove();
+ 		  				$('#nameError').append('<li class = "erro"><h5 style = "color:red">'+ res.errors.NameError + '</h5></li>');
+ 					}
+ 					if(res.errors.NameLength){
+ 		  				$('#nameError li').remove();
+ 		  				$('#nameError').append('<li class = "erro"><h5 style = "color:red">'+ res.errors.NameError + '</h5></li>');
+ 					}
+ 					if(res.errors.AlbumLength){
+ 		  				$('#albumError li').remove();
+ 		  				$('#albumError').append('<li class = "erro"><h5 style = "color:red">'+ res.errors.NameError + '</h5></li>');
+ 					}
+ 					if(res.errors.DescriptionLength){
+ 		  				$('#descError li').remove();
+ 		  				$('#descError').append('<li class = "erro"><h5 style = "color:red">'+ res.errors.NameError + '</h5></li>');
+ 					}
+ 					if(res.errors.TagLength){
+ 		  				$('#tagError li').remove();
+ 		  				$('#tagError').append('<li class = "erro"><h5 style = "color:red">'+ res.errors.NameError + '</h5></li>');
+ 					}
  				},
  				error: function(res){
  					console.log(res);
  				} 	
  			});
  			if (!imgOk) {
-  				$('#image-list li').remove();
-  				$('#image-list').append('<li class = "erro"><h4 style = "color:red">This file is not an image.</h4></li>');
+  				$('#typeError li').remove();
+  				$('#nameError li').remove();
+	  			$('#tagError li').remove();
+	  			$('#descError li').remove();
+	  			$('#albumError li').remove();
+  				$('#typeError').append('<li class = "erro"><h4 style = "color:red">This file is not an image.</h4></li>');
   			}else{
-  				$('#image-list li').remove();
-  				makeProgress();
+  				$('#typeError li').remove();
+  				$('#nameError li').remove();
+	  			$('#tagError li').remove();
+	  			$('#descError li').remove();
+	  			$('#albumError li').remove();
+  				if(!magic){
+  	  				makeProgress();
+  				}
   			}
  		}
  		

@@ -28,14 +28,18 @@
 					
 					Name: <br>
 					<input id= "name" type="text" placeholder="name..." class="form-username form-control">
+					<ul id = "nameError"></ul>
 					Description: <br>
-					 <input id = "description" type="text" placeholder="description..."  class="form-username form-control">
+					<input id = "description" type="text" placeholder="description..."  class="form-username form-control">
+					<ul id = "descError"></ul>
 					Album: <br>
 					<select id = "albums"  class="form-username form-control"></select>  
 					or create new album
+					<ul id = "albumError"></ul>
 					Tags:  <br>
 					<input id = "tags" type="text" placeholder="Red, roses... " class="form-username form-control" >
 					/please enter your image tags separated with a comma/
+					<ul id = "tagError"></ul>
 				</div>
 				<div id="main">
 					<div class="form-top-left" >
@@ -43,6 +47,7 @@
 					</div>
 					<form method="post" enctype="multipart/form-data"  action="upload.php" >
 						<input type="file" name="images" id="images" multiple  required/>
+						<ul id = "typeError"></ul>
 						<button type="submit" id="btn" class="form-button form-control buttons">Upload Files!</button>
 					</form>
 				</div>
