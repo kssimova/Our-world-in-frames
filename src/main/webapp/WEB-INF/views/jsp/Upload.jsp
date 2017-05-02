@@ -69,15 +69,15 @@
 				</div>
 			</div>
 		</div>
-		<div align="center" class = "position">
+		<div align="center" class = "position col-sm-12">
+			<ul id = "image-list">
+				
+			</ul>
 			<div class="progress progress-striped active">
 				<div class="progress-bar" style="width: 0%;">
 					<span class="sr-only">0% Complete</span>
 				</div>
 			</div>
-			<ul id = "image-list">
-				
-			</ul>
 		</div>
 
 	</body>

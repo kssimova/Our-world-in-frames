@@ -21,7 +21,7 @@ $(function() {
 	 		}, 100);
 		}
 		if(progres == 100){
-			alert("Image uploaded successfully!");
+			$('#image-list').append("<h3 style = 'color:green;background-color:white;'>Image upload successfully</h3>")
 		}
 	}
  	
@@ -150,7 +150,6 @@ $(function() {
 	 					data: user,
 	 					dataType: 'JSON',
 	 					success: function (res) {
-	 						alert("Image done");
 	 						document.getElementById("response").innerHTML = res; 
 	 					},
 	 					error: function(res){
