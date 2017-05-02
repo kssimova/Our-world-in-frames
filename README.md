@@ -3,7 +3,7 @@
 
 <img src="http://i.imgur.com/GqnDL4g.png"></img>
 
-<img src="http://i.imgur.com/oPiEaxe.jpg"></img>
+<img src="http://i.imgur.com/7EOc4oV.jpg"></img>
 
 <img src="http://i.imgur.com/EF4fhXb.jpg"></img>
 
