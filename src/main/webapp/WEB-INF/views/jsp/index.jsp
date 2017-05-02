@@ -158,8 +158,8 @@
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-password">Password</label>
-				                        	<input type="password" id = "register-password" name="form-password" placeholder="Password..." class="form-password form-control">
-				                       		<span id = "passwordError" style = "font: 16px arial, sans-serif; color: red"> </span><br>
+				                        	<input type="password" id = "register-password" name="form-password" placeholder="Password..." class="form-password form-control"><br>
+				                       		<span id = "passwordError" style = "font: 16px arial, sans-serif; color: red"> </span>
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-confirm-password">Confirm Password</label>

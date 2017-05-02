@@ -50,7 +50,9 @@ public class UserController {
 	   String message = request.getParameter("message");
 	   Basic basic = new Basic();
 	   boolean validContact = true;
+	   
 	   System.out.println(message + "-------------------------------------------------");
+	   
 	   if(message.trim().length() > 0  && message.length() <= 500){
 		   try{
 			   User user = new User(name);
@@ -67,7 +69,7 @@ public class UserController {
 				   basic.addError("#contact-error", "* Message sent successfully! Thank you for your time! :) ");
 			   } catch (SQLException e) {
 				   System.out.println(e.getMessage());
-			       basic.addError("#contact-error", "* Something went wrong! It's not you it's us :( ");
+			       basic.addError("#contact-error", "* Something went wrong! It's not you, it's us :( ");
 			    }
 			}
 	   }
@@ -173,17 +175,6 @@ public class UserController {
 			user.changeGender(Enum.valueOf(User.Gender.class, (gender.toUpperCase())));
 		}
 		
-		System.out.println("Gender is " + gender);
-		
-		System.out.println("***********");
-		System.out.println(username);
-		System.out.println(email);
-		System.out.println(gender);
-		//System.out.println(user.getGender().toString());
-		System.out.println(password);
-		System.out.println("***********");
-		
-		System.out.println(validRegistration);
 		if(validRegistration){
 			basic.addError("#registration", "  * Registration successful! Log in!");
 			try {
@@ -191,10 +182,6 @@ public class UserController {
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
 			}
-		}
-		
-		for(Entry<String, String> entry : basic.getErrors().entrySet()){
-			System.out.println("Greshkata e " + entry.getKey() + " message e " + entry.getValue());
 		}
 		
 		return basic;
