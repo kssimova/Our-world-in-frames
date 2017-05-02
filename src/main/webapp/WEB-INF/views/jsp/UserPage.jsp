@@ -333,23 +333,8 @@
 		 </div>
 		 
 		 
-		 <div id = "about" class = "panel">
-		     <div class="col-md-3 thumbnail"  style = "background-color: #f5f5f5;">
-		   		 Description: 
-		     	<div class = "description thumbnail" ></div>
-		     </div>
-		     <div class="col-md-3 thumbnail"  style = "background-color: #f5f5f5;">
-		     	Mobile Number:
-		     	<div class = "mobileNumber thumbnail" ></div>
-		     </div>
-		     <div class="col-md-3 thumbnail"  style = "background-color: #f5f5f5;">
-		   		Birthday: 
-		     	<div class = "birthdate thumbnail" >.</div>
-		     </div>
-		     <div class="col-md-3 thumbnail"  style = "background-color: #f5f5f5;">
-		     	Gender: 
-		     	<div class = "gender thumbnail" ></div>
-		     </div>
+		 <div id = "about" class = "panel" align="center">
+			<img src ="http://i.imgur.com/F9OMXUI.jpg"></img>
 		     <p style = "padding: 0 0 30px 0">.</p>
 		 </div>
 		</div>

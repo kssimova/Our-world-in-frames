@@ -5,7 +5,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -17,6 +16,7 @@ import javax.xml.bind.ValidationException;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.ourwif.model.CachedObjects;
 import com.ourwif.model.User;
@@ -33,6 +33,7 @@ public class UserDAO {
 	
 	private static final String UNFOLLOW_USER = "DELETE FROM ourwif.followers WHERE user_id = ? AND followed_id = ? ;";
 	
+	private static final String CHANGE_PASSWORD = "UPDATE ourwif.users SET password = ? WHERE user_id = ?";
 	// WITHOUT CITY AND COUNTRY
 	private static final String GET_ALL_FOLLOWERS = "SELECT USERS.user_id, first_name, last_name, username, email, password, mobile_number, birthdate, description, gender, profilephoto_path FROM ourwif.users USERS JOIN ourwif.followers FOLLOWERS ON (USERS.user_id = FOLLOWERS.user_id) WHERE followed_id = ?";
 	
@@ -212,12 +213,8 @@ public class UserDAO {
 				preparedStatement.close();
 				connection.setAutoCommit(true);
 			}
-			System.out.println(user.getFollowers());
 			followedUser.removeFollower(user);
-			System.out.println(user.getFollowers());
-			System.out.println(followedUser.getFollowing());
 			user.removeFollowing(followedUser);
-			System.out.println(followedUser.getFollowing());
 		}
 	
 	// get user's followers and following
@@ -274,15 +271,50 @@ public class UserDAO {
 			connection.close();
 		}
 	}
+	
+	//change password
+	public void changePassword(User user, String password) throws ValidationException{
+		user.changePassword(password);
+		PreparedStatement preparedStatement = null;
+		Connection connection = null;
+		try {
+			connection = (Connection) dataSource.getConnection();
+			preparedStatement = connection.prepareStatement(CHANGE_PASSWORD);
+			preparedStatement.setString(1, password);
+			preparedStatement.setLong(2, user.getUserId());
+			preparedStatement.executeUpdate();
+		} catch (SQLException e1) {
+			System.out.println("Error in 1st catch block in UserDAO method changePassword() - " + e1.getMessage());
+		}
+		finally{
+			if(preparedStatement != null){
+				try {
+					preparedStatement.close();
+				} catch (SQLException e2) {
+					System.out.println("Error when closing statement in 1st catch block in UserDAO method changePassword() - " + e2.getMessage());
+				}
+			}
+		}
+	}
 
 	public boolean validLogin(String username, String password) throws ValidationException, SQLException {
 		CachedObjects cachedObj = CachedObjects.getInstance();
+		boolean valid = false;
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		if(cachedObj.getAllUsers().isEmpty()){
 
 			getAllUsers();
 		}
 		User user = cachedObj.getOneUser(username);
-		return user.getPassword().equals(password);	
+		String existingPassword = password; // Password entered by user
+		String dbPassword = user.getPassword();  // Load hashed DB password
+		if (passwordEncoder.matches(existingPassword, dbPassword)) {
+			String hashedPassword = passwordEncoder.encode(password);
+			user.changePassword(hashedPassword);
+			changePassword(user, hashedPassword);
+			valid = true;
+		}
+		return valid;	
 	}
 	
 	public boolean isUsernameTaken(String username) throws ValidationException, SQLException {

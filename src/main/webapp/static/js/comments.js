@@ -22,6 +22,7 @@ $(function () {
 								'<a class="pull-left"  id = "'+ val.commentId +'">' 
 					);    
 	               	if(val.creatorUrl != null){
+	               		console.log(val.creatorUrl);
 	    				$comments.append(
 									'<img class="media-object img-circle" src="'+ val.creatorUrl +'" alt="profile" style ="height:100px;width:auto;max-width:100px;">'
 	    				); 
@@ -85,7 +86,7 @@ $(function () {
 							 $('#comments').append(
 								'<li class="media">' + 
 									'<a class="pull-left" id = "'+ val.commentId +'">' +
-										'<img class="media-object img-circle" src="'+ val.creatorURL +'" alt="profile" style ="height:100px;width:auto;max-width:100px;">' + 
+										'<img class="media-object img-circle" src="http://i.imgur.com/ADi2E7S.jpg" alt="profile" style ="height:100px;width:auto;max-width:100px;">' + 
 									'</a>' +
 									'<div class="media-body">' +
 										'<div class="well well-lg" style = "width: 600px">' +

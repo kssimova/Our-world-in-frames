@@ -3,7 +3,6 @@ package com.ourwif.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.ourwif.DAO.PostDAO;
 import com.ourwif.DAO.UserDAO;
@@ -85,7 +85,9 @@ public class UserController {
 		String username = request.getParameter("username");
 		System.out.println(username);
 		String password = request.getParameter("password");	
-		System.out.println(password);
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String hashedPassword = passwordEncoder.encode(password);
+		System.out.println(hashedPassword);
 		CachedObjects cachedObj =  CachedObjects.getInstance();
 		Basic basic = null;
 		User u = null;
@@ -117,6 +119,8 @@ public class UserController {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");	
 		String confirmPassword = request.getParameter("confirmPassword");
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String hashedPassword = passwordEncoder.encode(password);
 		String email = request.getParameter("email");	
 		String gender = request.getParameter("gender");
 		Basic basic = new Basic();
@@ -161,7 +165,7 @@ public class UserController {
 		}
 		
 		try {
-			user.changePassword(password);
+			user.changePassword(hashedPassword);
 		} catch (ValidationException e) {
 			validRegistration = false;
 			basic.addError("#passwordError", e.getMessage());
@@ -174,7 +178,6 @@ public class UserController {
 		else{
 			user.changeGender(Enum.valueOf(User.Gender.class, (gender.toUpperCase())));
 		}
-		
 		if(validRegistration){
 			basic.addError("#registration", "  * Registration successful! Log in!");
 			try {
