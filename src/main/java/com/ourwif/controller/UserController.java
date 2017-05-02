@@ -179,10 +179,6 @@ public class UserController {
 		else{
 			user.changeGender(Enum.valueOf(User.Gender.class, (gender.toUpperCase())));
 		}
-<<<<<<< HEAD
-=======
-		
->>>>>>> 74d77df22eadb727a1a6978ad9e067bff582c91a
 		if(validRegistration){
 			basic.addError("#registration", "  * Registration successful! Log in!");
 			try {
