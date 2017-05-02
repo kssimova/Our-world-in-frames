@@ -26,31 +26,12 @@ import com.ourwif.model.User;
 
 public class UserDAO {
 
-	// works
 	private static final String SELECT_ALL_USERS = "SELECT user_id, first_name, last_name, username, email, password, mobile_number, birthdate, description, gender, profilephoto_path FROM ourwif.users ";
-	// works
+	
 	private static final String ADD_COUNTRIS_TO_USERS = "SELECT user_id, CITY.name AS city_name, COUNTRY.name AS country_name FROM ourwif.users JOIN ourwif.cities CITY ON (users.city_id = CITY.city_id) JOIN ourwif.countries COUNTRY ON (CITY.country_id = COUNTRY.country_id)";
 	
 	private static final String INSERT_USER = "INSERT INTO ourwif.users (first_name, last_name, username, email, password, mobile_number, birthdate, description, gender, profilephoto_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-	// works
-	private static final String CHANGE_FIRST_NAME = "UPDATE ourwif.users SET first_name = ? WHERE user_id = ?";
-	// works
-	private static final String CHANGE_LAST_NAME = "UPDATE ourwif.users SET last_name = ? WHERE user_id = ?";
-	// works 
-	private static final String CHANGE_EMAIL = "UPDATE ourwif.users SET email = ? WHERE user_id = ?";
-	// works
-	private static final String CHANGE_MOBILENUMBER = "UPDATE ourwif.users SET mobile_number = ? WHERE user_id = ?";
-	// works
-	private static final String CHANGE_PASSWORD = "UPDATE ourwif.users SET password = ? WHERE user_id = ?";
-	// works
-	private static final String CHANGE_CITY_AND_COUNTRY = "UPDATE ourwif.users SET city_id = ?, country_id = ? WHERE user_id = ?";
-	// works
-	private static final String CHANGE_DESCRIPTION = "UPDATE ourwif.users SET description = ? WHERE user_id = ?";
-	// works
-	private static final String CHANGE_BIRTHDATE = "UPDATE ourwif.users SET birthdate = ? WHERE user_id = ?";
-	// works
-	private static final String CHANGE_PROFILEPHOTO = "UPDATE ourwif.users SET profilephoto_path = ? WHERE user_id = ?";
-	// works
+	
 	private static final String FOLLOW_USER = "INSERT INTO ourwif.followers (user_id, followed_id) VALUES (?, ?);";
 	
 	private static final String UNFOLLOW_USER = "DELETE FROM ourwif.followers WHERE user_id = ? AND followed_id = ? ;";
@@ -60,6 +41,8 @@ public class UserDAO {
 	
 	private static final String GET_ALL_FOLLOWING = "SELECT u.user_id, u.first_name, u.last_name, u.username, u.email, u.password, u.mobile_number, u.birthdate, u.description, u.gender, u.profilephoto_path FROM users u JOIN followers f ON (u.user_id = f.followed_id) WHERE f.user_id = ?";
 
+	private static final String CONTACT_US = "INSERT INTO ourwif.messages (name, email, mobile_number, message) VALUES (?,?,?,?)";
+	
 	private DataSource dataSource;
 	private ApplicationContext context = null;
 
@@ -190,6 +173,7 @@ public class UserDAO {
 		return Collections.unmodifiableMap(allUsers);
 	}
 	
+<<<<<<< HEAD
 	//change first name
 	public void changeFirstName(User user, String first_name) throws ValidationException, SQLException{
 		user.changeFirstName(first_name);
@@ -420,6 +404,8 @@ public class UserDAO {
 		}
 	}
 	
+=======
+>>>>>>> 74d77df22eadb727a1a6978ad9e067bff582c91a
 	// follow user
 	public void followUser(User user, User followedUser) throws SQLException{
 		PreparedStatement preparedStatement = null;
@@ -588,5 +574,25 @@ public class UserDAO {
 			}
 		}
 		return containsEmail;
-	}	
+	}
+	
+	// contact form 
+	public void contactUs(String name, String email, String message, String mobile_number) throws SQLException{
+		PreparedStatement preparedStatement = null;
+		Connection connection = null;
+		try {
+			connection = (Connection) dataSource.getConnection();
+			preparedStatement = connection.prepareStatement(CONTACT_US);
+			preparedStatement.setString(1, name);
+			preparedStatement.setString(2, email);
+			preparedStatement.setString(3, mobile_number);
+			preparedStatement.setString(4, message);
+			preparedStatement.executeUpdate();
+		}
+		finally{
+			preparedStatement.close();
+			connection.close();
+		}
+	}
+	
 }

@@ -158,8 +158,8 @@
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-password">Password</label>
-				                        	<input type="password" id = "register-password" name="form-password" placeholder="Password..." class="form-password form-control">
-				                       		<span id = "passwordError" style = "font: 16px arial, sans-serif; color: red"> </span><br>
+				                        	<input type="password" id = "register-password" name="form-password" placeholder="Password..." class="form-password form-control"><br>
+				                       		<span id = "passwordError" style = "font: 16px arial, sans-serif; color: red"> </span>
 				                        </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-confirm-password">Confirm Password</label>
@@ -271,36 +271,38 @@
             </div>
             <div class="row">
                 <div class="col-lg-12">
-                    <form name="sentMessage" id="contactForm" novalidate>
+   
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Please enter your name *"  id="name"  "Please enter your name.">
+                                    <input type="text" id="contact-name" class="form-control" placeholder="Please enter your name *">
                                     <p class="help-block text-danger"></p>
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" class="form-control" placeholder="Please enter your email address *" id="email" required data-validation-required-message="Please enter your email address.">
+                                    <input type="email" id="contact-email" class="form-control" placeholder="Please enter your email address *">
                                     <p class="help-block text-danger"></p>
                                 </div>
                                 <div class="form-group">
-                                    <input type="tel" class="form-control" placeholder="Please enter your mobile number *" id="phone" required data-validation-required-message="Please enter your phone number.">
+                                    <input type="tel" id="contact-number" class="form-control" placeholder="Please enter your mobile number *">
                                     <p class="help-block text-danger"></p>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <textarea class="form-control" placeholder="Message to us *" id="message" required data-validation-required-message="Please enter a message."></textarea>
+                                    <textarea class="form-control" id="contact-message" placeholder="Message to us *"></textarea>
                                     <p class="help-block text-danger"></p>
                                 </div>
                             </div>
                             <div class="clearfix"></div>
                             <div class="col-lg-12 text-center">
                                 <div id="success"></div><br>
-                                <button type="submit" class="btn btn-xl" style = "background-color: #A386BF"> Send Message </button><br><br><br>
+                                <button type="submit" id = "contactUs" class="btn btn-xl" style = "background-color: #A386BF"> Send Message </button><br><br>
+								<span id="contact-error" style = "font: 16px arial, sans-serif; color: red"> </span><br><br>
+								
                                  <span class="copyright" style = "color: white; font: 16px arial, sans-serif; font-style: italic;">Copyright &copy; Our world in frames 2017. Designed by Mariya & Kristina</span>
                             </div>
                         </div>
-                    </form>
+                   
                 </div>
             </div>
            
@@ -332,6 +334,7 @@
         <script src="js/bootstrap.min.js"></script>
         <script src="js/jquery.backstretch.js"></script>
         <script src="js/scripts.js"></script>
+        <script src="js/messages.js"></script>
         
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css" />

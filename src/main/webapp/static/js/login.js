@@ -68,7 +68,7 @@ $(function () {
 				
 				$.each(response.errors, function (index, val) {
 					console.log(index + " : " + val);
-					$(index).text(val);
+					$(index).text('<br>' + val);
 				});
 			},
 		

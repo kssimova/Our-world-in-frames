@@ -43,6 +43,44 @@ public class UserController {
 		}
 	}
 	
+	@RequestMapping(value="/contactUs", method=RequestMethod.POST)
+	public Basic contact(Model model, HttpServletRequest request) {
+	   String name = request.getParameter("name");
+	   String email = request.getParameter("email");
+	   String mobileNumber = request.getParameter("mobile");
+	   String message = request.getParameter("message");
+	   Basic basic = new Basic();
+	   boolean validContact = true;
+	   
+	   System.out.println(message + "-------------------------------------------------");
+	   
+	   if(message.trim().length() > 0  && message.length() <= 500){
+		   try{
+			   User user = new User(name);
+			   user.changeEmail(email);
+			   user.changeMobileNumber(mobileNumber);
+		   }
+		   catch(ValidationException e1){
+			   validContact = false;
+			   basic.addError("#contact-error", e1.getMessage());
+		   }
+		   if(validContact){
+			   try {
+				   userDAO.contactUs(name, email, message, mobileNumber);
+				   basic.addError("#contact-error", "* Message sent successfully! Thank you for your time! :) ");
+			   } catch (SQLException e) {
+				   System.out.println(e.getMessage());
+			       basic.addError("#contact-error", "* Something went wrong! It's not you, it's us :( ");
+			    }
+			}
+	   }
+	   else{
+		   basic.addError("#contact-error", "* Please enter a valid message! ");
+	   }
+	   
+	   return basic;
+	}
+	
 	@RequestMapping(value="/login",method = RequestMethod.POST)
 	public Basic login(Model model, HttpSession session, HttpServletRequest request) {
 		String username = request.getParameter("username");
@@ -141,6 +179,10 @@ public class UserController {
 		else{
 			user.changeGender(Enum.valueOf(User.Gender.class, (gender.toUpperCase())));
 		}
+<<<<<<< HEAD
+=======
+		
+>>>>>>> 74d77df22eadb727a1a6978ad9e067bff582c91a
 		if(validRegistration){
 			basic.addError("#registration", "  * Registration successful! Log in!");
 			try {
@@ -148,10 +190,6 @@ public class UserController {
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
 			}
-		}
-		
-		for(Entry<String, String> entry : basic.getErrors().entrySet()){
-			System.out.println("Greshkata e " + entry.getKey() + " message e " + entry.getValue());
 		}
 		
 		return basic;
